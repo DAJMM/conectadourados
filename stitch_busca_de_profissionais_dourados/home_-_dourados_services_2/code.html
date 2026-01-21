@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Home - Dourados Services</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1183d4",
+                        "footer-bg": "#0f172a",
+                        "background-light": "#ffffff",
+                        "background-dark": "#1f262e",
+                        "star-yellow": "#FFD700",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-tab {
+            border-bottom: 3px solid #1183d4;
+            color: #111518;
+        }
+        .card-shadow {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card-shadow:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex min-h-screen flex-col overflow-x-hidden">
+<header class="sticky top-0 z-50 w-full border-b border-solid border-[#f0f3f4] dark:border-[#2f3944] bg-white/90 dark:bg-background-dark/90 backdrop-blur-md px-4 lg:px-40 py-3">
+<div class="flex items-center justify-between whitespace-nowrap">
+<div class="flex items-center gap-4 text-[#111518] dark:text-white">
+<div class="size-8 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl">handyman</span>
+</div>
+<div>
+<h2 class="text-lg font-extrabold leading-tight tracking-tight">Dourados Services</h2>
+<div class="flex items-center gap-1 text-[10px] text-[#617989] uppercase tracking-wider font-bold">
+<span class="material-symbols-outlined text-xs">location_on</span>
+                            Dourados, MS
+                        </div>
+</div>
+</div>
+<div class="hidden md:flex flex-1 justify-end gap-8 items-center">
+<nav class="flex items-center gap-9">
+<a class="text-[#111518] dark:text-gray-200 text-sm font-semibold leading-normal hover:text-primary transition-colors" href="#">Início</a>
+<a class="text-[#111518] dark:text-gray-200 text-sm font-semibold leading-normal hover:text-primary transition-colors" href="#">Categorias</a>
+<a class="text-[#111518] dark:text-gray-200 text-sm font-semibold leading-normal hover:text-primary transition-colors" href="#">Seja um Prestador</a>
+</nav>
+<div class="flex gap-2">
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center rounded-lg h-10 px-4 bg-[#f0f3f4] dark:bg-[#2f3944] text-[#111518] dark:text-white text-sm font-bold">
+                            Entrar
+                        </button>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold shadow-sm">
+                            Cadastrar
+                        </button>
+</div>
+</div>
+</div>
+</header>
+<div class="w-full flex justify-center py-6 px-4 lg:px-40">
+<div class="w-full max-w-[1200px]">
+<div class="@container">
+<div class="relative flex min-h-[420px] flex-col gap-6 overflow-hidden rounded-2xl items-center justify-center p-8 bg-[#f8fafc] dark:bg-[#252d35]">
+<div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+<div class="absolute top-10 left-10 w-32 h-32 rounded-full bg-primary blur-3xl"></div>
+<div class="absolute bottom-10 right-10 w-48 h-48 rounded-full bg-primary blur-3xl"></div>
+</div>
+<div class="flex flex-col gap-4 text-center z-10">
+<h1 class="text-[#111518] dark:text-white text-4xl font-extrabold leading-tight tracking-tight @[480px]:text-6xl max-w-2xl">
+                                Quem você precisa contratar hoje?
+                            </h1>
+<p class="text-[#617989] dark:text-gray-400 text-base font-medium @[480px]:text-xl">
+                                Encontre e agende os melhores profissionais locais em Dourados.
+                            </p>
+</div>
+<label class="relative flex flex-col min-w-40 h-16 w-full max-w-[640px] z-10">
+<div class="flex w-full flex-1 items-stretch rounded-xl overflow-hidden shadow-xl border border-gray-100 dark:border-gray-700 bg-white dark:bg-[#1f262e]">
+<div class="text-[#617989] flex items-center justify-center pl-5">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="form-input flex w-full border-none focus:ring-0 bg-transparent text-[#111518] dark:text-white px-4 text-base placeholder:text-[#617989]" placeholder="Ex: Eletricista, Professor de Inglês, Diarista..." value=""/>
+<div class="flex items-center pr-2">
+<button class="flex h-12 px-8 cursor-pointer items-center justify-center rounded-lg bg-primary text-white text-base font-bold transition-all hover:bg-[#0e6eb3]">
+                                        Pesquisar
+                                    </button>
+</div>
+</div>
+</label>
+<div class="flex gap-4 mt-2 text-sm text-[#617989] dark:text-gray-400 font-medium">
+<span>Popular:</span>
+<a class="underline hover:text-primary" href="#">Diaristas</a>
+<a class="underline hover:text-primary" href="#">Pintores</a>
+<a class="underline hover:text-primary" href="#">Manicure</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="px-4 lg:px-40 flex justify-center py-2">
+<div class="max-w-[1200px] w-full">
+<h2 class="text-[#111518] dark:text-white text-[22px] font-extrabold leading-tight tracking-tight px-4 pb-4">Navegue por Categorias</h2>
+</div>
+</div>
+<div class="px-4 lg:px-40 flex justify-center pb-8">
+<div class="max-w-[1200px] w-full">
+<div class="flex border-b border-[#dbe1e6] dark:border-[#2f3944] px-4 gap-12 overflow-x-auto no-scrollbar">
+<a class="flex flex-col items-center justify-center border-b-[3px] border-primary text-primary gap-2 pb-4 pt-2 group" href="#">
+<div class="p-3 rounded-full bg-primary/10 transition-colors group-hover:bg-primary/20">
+<span class="material-symbols-outlined text-2xl">home_repair_service</span>
+</div>
+<p class="text-sm font-bold tracking-tight">Reformas</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-transparent text-[#617989] gap-2 pb-4 pt-2 group hover:text-[#111518] dark:hover:text-white transition-all" href="#">
+<div class="p-3 rounded-full bg-gray-100 dark:bg-gray-800 transition-colors group-hover:bg-gray-200 dark:group-hover:bg-gray-700">
+<span class="material-symbols-outlined text-2xl">celebration</span>
+</div>
+<p class="text-sm font-bold tracking-tight">Eventos</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-transparent text-[#617989] gap-2 pb-4 pt-2 group hover:text-[#111518] dark:hover:text-white transition-all" href="#">
+<div class="p-3 rounded-full bg-gray-100 dark:bg-gray-800 transition-colors group-hover:bg-gray-200 dark:group-hover:bg-gray-700">
+<span class="material-symbols-outlined text-2xl">favorite</span>
+</div>
+<p class="text-sm font-bold tracking-tight">Saúde</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-transparent text-[#617989] gap-2 pb-4 pt-2 group hover:text-[#111518] dark:hover:text-white transition-all" href="#">
+<div class="p-3 rounded-full bg-gray-100 dark:bg-gray-800 transition-colors group-hover:bg-gray-200 dark:group-hover:bg-gray-700">
+<span class="material-symbols-outlined text-2xl">school</span>
+</div>
+<p class="text-sm font-bold tracking-tight">Aulas</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-transparent text-[#617989] gap-2 pb-4 pt-2 group hover:text-[#111518] dark:hover:text-white transition-all" href="#">
+<div class="p-3 rounded-full bg-gray-100 dark:bg-gray-800 transition-colors group-hover:bg-gray-200 dark:group-hover:bg-gray-700">
+<span class="material-symbols-outlined text-2xl">build</span>
+</div>
+<p class="text-sm font-bold tracking-tight">Técnica</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-transparent text-[#617989] gap-2 pb-4 pt-2 group hover:text-[#111518] dark:hover:text-white transition-all" href="#">
+<div class="p-3 rounded-full bg-gray-100 dark:bg-gray-800 transition-colors group-hover:bg-gray-200 dark:group-hover:bg-gray-700">
+<span class="material-symbols-outlined text-2xl">cleaning_services</span>
+</div>
+<p class="text-sm font-bold tracking-tight">Diaristas</p>
+</a>
+</div>
+</div>
+</div>
+<div class="px-4 lg:px-40 flex justify-center py-2">
+<div class="max-w-[1200px] w-full flex items-center justify-between px-4">
+<h2 class="text-[#111518] dark:text-white text-[22px] font-extrabold leading-tight tracking-tight">Profissionais em Destaque</h2>
+<a class="text-primary text-sm font-bold hover:underline" href="#">Ver todos</a>
+</div>
+</div>
+<main class="px-4 lg:px-40 flex justify-center pb-20">
+<div class="max-w-[1200px] w-full flex flex-col gap-4 px-4">
+<div class="card-shadow bg-white dark:bg-[#252d35] rounded-xl p-5 border border-gray-100 dark:border-gray-700 flex flex-col md:flex-row gap-6 items-center md:items-stretch">
+<div class="relative">
+<div class="size-24 md:size-32 rounded-full bg-cover bg-center border-4 border-white dark:border-gray-800 shadow-sm" data-alt="Portrait of a friendly electrician professional" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCKR01IsH0baQLCVp8QzbDPQ8FF0fXdLMD3umTYfp41wFhEAKC2xlrQLQCBzBAPW-AX3DxrOoftSbdSE5fkjRZdxDS6UQKZAutecOWW06JU7s__i96u8txtyXjQic0Nds5dYcwzIzQmHfDcDDj0fBUxJMf9F5xoznMeA-ml6eQsxtme1GYSkmzio-U0KW6LrAGtjtZmj5tf01dmd2Lb7lXnkJe9hj0aq1UrqK43jvENsFFLUQ_VGWLUoUMcmBgtPG-mEqVe3Z6kjJ_D");'></div>
+<div class="absolute bottom-1 right-1 bg-green-500 size-4 rounded-full border-2 border-white dark:border-gray-800 shadow-sm"></div>
+</div>
+<div class="flex-1 flex flex-col justify-center text-center md:text-left">
+<div class="flex flex-col md:flex-row md:items-center gap-2 mb-1">
+<h3 class="text-xl font-extrabold text-[#111518] dark:text-white">Ricardo Silva</h3>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 w-fit mx-auto md:mx-0">
+                                Disponível Agora
+                            </span>
+</div>
+<p class="text-[#617989] dark:text-gray-400 font-semibold text-base mb-2">Eletricista Residencial &amp; Industrial</p>
+<div class="flex items-center justify-center md:justify-start gap-1 mb-3">
+<span class="material-symbols-outlined text-star-yellow text-xl" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold text-[#111518] dark:text-white text-base">4.9</span>
+<span class="text-[#617989] dark:text-gray-400 text-sm">(124 avaliações)</span>
+<span class="mx-2 text-gray-300">•</span>
+<span class="text-[#617989] dark:text-gray-400 text-sm">Jardim Água Boa, Dourados</span>
+</div>
+</div>
+<div class="flex flex-col justify-center gap-3 w-full md:w-auto min-w-[160px]">
+<button class="w-full bg-primary text-white font-bold py-3 px-6 rounded-lg hover:bg-[#0e6eb3] transition-colors">
+                            Ver Perfil
+                        </button>
+<button class="w-full bg-primary/10 text-primary font-bold py-3 px-6 rounded-lg hover:bg-primary/20 transition-colors">
+                            Solicitar Orçamento
+                        </button>
+</div>
+</div>
+<div class="card-shadow bg-white dark:bg-[#252d35] rounded-xl p-5 border border-gray-100 dark:border-gray-700 flex flex-col md:flex-row gap-6 items-center md:items-stretch">
+<div class="relative">
+<div class="size-24 md:size-32 rounded-full bg-cover bg-center border-4 border-white dark:border-gray-800 shadow-sm" data-alt="Female tutor smiling confidently" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDd30sHjg1-d_y7tAVAetB_Zc7Et7oQmeF-J68FWDMZc94TUYjHSrboTY_MoEtgCH_YXnTKTDgzc2wssV-O5VI3UMxt228cRnkDx67onHsN52Ks35sgYFQs6dwOJZsFOs5aWlyH1m-c19SpfTwufD5Qvxcf8EZ-4l7NABNX79c8yZO3JVzi2zzMJV_HpZz7LFdjYmUc4tmB-m5kGeVO7-MkQWGKcqP9byEQ96M4F3rDMSd_QT7xhyHh8xag0pHkgyW8aQ0OL5zWFHOy");'></div>
+</div>
+<div class="flex-1 flex flex-col justify-center text-center md:text-left">
+<div class="flex flex-col md:flex-row md:items-center gap-2 mb-1">
+<h3 class="text-xl font-extrabold text-[#111518] dark:text-white">Maria Eduarda Santos</h3>
+</div>
+<p class="text-[#617989] dark:text-gray-400 font-semibold text-base mb-2">Professora Particular de Inglês e Espanhol</p>
+<div class="flex items-center justify-center md:justify-start gap-1 mb-3">
+<span class="material-symbols-outlined text-star-yellow text-xl" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold text-[#111518] dark:text-white text-base">5.0</span>
+<span class="text-[#617989] dark:text-gray-400 text-sm">(89 avaliações)</span>
+<span class="mx-2 text-gray-300">•</span>
+<span class="text-[#617989] dark:text-gray-400 text-sm">Centro, Dourados</span>
+</div>
+</div>
+<div class="flex flex-col justify-center gap-3 w-full md:w-auto min-w-[160px]">
+<button class="w-full bg-primary text-white font-bold py-3 px-6 rounded-lg hover:bg-[#0e6eb3] transition-colors">
+                            Ver Perfil
+                        </button>
+<button class="w-full bg-primary/10 text-primary font-bold py-3 px-6 rounded-lg hover:bg-primary/20 transition-colors">
+                            Solicitar Orçamento
+                        </button>
+</div>
+</div>
+<div class="card-shadow bg-white dark:bg-[#252d35] rounded-xl p-5 border border-gray-100 dark:border-gray-700 flex flex-col md:flex-row gap-6 items-center md:items-stretch">
+<div class="relative">
+<div class="size-24 md:size-32 rounded-full bg-cover bg-center border-4 border-white dark:border-gray-800 shadow-sm" data-alt="Construction worker portrait" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBxOwc3B3GaY0ZZYEBtyPFNO69b5QiDfLfFBMnUni227v3TvNFR5YUvUMIFpfiJSu4snHBkQ-aREqo40885ktbnv7Rn_ToY0ctI7Ootw9aFhQv5bPkTVC5SUL8GXzwzOxMWDE6RBzq3pTQhNSV4-IdWwjjNSs2RBlBA6JGWYCp7e70un0-ST0VnA7HZ4oVJnawCKnJuwW65L_j2OQA7P4E_bLk5fXXYPeQsa-oOWlG-Cgew_eQvjUsL1YouyjNI0MJUlvZc8f-ZsgtZ");'></div>
+<div class="absolute bottom-1 right-1 bg-green-500 size-4 rounded-full border-2 border-white dark:border-gray-800 shadow-sm"></div>
+</div>
+<div class="flex-1 flex flex-col justify-center text-center md:text-left">
+<div class="flex flex-col md:flex-row md:items-center gap-2 mb-1">
+<h3 class="text-xl font-extrabold text-[#111518] dark:text-white">Marcos Oliveira</h3>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 w-fit mx-auto md:mx-0">
+                                Disponível Agora
+                            </span>
+</div>
+<p class="text-[#617989] dark:text-gray-400 font-semibold text-base mb-2">Pintor &amp; Gesseiro Profissional</p>
+<div class="flex items-center justify-center md:justify-start gap-1 mb-3">
+<span class="material-symbols-outlined text-star-yellow text-xl" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold text-[#111518] dark:text-white text-base">4.7</span>
+<span class="text-[#617989] dark:text-gray-400 text-sm">(210 avaliações)</span>
+<span class="mx-2 text-gray-300">•</span>
+<span class="text-[#617989] dark:text-gray-400 text-sm">Parque Alvorada, Dourados</span>
+</div>
+</div>
+<div class="flex flex-col justify-center gap-3 w-full md:w-auto min-w-[160px]">
+<button class="w-full bg-primary text-white font-bold py-3 px-6 rounded-lg hover:bg-[#0e6eb3] transition-colors">
+                            Ver Perfil
+                        </button>
+<button class="w-full bg-primary/10 text-primary font-bold py-3 px-6 rounded-lg hover:bg-primary/20 transition-colors">
+                            Solicitar Orçamento
+                        </button>
+</div>
+</div>
+</div>
+</main>
+<footer class="bg-footer-bg text-white px-4 lg:px-40 pt-16 pb-8">
+<div class="max-w-[1200px] w-full mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12">
+<div class="flex flex-col gap-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-3xl">handyman</span>
+<h2 class="text-xl font-extrabold tracking-tight">Dourados Services</h2>
+</div>
+<p class="text-gray-400 text-sm leading-relaxed max-w-xs">
+                        A plataforma líder em Dourados para conectar você aos melhores profissionais da região de forma rápida, segura e eficiente.
+                    </p>
+<div class="flex gap-4">
+<a aria-label="Instagram" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-primary transition-colors duration-300" href="#">
+<svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path></svg>
+</a>
+<a aria-label="Facebook" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-primary transition-colors duration-300" href="#">
+<svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"></path></svg>
+</a>
+<a aria-label="LinkedIn" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-primary transition-colors duration-300" href="#">
+<svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z"></path></svg>
+</a>
+</div>
+</div>
+<div>
+<h3 class="text-white font-bold text-lg mb-6">Para Você</h3>
+<ul class="flex flex-col gap-4">
+<li><a class="text-gray-400 hover:text-white transition-colors text-sm" href="#">Buscar Profissionais</a></li>
+<li><a class="text-gray-400 hover:text-white transition-colors text-sm" href="#">Como Funciona</a></li>
+<li><a class="text-gray-400 hover:text-white transition-colors text-sm" href="#">Depoimentos</a></li>
+<li><a class="text-gray-400 hover:text-white transition-colors text-sm" href="#">Central de Ajuda</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-white font-bold text-lg mb-6">Para Profissionais</h3>
+<ul class="flex flex-col gap-4">
+<li><a class="text-gray-400 hover:text-white transition-colors text-sm" href="#">Anuncie Aqui</a></li>
+<li><a class="text-gray-400 hover:text-white transition-colors text-sm" href="#">Central de Ajuda</a></li>
+<li><a class="text-gray-400 hover:text-white transition-colors text-sm" href="#">Dicas de Sucesso</a></li>
+<li><a class="text-gray-400 hover:text-white transition-colors text-sm" href="#">Vantagens</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-white font-bold text-lg mb-6">Institucional</h3>
+<ul class="flex flex-col gap-4">
+<li><a class="text-gray-400 hover:text-white transition-colors text-sm" href="#">Sobre Nós</a></li>
+<li><a class="text-gray-400 hover:text-white transition-colors text-sm" href="#">Termos de Uso</a></li>
+<li><a class="text-gray-400 hover:text-white transition-colors text-sm" href="#">Privacidade</a></li>
+<li><a class="text-gray-400 hover:text-white transition-colors text-sm" href="#">Contato</a></li>
+</ul>
+</div>
+</div>
+<div class="max-w-[1200px] w-full mx-auto mt-16 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex flex-col md:flex-row items-center gap-2 md:gap-4 text-gray-500 text-sm">
+<p>© 2024 Dourados Services - Feito para a nossa comunidade</p>
+<span class="hidden md:block w-1 h-1 rounded-full bg-slate-700"></span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Dourados, MS</span>
+</div>
+</div>
+<div class="flex gap-6 text-xs text-gray-500">
+<p>Desenvolvido com carinho no Mato Grosso do Sul.</p>
+</div>
+</div>
+</footer>
+</div>
+
+</body></html>

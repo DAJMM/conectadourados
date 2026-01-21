@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-br"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Story Interativo - Caixa de Perguntas</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#19bde6",
+                        "background-light": "#f9fafa",
+                        "background-dark": "#22262a",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .story-canvas {
+            aspect-ratio: 9 / 16;
+            max-height: 85vh;
+        }
+        .geometric-pattern {
+            background-image: radial-gradient(#19bde6 0.5px, transparent 0.5px);
+            background-size: 20px 20px;
+            opacity: 0.1;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111618] dark:text-white transition-colors duration-300">
+<div class="relative flex h-auto min-h-screen w-full flex-col">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#f0f3f4] dark:border-b-gray-800 px-10 py-3 bg-white dark:bg-background-dark z-10">
+<div class="flex items-center gap-4 text-[#111618] dark:text-white">
+<div class="size-6 text-primary">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 4H6V17.3333V30.6667H24V44H42V30.6667V17.3333H24V4Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-lg font-extrabold leading-tight tracking-[-0.015em]">Dourados Services</h2>
+</div>
+<div class="flex flex-1 justify-end gap-8">
+<div class="flex items-center gap-9">
+<a class="text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Meus Templates</a>
+<a class="text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Galeria</a>
+<a class="text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Suporte</a>
+</div>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold transition-transform hover:scale-105">
+<span class="truncate">Exportar PNG</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border border-gray-200 dark:border-gray-700" data-alt="User profile avatar placeholder" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBhbQt0tltYhrfLuL0EsbuH_LfimQ_cqBrMq94_VDsLmUNmALm3RhpkoxMZ-aGh3lRayLC7mF6M-jNP9ET9BQPduLZXU1n9HODHad6xM-JEcH3rGnny3fVs3M5JGS4vnt-ytvOkmXV-G4JGf7f99Vs2F07LBzQLahjPO89tCo8Tr4uQ0QJtVzf7QxoVpuBxv_u6eKBhc7aZGz5JxKFyQW7JWO0cnAFj6rda6LJgnGYXc_yRxdj_cWXM1orikAbn_nukOfek3j8FZyLo");'></div>
+</div>
+</header>
+<main class="flex flex-1 overflow-hidden">
+<!-- Left Sidebar -->
+<aside class="w-64 border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-background-dark p-6 hidden lg:flex flex-col justify-between">
+<div class="flex flex-col gap-8">
+<div class="flex flex-col">
+<h1 class="text-base font-bold leading-normal">Editor de Story</h1>
+<p class="text-[#638188] text-sm font-normal">Template Interativo #01</p>
+</div>
+<nav class="flex flex-col gap-2">
+<div class="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg group">
+<span class="material-symbols-outlined text-gray-500 group-hover:text-primary">edit_note</span>
+<p class="text-sm font-medium">Editar Texto</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg group">
+<span class="material-symbols-outlined text-gray-500 group-hover:text-primary">palette</span>
+<p class="text-sm font-medium">Cores do Tema</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary">
+<span class="material-symbols-outlined">dashboard_customize</span>
+<p class="text-sm font-bold">Layout 9:16</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg group">
+<span class="material-symbols-outlined text-gray-500 group-hover:text-primary">download</span>
+<p class="text-sm font-medium">Download HD</p>
+</div>
+</nav>
+<div class="mt-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-dashed border-gray-300 dark:border-gray-700">
+<p class="text-xs text-[#638188] mb-2 uppercase font-bold tracking-wider">Instruções</p>
+<p class="text-xs leading-relaxed text-gray-600 dark:text-gray-400">
+                            Ao subir no Instagram, posicione o sticker de "Caixa de Pergunta" exatamente sobre o retângulo pontilhado central.
+                        </p>
+</div>
+</div>
+<div class="pt-6 border-t border-gray-100 dark:border-gray-800">
+<div class="flex items-center gap-3 px-3 py-2">
+<span class="material-symbols-outlined text-gray-400">help_outline</span>
+<p class="text-sm font-medium text-gray-500">Guia de Uso</p>
+</div>
+</div>
+</aside>
+<!-- Preview Area -->
+<section class="flex-1 flex flex-col items-center justify-center p-8 bg-background-light dark:bg-background-dark/95">
+<div class="mb-6">
+<h3 class="text-2xl font-extrabold tracking-tight text-center">Visualize seu Story Interativo</h3>
+<p class="text-center text-[#638188] text-sm mt-1">Simulação de visualização em dispositivos móveis</p>
+</div>
+<!-- 9:16 Story Canvas -->
+<div class="story-canvas bg-white dark:bg-black rounded-[2.5rem] shadow-2xl overflow-hidden border-[8px] border-gray-900 dark:border-gray-800 relative flex flex-col">
+<!-- Background Gradient & Patterns -->
+<div class="absolute inset-0 bg-gradient-to-b from-primary/20 via-white to-white dark:from-primary/10 dark:via-gray-900 dark:to-gray-900 z-0"></div>
+<div class="absolute inset-0 geometric-pattern z-0"></div>
+<!-- Content -->
+<div class="relative z-10 flex flex-col h-full px-8 py-12">
+<!-- Header Professional Branding -->
+<div class="flex flex-col items-center gap-4 text-center mb-12">
+<div class="w-16 h-16 rounded-full border-4 border-primary p-0.5 bg-white shadow-md">
+<div class="w-full h-full rounded-full bg-cover bg-center" data-alt="Professional headshot placeholder" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCXohT8Vqqy-U2-ScOsiojabmguG7l_fW9T-kcqwbadj5lS6s3UU8neG33HCO7jttLzZMYWOBiUGZ-VwBHI9Ka4ZAUPtbghjypfYOO4d61vzzSBVTPTOPrXegXOl5zl4xo3zFFi_v5NByDtfXPmPsQcoJ6tKhLjDEDTiQr9qJWaDF4hgqn5lgPdNMkW6rn0mTHbApYYYeRQygj-4XdSoKuVFWq2gBxRQSh3ZSQzxnd4Wsm0vuxYd7mBvlH_R5rBv9vx41qdnNIbJw_-");'></div>
+</div>
+<div>
+<h4 class="text-primary text-xs font-bold tracking-[0.2em] uppercase mb-1">Dourados Services</h4>
+<h3 class="text-xl font-extrabold text-[#111618] dark:text-white leading-tight">João Silva</h3>
+<p class="text-sm font-medium text-[#638188]">Eletricista Residencial &amp; Industrial</p>
+</div>
+</div>
+<!-- Instagram Question Box Placeholder Area -->
+<div class="flex-1 flex flex-col items-center justify-center">
+<div class="w-full py-4 border-2 border-dashed border-primary/40 rounded-2xl flex flex-col items-center justify-center gap-4 bg-white/40 dark:bg-white/5 backdrop-blur-sm relative min-h-[180px]">
+<div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-full whitespace-nowrap uppercase tracking-widest">
+                                    Sticker de Pergunta
+                                </div>
+<h2 class="text-[#111618] dark:text-white text-lg font-bold text-center px-6 leading-snug">
+                                    Qual serviço você precisa em Dourados hoje?
+                                </h2>
+<div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center opacity-50">
+<span class="material-symbols-outlined text-gray-400">add</span>
+</div>
+</div>
+<p class="mt-4 text-[10px] text-[#638188] font-bold uppercase tracking-widest text-center opacity-60">
+                                Área para o Sticker do Instagram
+                            </p>
+</div>
+<!-- Bottom CTA Section -->
+<div class="mt-auto flex flex-col items-center gap-6 pb-4">
+<div class="animate-bounce">
+<span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1">back_hand</span>
+</div>
+<div class="w-full bg-primary rounded-xl py-4 px-6 shadow-lg shadow-primary/25 flex flex-col items-center gap-1 group cursor-pointer transition-all hover:scale-105 active:scale-95">
+<p class="text-white text-sm font-extrabold tracking-wide text-center">VISITE MEU PERFIL NO</p>
+<p class="text-white text-xs font-medium opacity-90">douradosservices.com.br/joao-silva</p>
+</div>
+<div class="flex items-center gap-2 mt-2">
+<span class="w-1 h-1 rounded-full bg-primary"></span>
+<span class="w-8 h-1 rounded-full bg-primary/30"></span>
+<span class="w-1 h-1 rounded-full bg-primary"></span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Side Floating Controls (Desktop) -->
+<div class="fixed right-10 top-1/2 -translate-y-1/2 flex flex-col gap-4">
+<button class="size-12 bg-white dark:bg-gray-800 rounded-full shadow-lg flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all">
+<span class="material-symbols-outlined">zoom_in</span>
+</button>
+<button class="size-12 bg-white dark:bg-gray-800 rounded-full shadow-lg flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all">
+<span class="material-symbols-outlined">share</span>
+</button>
+<button class="size-12 bg-white dark:bg-gray-800 rounded-full shadow-lg flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+</div>
+</section>
+</main>
+<!-- Footer Stats -->
+<footer class="bg-white dark:bg-background-dark border-t border-gray-200 dark:border-gray-800 px-10 py-4 flex justify-between items-center text-xs text-gray-500">
+<div class="flex gap-4">
+<span class="font-medium">Resolução: 1080x1920 (9:16)</span>
+<span class="text-gray-300">|</span>
+<span class="font-medium">Formato: PNG High-Res</span>
+</div>
+<div class="flex gap-6">
+<a class="hover:underline" href="#">Privacidade</a>
+<a class="hover:underline" href="#">Termos do Profissional</a>
+<span>© 2024 Dourados Services</span>
+</div>
+</footer>
+</div>
+<script>
+        // Simple dark mode toggle logic
+        const toggleBtn = document.querySelector('[data-icon="dark_mode"]')?.parentElement || document.querySelector('.material-symbols-outlined:contains("dark_mode")')?.parentElement;
+        if(toggleBtn) {
+            toggleBtn.onclick = () => {
+                document.documentElement.classList.toggle('dark');
+            };
+        }
+    </script>
+</body></html>

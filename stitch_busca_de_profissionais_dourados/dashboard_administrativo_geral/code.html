@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dourados Services - Dashboard Administrativo</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2273c3",
+                        "background-light": "#ffffff",
+                        "background-dark": "#16191d",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#121417] dark:text-white transition-colors duration-200">
+<div class="flex min-h-screen">
+<!-- Sidebar Navigation -->
+<aside class="w-72 border-r border-[#dce0e5] dark:border-[#343a40] bg-background-light dark:bg-background-dark flex flex-col fixed h-full">
+<div class="p-6 flex flex-col gap-8 h-full">
+<!-- Brand -->
+<div class="flex items-center gap-3">
+<div class="bg-primary size-10 rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined">maps_home_work</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-[#121417] dark:text-white text-lg font-bold leading-tight">Dourados Services</h1>
+<p class="text-[#657586] dark:text-[#9eaab7] text-xs font-medium uppercase tracking-wider">Marketplace Admin</p>
+</div>
+</div>
+<!-- Nav Links -->
+<nav class="flex flex-col gap-1 grow">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary font-bold" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm">Geral</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-[#657586] dark:text-[#9eaab7] hover:bg-gray-100 dark:hover:bg-white/5 transition-colors font-semibold" href="#">
+<span class="material-symbols-outlined">engineering</span>
+<span class="text-sm">Profissionais</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-[#657586] dark:text-[#9eaab7] hover:bg-gray-100 dark:hover:bg-white/5 transition-colors font-semibold" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="text-sm">Clientes</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-[#657586] dark:text-[#9eaab7] hover:bg-gray-100 dark:hover:bg-white/5 transition-colors font-semibold" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="text-sm">Assinaturas</span>
+</a>
+<div class="mt-4 pt-4 border-t border-gray-100 dark:border-white/5">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-[#657586] dark:text-[#9eaab7] hover:bg-gray-100 dark:hover:bg-white/5 transition-colors font-semibold" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm">Configurações</span>
+</a>
+</div>
+</nav>
+<!-- Profile Small Card -->
+<div class="mt-auto p-4 rounded-xl bg-gray-50 dark:bg-white/5 flex items-center gap-3 border border-[#dce0e5] dark:border-white/10">
+<div class="size-10 rounded-full bg-cover bg-center" data-alt="Admin user profile picture" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCFaTMbr6dMYGLZbFKqhlQM1_BBVXlMWqcKFDvd21H9Q-K8lRmE95fhv00uiMOZZ1O9wdU81f8wiLPXiNqJ-wxRE3A0_nk5xsFbL-WSH_ykZB99mg3VlBHIXPsp9eilZnT6VvS_s-CzH2J0H6i7cVN0rkAcmuM8uoDf_P6yT23e86PNT8b4PPLwSKCT5sbZHnR-LaKTyfWH-fawkkIt8CeML0bTQ8XTG2hS7fzI7QXLq-BSp_oN9GI3Vwwlp73gwFhP3Q5-4zBIqv5u')"></div>
+<div class="flex flex-col overflow-hidden">
+<p class="text-sm font-bold truncate dark:text-white">Admin Dourados</p>
+<p class="text-xs text-[#657586] truncate">admin@dourados.srv</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 ml-72">
+<!-- Top Header -->
+<header class="h-20 border-b border-[#dce0e5] dark:border-[#343a40] bg-background-light dark:bg-background-dark px-10 flex items-center justify-between sticky top-0 z-10">
+<div class="flex flex-col">
+<h2 class="text-[#121417] dark:text-white text-2xl font-black tracking-tight">Dashboard Geral</h2>
+<p class="text-[#657586] dark:text-[#9eaab7] text-sm">Visão consolidada do mercado de Dourados, MS</p>
+</div>
+<div class="flex items-center gap-4">
+<button class="size-10 flex items-center justify-center rounded-full border border-[#dce0e5] dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined text-[#657586] dark:text-[#9eaab7]">notifications</span>
+</button>
+<button class="bg-primary text-white px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
+<span class="material-symbols-outlined text-sm">download</span>
+                        Exportar Relatório
+                    </button>
+</div>
+</header>
+<div class="p-10 max-w-[1200px] mx-auto flex flex-col gap-8">
+<!-- Stats Row -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="bg-background-light dark:bg-background-dark border border-[#dce0e5] dark:border-white/10 rounded-xl p-6 hover:shadow-xl transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-lg">engineering</span>
+<span class="text-[#078838] bg-[#078838]/10 text-xs font-bold px-2 py-1 rounded">+12%</span>
+</div>
+<p class="text-[#657586] dark:text-[#9eaab7] text-sm font-semibold uppercase tracking-wide">Total de Profissionais</p>
+<p class="text-[#121417] dark:text-white text-3xl font-black mt-1">1,240</p>
+</div>
+<div class="bg-background-light dark:bg-background-dark border border-[#dce0e5] dark:border-white/10 rounded-xl p-6 hover:shadow-xl transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-lg">monetization_on</span>
+<span class="text-[#078838] bg-[#078838]/10 text-xs font-bold px-2 py-1 rounded">+8%</span>
+</div>
+<p class="text-[#657586] dark:text-[#9eaab7] text-sm font-semibold uppercase tracking-wide">Receita Mensal</p>
+<p class="text-[#121417] dark:text-white text-3xl font-black mt-1">R$ 45.200</p>
+</div>
+<div class="bg-background-light dark:bg-background-dark border border-[#dce0e5] dark:border-white/10 rounded-xl p-6 hover:shadow-xl transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-lg">person_add</span>
+<span class="text-[#078838] bg-[#078838]/10 text-xs font-bold px-2 py-1 rounded">+15%</span>
+</div>
+<p class="text-[#657586] dark:text-[#9eaab7] text-sm font-semibold uppercase tracking-wide">Novos Assinantes</p>
+<p class="text-[#121417] dark:text-white text-3xl font-black mt-1">85</p>
+</div>
+<div class="bg-background-light dark:bg-background-dark border border-[#dce0e5] dark:border-white/10 rounded-xl p-6 hover:shadow-xl transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-red-500 bg-red-500/10 p-2 rounded-lg">trending_down</span>
+<span class="text-red-500 bg-red-500/10 text-xs font-bold px-2 py-1 rounded">-0.5%</span>
+</div>
+<p class="text-[#657586] dark:text-[#9eaab7] text-sm font-semibold uppercase tracking-wide">Taxa de Churn</p>
+<p class="text-[#121417] dark:text-white text-3xl font-black mt-1">2.4%</p>
+</div>
+</div>
+<!-- Main Grid Section (Chart & Activities) -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Revenue Chart Area -->
+<div class="lg:col-span-2 bg-background-light dark:bg-background-dark border border-[#dce0e5] dark:border-white/10 rounded-xl p-8">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h3 class="text-xl font-bold dark:text-white">Crescimento de Receita</h3>
+<p class="text-[#657586] dark:text-[#9eaab7] text-sm">Relatório semestral de assinaturas premium</p>
+</div>
+<div class="flex items-center gap-4 text-sm font-bold">
+<span class="flex items-center gap-1.5 text-primary">
+<span class="size-3 rounded-full bg-primary"></span>
+                                    Total em R$
+                                </span>
+</div>
+</div>
+<div class="relative h-[300px] w-full mt-4">
+<!-- SVG Chart Simulation -->
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 600 200">
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#2273c3" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#2273c3" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<!-- Area -->
+<path d="M0 160 C 50 150, 100 130, 150 140 C 200 150, 250 80, 300 90 C 350 100, 400 40, 450 50 C 500 60, 550 20, 600 30 L 600 200 L 0 200 Z" fill="url(#chartGradient)"></path>
+<!-- Line -->
+<path d="M0 160 C 50 150, 100 130, 150 140 C 200 150, 250 80, 300 90 C 350 100, 400 40, 450 50 C 500 60, 550 20, 600 30" fill="none" stroke="#2273c3" stroke-linecap="round" stroke-width="4"></path>
+</svg>
+<!-- Labels -->
+<div class="flex justify-between mt-6 px-2">
+<span class="text-xs font-bold text-[#657586] dark:text-[#9eaab7]">Jan</span>
+<span class="text-xs font-bold text-[#657586] dark:text-[#9eaab7]">Fev</span>
+<span class="text-xs font-bold text-[#657586] dark:text-[#9eaab7]">Mar</span>
+<span class="text-xs font-bold text-[#657586] dark:text-[#9eaab7]">Abr</span>
+<span class="text-xs font-bold text-[#657586] dark:text-[#9eaab7]">Mai</span>
+<span class="text-xs font-bold text-[#657586] dark:text-[#9eaab7]">Jun</span>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-[#dce0e5] dark:border-white/10 flex justify-between">
+<div class="flex flex-col">
+<span class="text-[#657586] text-xs font-bold uppercase tracking-widest">Receita Acumulada</span>
+<span class="text-2xl font-black dark:text-white">R$ 258.400</span>
+</div>
+<div class="flex flex-col text-right">
+<span class="text-[#657586] text-xs font-bold uppercase tracking-widest">Projeção Julho</span>
+<span class="text-2xl font-black text-[#078838]">R$ 52.000</span>
+</div>
+</div>
+</div>
+<!-- Recent Activity Section -->
+<div class="bg-background-light dark:bg-background-dark border border-[#dce0e5] dark:border-white/10 rounded-xl flex flex-col overflow-hidden">
+<div class="p-6 border-b border-[#dce0e5] dark:border-white/10 flex items-center justify-between bg-gray-50/50 dark:bg-white/5">
+<h3 class="text-lg font-bold dark:text-white">Atividades Recentes</h3>
+<button class="text-primary text-xs font-black uppercase hover:underline">Ver tudo</button>
+</div>
+<div class="flex-1 overflow-y-auto">
+<!-- Activity Item 1 -->
+<div class="p-6 flex items-start gap-4 border-b border-[#dce0e5] dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+<div class="size-10 rounded-full bg-blue-500/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-blue-500 text-xl">person_add</span>
+</div>
+<div class="flex flex-col gap-1">
+<p class="text-sm font-bold dark:text-white">Novo Profissional</p>
+<p class="text-xs text-[#657586] dark:text-[#9eaab7]">João Silva (Encanador) completou o cadastro.</p>
+<p class="text-[10px] text-[#9eaab7] mt-1 uppercase font-bold tracking-tight">Agora mesmo</p>
+</div>
+</div>
+<!-- Activity Item 2 -->
+<div class="p-6 flex items-start gap-4 border-b border-[#dce0e5] dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+<div class="size-10 rounded-full bg-green-500/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-green-500 text-xl">verified_user</span>
+</div>
+<div class="flex flex-col gap-1">
+<p class="text-sm font-bold dark:text-white">Pagamento Confirmado</p>
+<p class="text-xs text-[#657586] dark:text-[#9eaab7]">Maria Oliveira (Premium) renovou a assinatura.</p>
+<p class="text-[10px] text-[#9eaab7] mt-1 uppercase font-bold tracking-tight">2 horas atrás</p>
+</div>
+</div>
+<!-- Activity Item 3 -->
+<div class="p-6 flex items-start gap-4 border-b border-[#dce0e5] dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+<div class="size-10 rounded-full bg-orange-500/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-orange-500 text-xl">new_releases</span>
+</div>
+<div class="flex flex-col gap-1">
+<p class="text-sm font-bold dark:text-white">Nova Inscrição</p>
+<p class="text-xs text-[#657586] dark:text-[#9eaab7]">Carlos Santos criou uma conta de cliente.</p>
+<p class="text-[10px] text-[#9eaab7] mt-1 uppercase font-bold tracking-tight">5 horas atrás</p>
+</div>
+</div>
+<!-- Activity Item 4 -->
+<div class="p-6 flex items-start gap-4 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+<div class="size-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-xl">star</span>
+</div>
+<div class="flex flex-col gap-1">
+<p class="text-sm font-bold dark:text-white">Nova Avaliação</p>
+<p class="text-xs text-[#657586] dark:text-[#9eaab7]">5 estrelas para "Eletricista Rápido".</p>
+<p class="text-[10px] text-[#9eaab7] mt-1 uppercase font-bold tracking-tight">Ontem</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Secondary Row - Profession Stats & Map Hook -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="bg-primary/5 dark:bg-primary/10 rounded-xl p-8 border border-primary/20 flex items-center justify-between">
+<div>
+<h4 class="text-xl font-black text-primary mb-2">Plano de Expansão</h4>
+<p class="text-primary/80 text-sm max-w-sm">Estamos atingindo a meta de 1.500 profissionais em Dourados. Faltam apenas 260 profissionais para desbloquear novas ferramentas de marketing.</p>
+</div>
+<div class="size-24 relative flex items-center justify-center">
+<svg class="size-full -rotate-90">
+<circle class="text-primary/10" cx="48" cy="48" fill="transparent" r="40" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-primary" cx="48" cy="48" fill="transparent" r="40" stroke="currentColor" stroke-dasharray="251.2" stroke-dashoffset="50.24" stroke-width="8"></circle>
+</svg>
+<span class="absolute inset-0 flex items-center justify-center text-primary font-black text-lg">80%</span>
+</div>
+</div>
+<div class="bg-background-light dark:bg-background-dark border border-[#dce0e5] dark:border-white/10 rounded-xl p-6 flex items-center gap-6">
+<div class="size-20 bg-cover bg-center rounded-lg shrink-0 border border-[#dce0e5] dark:border-white/10" data-alt="Mini map of Dourados city center" data-location="Dourados" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBkVcNZg8tn_plA9NRicAtS89mk6OuyU-jPTSrrIzF_WeHF_xLjvDrGjiKserpgHpY_jYuJ2HomOTRfKadAKLYr-QdFSWm__9XLymymeUMZ3RKpB2fizE45rfiGrz4RePD3E6LYYZcUkTb0jnQ0Thmuewf-KrtDVZeaYPcwNsOdS8Y7XBYffS7nnubSdY-ahaaT-B_IAZ8eWGSPUyoGKiB3MasKnQO9wMMVxh2o_NgvkzX7hwGu-IvUCJLeNdt-fl0M1H-m6zdmopha')"></div>
+<div class="flex flex-col">
+<p class="text-xs font-bold text-[#657586] uppercase tracking-widest">Foco Geográfico</p>
+<h4 class="text-lg font-bold dark:text-white">Região Central</h4>
+<p class="text-sm text-[#657586] dark:text-[#9eaab7]">Maior densidade de serviços (45%).</p>
+<a class="text-primary text-xs font-bold mt-2 flex items-center gap-1 hover:underline" href="#">
+                                Ver mapa de calor <span class="material-symbols-outlined text-xs">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+<!-- Simple Footer -->
+<footer class="p-10 border-t border-[#dce0e5] dark:border-[#343a40] mt-10">
+<div class="flex justify-between items-center text-sm text-[#657586]">
+<p>© 2024 Dourados Services. Todos os direitos reservados.</p>
+<div class="flex gap-6">
+<a class="hover:text-primary transition-colors" href="#">Suporte</a>
+<a class="hover:text-primary transition-colors" href="#">Políticas</a>
+<a class="hover:text-primary transition-colors" href="#">Ajuda</a>
+</div>
+</div>
+</footer>
+</main>
+</div>
+</body></html>

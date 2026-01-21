@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Página 404 - Dourados Services</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1183d4",
+                        "background-light": "#ffffff",
+                        "background-dark": "#21262c",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111518] dark:text-white antialiased min-h-screen flex flex-col">
+<!-- Header / TopNavBar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#f0f3f4] dark:border-b-gray-700 px-6 md:px-10 lg:px-20 py-3 bg-background-light dark:bg-background-dark sticky top-0 z-50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-[#111518] dark:text-white">
+<div class="size-6 text-primary">
+<svg fill="currentColor" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 4H6V17.3333V30.6667H24V44H42V30.6667V17.3333H24V4Z" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em]">Dourados Services</h2>
+</div>
+<nav class="hidden md:flex items-center gap-9">
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Início</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Profissionais</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Como funciona</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Sobre</a>
+</nav>
+</div>
+<div class="flex flex-1 justify-end gap-4 md:gap-8 items-center">
+<label class="hidden sm:flex flex-col min-w-40 !h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full overflow-hidden">
+<div class="text-[#617989] flex border-none bg-[#f0f3f4] dark:bg-gray-800 items-center justify-center pl-4">
+<span class="material-symbols-outlined !text-[20px]">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 border-none bg-[#f0f3f4] dark:bg-gray-800 focus:outline-0 focus:ring-0 h-full placeholder:text-[#617989] px-4 pl-2 text-base font-normal dark:text-white" placeholder="Search" value=""/>
+</div>
+</label>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center rounded-lg h-10 px-5 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity">
+<span>Entrar</span>
+</button>
+</div>
+</header>
+<!-- Main Content: Error 404 Section -->
+<main class="flex-grow flex items-center justify-center py-12 px-6">
+<div class="max-w-[800px] w-full flex flex-col items-center text-center">
+<!-- Playful Illustration Space -->
+<div class="w-full max-w-[450px] mb-8 relative">
+<div class="aspect-[16/9] w-full rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 dark:from-primary/20 dark:to-transparent flex items-center justify-center overflow-hidden border border-dashed border-primary/30">
+<!-- Representing a localized lost person vector graphic -->
+<div class="relative flex flex-col items-center">
+<span class="material-symbols-outlined !text-[120px] text-primary opacity-80">map</span>
+<div class="absolute -top-2 -right-2 bg-white dark:bg-background-dark p-2 rounded-full shadow-lg border border-primary/20">
+<span class="material-symbols-outlined !text-[32px] text-red-500">question_mark</span>
+</div>
+</div>
+</div>
+<!-- Data Alt for AI Image Generation -->
+<div class="hidden" data-alt="Illustration of a professional person looking at a map in Dourados city context"></div>
+</div>
+<!-- Error Messages -->
+<div class="flex flex-col items-center gap-4 mb-10">
+<h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-[#111518] dark:text-white">
+                    Eita! Essa página não foi encontrada.
+                </h1>
+<p class="text-base md:text-lg text-[#617989] dark:text-gray-400 max-w-[600px] leading-relaxed">
+                    Parece que você pegou um caminho sem saída. Não se preocupe, ainda podemos te ajudar a encontrar o profissional qualificado que você precisa para o seu serviço em Dourados.
+                </p>
+</div>
+<!-- CTA Buttons -->
+<div class="flex flex-col sm:flex-row gap-4 justify-center w-full sm:w-auto">
+<a class="flex min-w-[200px] cursor-pointer items-center justify-center rounded-lg h-14 px-8 bg-primary text-white text-base font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform" href="#">
+<span>Voltar para a Home</span>
+</a>
+<a class="flex min-w-[200px] cursor-pointer items-center justify-center rounded-lg h-14 px-8 bg-[#f0f3f4] dark:bg-gray-800 text-[#111518] dark:text-white text-base font-bold hover:bg-[#e2e5e7] dark:hover:bg-gray-700 transition-colors" href="#">
+<span>Buscar Profissionais</span>
+</a>
+</div>
+<!-- Suggestions / Secondary Links -->
+<div class="mt-16 pt-8 border-t border-solid border-b-[#f0f3f4] dark:border-t-gray-800 w-full">
+<p class="text-sm font-semibold text-[#617989] uppercase tracking-wider mb-6">Sugestões rápidas</p>
+<div class="flex flex-wrap justify-center gap-3">
+<a class="px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium hover:bg-primary/20 transition-colors" href="#">Eletricistas</a>
+<a class="px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium hover:bg-primary/20 transition-colors" href="#">Encanadores</a>
+<a class="px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium hover:bg-primary/20 transition-colors" href="#">Diaristas</a>
+<a class="px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium hover:bg-primary/20 transition-colors" href="#">Reformas</a>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-background-light dark:bg-background-dark border-t border-[#f0f3f4] dark:border-gray-800">
+<div class="max-w-[960px] mx-auto px-6 py-12 flex flex-col gap-8 text-center">
+<div class="flex flex-wrap items-center justify-center gap-6 md:justify-around">
+<a class="text-[#617989] text-base font-normal hover:text-primary transition-colors min-w-[120px]" href="#">Termos de Uso</a>
+<a class="text-[#617989] text-base font-normal hover:text-primary transition-colors min-w-[120px]" href="#">Privacidade</a>
+<a class="text-[#617989] text-base font-normal hover:text-primary transition-colors min-w-[120px]" href="#">Ajuda</a>
+<a class="text-[#617989] text-base font-normal hover:text-primary transition-colors min-w-[120px]" href="#">Contato</a>
+</div>
+<div class="flex flex-wrap justify-center gap-6">
+<a class="text-[#617989] hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">brand_awareness</span>
+</a>
+<a class="text-[#617989] hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">share</span>
+</a>
+<a class="text-[#617989] hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">public</span>
+</a>
+</div>
+<div class="text-[#617989] text-sm md:text-base flex flex-col items-center gap-2">
+<p>© 2024 Dourados Services. Todos os direitos reservados.</p>
+<div class="flex items-center gap-1 text-xs opacity-60">
+<span class="material-symbols-outlined !text-xs">location_on</span>
+<span data-location="Dourados, Mato Grosso do Sul">Dourados, MS</span>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

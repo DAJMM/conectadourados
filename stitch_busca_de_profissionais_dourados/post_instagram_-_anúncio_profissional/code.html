@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dourados Services Post Maker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1979be",
+                        "accent": "#F9C41A",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111a21",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        .canvas-shadow { box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.08); }
+        .phone-frame { border: 8px solid #111517; border-radius: 2rem; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111517] dark:text-white transition-colors duration-300">
+<div class="flex flex-col min-h-screen">
+<!-- Top Navigation -->
+<header class="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-background-dark px-6 py-3 sticky top-0 z-50">
+<div class="flex items-center gap-4">
+<div class="text-primary">
+<svg class="size-8" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_6_535)">
+<path clip-rule="evenodd" d="M47.2426 24L24 47.2426L0.757355 24L24 0.757355L47.2426 24ZM12.2426 21H35.7574L24 9.24264L12.2426 21Z" fill="currentColor" fill-rule="evenodd"></path>
+</g>
+<defs><clippath id="clip0_6_535"><rect fill="white" height="48" width="48"></rect></clippath></defs>
+</svg>
+</div>
+<div>
+<h2 class="text-lg font-extrabold leading-tight tracking-tight">Dourados Services</h2>
+<p class="text-xs text-gray-500 dark:text-gray-400 font-medium">Post Generator Pro</p>
+</div>
+</div>
+<div class="hidden md:flex flex-1 justify-center gap-8">
+<a class="text-sm font-semibold border-b-2 border-primary pb-1" href="#">Editor</a>
+<a class="text-sm font-medium text-gray-500 hover:text-primary transition-colors" href="#">Meus Designs</a>
+<a class="text-sm font-medium text-gray-500 hover:text-primary transition-colors" href="#">Biblioteca</a>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 text-sm font-bold px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors">
+<span class="material-symbols-outlined text-lg">share</span>
+<span class="hidden sm:inline">Compartilhar</span>
+</button>
+<button class="flex items-center gap-2 bg-primary text-white text-sm font-bold px-4 py-2 rounded-lg hover:brightness-110 transition-all shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-lg">download</span>
+<span>Baixar Post</span>
+</button>
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden">
+<!-- Sidebar Editor -->
+<aside class="w-80 border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-background-dark hidden lg:flex flex-col p-6 gap-6 overflow-y-auto">
+<div>
+<h3 class="text-sm font-bold uppercase tracking-wider text-gray-400 mb-4">Configurações do Post</h3>
+<div class="space-y-4">
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-bold text-gray-600 dark:text-gray-300">NOME DO PROFISSIONAL</label>
+<input class="w-full bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-lg p-2.5 text-sm focus:ring-primary focus:border-primary" type="text" value="Dr. Henrique Silva"/>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-bold text-gray-600 dark:text-gray-300">CATEGORIA / SERVIÇO</label>
+<input class="w-full bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-lg p-2.5 text-sm focus:ring-primary focus:border-primary" type="text" value="Fisioterapeuta Especializado"/>
+</div>
+</div>
+</div>
+<div class="border-t border-gray-100 dark:border-gray-800 pt-6">
+<h3 class="text-sm font-bold uppercase tracking-wider text-gray-400 mb-4">Sua Foto</h3>
+<div class="flex flex-col gap-3">
+<div class="aspect-square bg-gray-100 dark:bg-gray-800 rounded-xl flex items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 overflow-hidden relative group cursor-pointer">
+<div class="absolute inset-0 bg-cover bg-center opacity-80 group-hover:opacity-100 transition-opacity" data-alt="Portrait of a professional man in a suit smiling" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAv3piJ29xMivhIsnjez7CZOA1Xzyvl4PrH3lo_veJHTwqGs9u1e_y8ZKkgLYEtRVv6UTWm9WYgpL5y0Qm9uYe_SG6Fq9CWkVRpyQImFXz6FCwl9B4ccMKRa1yHShZ9pmeOpgUL93s5wxBjIOyPgBy557vnwKM0qA9WFmZ-Zvbz81H_tMEqw69MRcvZ4dl501G2WhjgKcDT9-oMzpLIv_VIN4fB_ydH3fC0s4ij1Sc-rTAsD_9rZJM8gd9_K3N_uspndiWcjdIxv1Zh')"></div>
+<div class="relative z-10 bg-white/90 dark:bg-black/50 p-2 rounded-lg backdrop-blur-sm group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-primary">upload</span>
+</div>
+</div>
+<p class="text-[10px] text-center text-gray-500">Recomendado: Fundo neutro ou ambiente de trabalho.</p>
+</div>
+</div>
+<div class="border-t border-gray-100 dark:border-gray-800 pt-6">
+<h3 class="text-sm font-bold uppercase tracking-wider text-gray-400 mb-4">Estilo do Badge</h3>
+<div class="grid grid-cols-2 gap-2">
+<button class="flex items-center justify-center py-2 px-3 rounded-lg border-2 border-primary bg-primary/5 text-primary text-xs font-bold">Amarelo (CTA)</button>
+<button class="flex items-center justify-center py-2 px-3 rounded-lg border-2 border-transparent bg-gray-50 dark:bg-gray-800 text-gray-500 text-xs font-bold">Azul (Trust)</button>
+</div>
+</div>
+</aside>
+<!-- Canvas Workspace -->
+<main class="flex-1 bg-background-light dark:bg-[#0a0f14] p-8 overflow-y-auto flex flex-col items-center">
+<div class="mb-6 flex flex-col items-center gap-2">
+<h1 class="text-2xl font-extrabold tracking-tight">Anúncio Profissional</h1>
+<p class="text-sm text-gray-500">Pré-visualização 1080x1080px • Instagram Post</p>
+</div>
+<!-- POST CANVAS -->
+<div class="w-full max-w-[600px] aspect-square bg-white dark:bg-white text-[#111517] canvas-shadow rounded-none relative overflow-hidden flex flex-col">
+<!-- Top Header Section -->
+<div class="p-8 text-center relative z-20 bg-white">
+<div class="flex justify-center mb-4">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined font-bold text-3xl">verified</span>
+<span class="text-lg font-black tracking-tighter uppercase">Dourados Services</span>
+</div>
+</div>
+<h2 class="text-[28px] md:text-[34px] font-extrabold leading-[1.1] tracking-tight text-gray-900">
+                            Agora você me encontra no <br/>
+<span class="text-primary">Dourados Services!</span>
+</h2>
+</div>
+<!-- Split Main Content -->
+<div class="flex-1 flex overflow-hidden">
+<!-- Left Side: Professional Image -->
+<div class="w-1/2 relative">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="Close up portrait of a smiling male professional" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCNOT_iNj8lu53M_oofXDcumOiIxfacVRcVlOJi-kmV0n1mE30G2smuNcqyQT8OV9Sztw_7jHc-3BRfHmfrItMsKmLBPqLL2MZxMAO8yslHC7FoxJefUfVnwvKM0FVhsLPqmi0XZuZpQITcM1aGDbXoqfLgwj8KMK2bDtRYF6dr84w-l1uQhcFEcGF6jDCE1AzXtkNuLGRZstuaNKFyPwpyYAMuhJ2r1yErthf1Alt5U1YWOj5S5BCabNkPqX5BEvwUhmQuMsQ1zsRI')"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-white/10"></div>
+<!-- Small accent element -->
+<div class="absolute bottom-4 left-4 bg-primary text-white text-[10px] font-black uppercase px-2 py-1 tracking-widest">
+                                Profissional Verificado
+                            </div>
+</div>
+<!-- Right Side: Phone Mockup -->
+<div class="w-1/2 bg-gray-50 flex items-center justify-center p-6 relative">
+<div class="phone-frame w-full max-w-[200px] aspect-[9/18.5] bg-white overflow-hidden shadow-2xl relative">
+<!-- Phone Header -->
+<div class="h-6 w-full flex items-center justify-center gap-1.5 pt-1">
+<div class="w-10 h-1.5 bg-gray-200 rounded-full"></div>
+</div>
+<!-- Mockup Content -->
+<div class="p-3 flex flex-col items-center">
+<div class="w-14 h-14 rounded-full bg-gray-100 border-2 border-primary mb-2 overflow-hidden">
+<div class="w-full h-full bg-cover bg-center" data-alt="Small thumbnail of the professional" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBOd1MA3oP3OOvtE_GdM_WMhudWrTCqxrSFY83QcufXGSfXoN8eoJMALKPhYd3yS9qcS0nYhWvJeTDnv6FzBBOF0gACISb0oukKodJ_85A5XvxGdN05dugZ14kaPIc9e7stCx6opRTXr9DliwTYFUAu7Bv0w_8f8j3gNeKqgcbYVyVDhItsUmjmpBrVDBIPct5nD-tPWysMeAlX4THiga0OXQaT-i2sf7lahOmiaY_JP5uJfPIsyCBlP-NdbICm9zUMPBLsHojFij6C')"></div>
+</div>
+<div class="h-2 w-16 bg-gray-200 rounded mb-1"></div>
+<div class="h-1.5 w-24 bg-gray-100 rounded mb-4"></div>
+<div class="w-full space-y-2">
+<div class="flex justify-between items-center px-1">
+<div class="flex gap-0.5">
+<span class="material-symbols-outlined text-[10px] text-accent fill-1">star</span>
+<span class="material-symbols-outlined text-[10px] text-accent fill-1">star</span>
+<span class="material-symbols-outlined text-[10px] text-accent fill-1">star</span>
+<span class="material-symbols-outlined text-[10px] text-accent fill-1">star</span>
+<span class="material-symbols-outlined text-[10px] text-accent fill-1">star</span>
+</div>
+<span class="text-[8px] font-bold text-gray-400">4.9 (124)</span>
+</div>
+<div class="w-full h-6 bg-primary rounded text-[10px] text-white flex items-center justify-center font-bold">
+                                            Agendar Horário
+                                        </div>
+<div class="w-full h-6 bg-gray-100 rounded text-[10px] text-gray-500 flex items-center justify-center font-bold">
+                                            Ver Perfil
+                                        </div>
+</div>
+<!-- Mockup Decorative feed -->
+<div class="grid grid-cols-2 gap-1 mt-4 w-full">
+<div class="aspect-square bg-gray-100 rounded"></div>
+<div class="aspect-square bg-gray-100 rounded"></div>
+</div>
+</div>
+<div class="absolute bottom-1 left-1/2 -translate-x-1/2 w-12 h-1 bg-gray-200 rounded-full"></div>
+</div>
+</div>
+</div>
+<!-- CTA Bottom Footer -->
+<div class="p-8 flex items-center justify-between relative z-20 bg-white">
+<div class="flex flex-col">
+<p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Encontre meu perfil no link:</p>
+<p class="text-sm font-extrabold text-primary">dourados.services/henrique-silva</p>
+</div>
+<div class="bg-accent text-[#111517] font-black text-sm px-5 py-3 rounded-full shadow-lg shadow-accent/20 flex items-center gap-2 transform rotate-2 hover:rotate-0 transition-transform cursor-default">
+<span class="material-symbols-outlined font-black">touch_app</span>
+                            LINK NA BIO
+                        </div>
+</div>
+</div>
+<!-- Tools Toolbar Mobile Only -->
+<div class="mt-8 lg:hidden w-full flex flex-col gap-4">
+<button class="w-full py-3 bg-white dark:bg-background-dark border border-gray-200 dark:border-gray-800 rounded-xl font-bold flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">edit</span>
+                        Editar Conteúdo
+                    </button>
+</div>
+</main>
+</div>
+</div>
+</body></html>

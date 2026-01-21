@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Dourados Services - Marketplace Local</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1183d4",
+                        "background-light": "#ffffff",
+                        "background-dark": "#1f262e",
+                        "star-yellow": "#FFD700",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .fill-icon { font-variation-settings: 'FILL' 1; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .card-shadow {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card-shadow:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        .story-canvas { aspect-ratio: 9 / 16; max-height: 85vh; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111518] dark:text-white antialiased">
+    <div id="root"></div>
+
+    <!-- React and Dependencies -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/history@5/umd/history.development.js"></script>
+    <script src="https://unpkg.com/react-router@6.3.0/umd/react-router.development.js"></script>
+    <script src="https://unpkg.com/react-router-dom@6.3.0/umd/react-router-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { createRoot } = ReactDOM;
+        const { MemoryRouter, Routes, Route, Link, useNavigate, useLocation } = ReactRouterDOM;
+
+        // --- Shared Components ---
+
+        const TopNavBar = () => {
+            const navigate = useNavigate();
+            return (
+                <header class="sticky top-0 z-50 w-full border-b border-solid border-[#f0f3f4] dark:border-[#2f3944] bg-white/90 dark:bg-background-dark/90 backdrop-blur-md px-4 lg:px-40 py-3">
+                    <div class="flex items-center justify-between whitespace-nowrap">
+                        <Link to="/" class="flex items-center gap-4 text-[#111518] dark:text-white">
+                            <div class="size-8 text-primary flex items-center justify-center">
+                                <span class="material-symbols-outlined text-3xl">handyman</span>
+                            </div>
+                            <div>
+                                <h2 class="text-lg font-extrabold leading-tight tracking-tight">Dourados Services</h2>
+                                <div class="flex items-center gap-1 text-[10px] text-[#617989] uppercase tracking-wider font-bold">
+                                    <span class="material-symbols-outlined text-xs">location_on</span>
+                                    Dourados, MS
+                                </div>
+                            </div>
+                        </Link>
+                        <div class="hidden md:flex flex-1 justify-end gap-8 items-center">
+                            <nav class="flex items-center gap-9">
+                                <Link class="text-[#111518] dark:text-gray-200 text-sm font-semibold leading-normal hover:text-primary transition-colors" to="/">Início</Link>
+                                <Link class="text-[#111518] dark:text-gray-200 text-sm font-semibold leading-normal hover:text-primary transition-colors" to="/search">Categorias</Link>
+                                <Link class="text-[#111518] dark:text-gray-200 text-sm font-semibold leading-normal hover:text-primary transition-colors" to="/advertise">Seja um Prestador</Link>
+                                <Link class="text-[#111518] dark:text-gray-200 text-sm font-semibold leading-normal hover:text-primary transition-colors" to="/admin">Dashboard</Link>
+                            </nav>
+                            <div class="flex gap-2">
+                                <button class="flex min-w-[84px] cursor-pointer items-center justify-center rounded-lg h-10 px-4 bg-[#f0f3f4] dark:bg-[#2f3944] text-[#111518] dark:text-white text-sm font-bold">
+                                    Entrar
+                                </button>
+                                <Link to="/success" class="flex min-w-[84px] cursor-pointer items-center justify-center rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold shadow-sm">
+                                    Cadastrar
+                                </Link>
+                            </div>
+                        </div>
+                        <button class="md:hidden p-2 text-primary" onClick={() => document.documentElement.classList.toggle('dark')}>
+                             <span class="material-symbols-outlined">dark_mode</span>
+                        </button>
+                    </div>
+                </header>
+            );
+        };
+
+        const Footer = () => (
+            <footer class="bg-[#f0f3f4] dark:bg-[#151a20] px-4 lg:px-40 py-12 border-t border-gray-200 dark:border-gray-800">
+                <div class="max-w-[1200px] w-full mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 text-left">
+                    <div class="col-span-1 md:col-span-1">
+                        <div class="flex items-center gap-2 text-[#111518] dark:text-white mb-4">
+                            <span class="material-symbols-outlined text-primary text-2xl">handyman</span>
+                            <h2 class="text-lg font-extrabold">Dourados Services</h2>
+                        </div>
+                        <p class="text-[#617989] dark:text-gray-400 text-sm leading-relaxed">
+                            Conectando talentos locais com quem precisa de serviços de qualidade em Dourados, MS.
+                        </p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-[#111518] dark:text-white mb-4">Plataforma</h4>
+                        <ul class="flex flex-col gap-2 text-sm text-[#617989] dark:text-gray-400">
+                            <li><Link class="hover:text-primary" to="/about">Como funciona</Link></li>
+                            <li><Link class="hover:text-primary" to="/search">Categorias</Link></li>
+                            <li><Link class="hover:text-primary" to="/advertise">Preços</Link></li>
+                            <li><Link class="hover:text-primary" to="/testimonials">Depoimentos</Link></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-[#111518] dark:text-white mb-4">Suporte</h4>
+                        <ul class="flex flex-col gap-2 text-sm text-[#617989] dark:text-gray-400">
+                            <li><Link class="hover:text-primary" to="/help">Central de Ajuda</Link></li>
+                            <li><Link class="hover:text-primary" to="/terms">Termos de Uso</Link></li>
+                            <li><Link class="hover:text-primary" to="/terms">Privacidade</Link></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-[#111518] dark:text-white mb-4">Localização</h4>
+                        <div class="flex flex-col gap-2">
+                            <div class="flex items-start gap-2 text-sm text-[#617989] dark:text-gray-400">
+                                <span class="material-symbols-outlined text-xs mt-0.5">location_on</span>
+                                <span>Dourados, Mato Grosso do Sul, Brasil</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="max-w-[1200px] w-full mx-auto mt-12 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4 text-[#617989] dark:text-gray-500 text-xs font-medium">
+                    <p>© 2024 Dourados Services. Todos os direitos reservados.</p>
+                </div>
+            </footer>
+        );
+
+        // --- Pages ---
+
+        const HomePage = () => {
+            const navigate = useNavigate();
+            return (
+                <div class="flex flex-col min-h-screen">
+                    <TopNavBar />
+                    <div class="w-full flex justify-center py-6 px-4 lg:px-40">
+                        <div class="w-full max-w-[1200px]">
+                            <div class="@container">
+                                <div class="relative flex min-h-[420px] flex-col gap-6 overflow-hidden rounded-2xl items-center justify-center p-8 bg-[#f8fafc] dark:bg-[#252d35]">
+                                    <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+                                        <div class="absolute top-10 left-10 w-32 h-32 rounded-full bg-primary blur-3xl"></div>
+                                        <div class="absolute bottom-10 right-10 w-48 h-48 rounded-full bg-primary blur-3xl"></div>
+                                    </div>
+                                    <div class="flex flex-col gap-4 text-center z-10">
+                                        <h1 class="text-[#111518] dark:text-white text-4xl font-extrabold leading-tight tracking-tight @[480px]:text-6xl max-w-2xl">
+                                            Quem você precisa contratar hoje?
+                                        </h1>
+                                        <p class="text-[#617989] dark:text-gray-400 text-base font-medium @[480px]:text-xl">
+                                            Encontre e agende os melhores profissionais locais em Dourados.
+                                        </p>
+                                    </div>
+                                    <label class="relative flex flex-col min-w-40 h-16 w-full max-w-[640px] z-10">
+                                        <div class="flex w-full flex-1 items-stretch rounded-xl overflow-hidden shadow-xl border border-gray-100 dark:border-gray-700 bg-white dark:bg-[#1f262e]">
+                                            <div class="text-[#617989] flex items-center justify-center pl-5">
+                                                <span class="material-symbols-outlined">search</span>
+                                            </div>
+                                            <input class="form-input flex w-full border-none focus:ring-0 bg-transparent text-[#111518] dark:text-white px-4 text-base placeholder:text-[#617989]" placeholder="Ex: Eletricista, Professor de Inglês, Diarista..." value=""/>
+                                            <div class="flex items-center pr-2">
+                                                <button onClick={() => navigate('/search')} class="flex h-12 px-8 cursor-pointer items-center justify-center rounded-lg bg-primary text-white text-base font-bold transition-all hover:bg-[#0e6eb3]">
+                                                    Pesquisar
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </label>
+                                    <div class="flex gap-4 mt-2 text-sm text-[#617989] dark:text-gray-400 font-medium">
+                                        <span>Popular:</span>
+                                        <Link class="underline hover:text-primary" to="/search">Diaristas</Link>
+                                        <Link class="underline hover:text-primary" to="/search">Pintores</Link>
+                                        <Link class="underline hover:text-primary" to="/search">Manicure</Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="px-4 lg:px-40 flex justify-center py-2">
+                        <div class="max-w-[1200px] w-full">
+                            <h2 class="text-[#111518] dark:text-white text-[22px] font-extrabold leading-tight tracking-tight px-4 pb-4">Navegue por Categorias</h2>
+                        </div>
+                    </div>
+                    
+                    <div class="px-4 lg:px-40 flex justify-center pb-8">
+                        <div class="max-w-[1200px] w-full">
+                            <div class="flex border-b border-[#dbe1e6] dark:border-[#2f3944] px-4 gap-12 overflow-x-auto no-scrollbar">
+                                {[
+                                    { icon: 'home_repair_service', label: 'Reformas', active: true },
+                                    { icon: 'celebration', label: 'Eventos' },
+                                    { icon: 'favorite', label: 'Saúde' },
+                                    { icon: 'school', label: 'Aulas' },
+                                    { icon: 'build', label: 'Técnica' },
+                                    { icon: 'cleaning_services', label: 'Diaristas' }
+                                ].map(cat => (
+                                    <Link key={cat.label} to="/search" class={`flex flex-col items-center justify-center border-b-[3px] gap-2 pb-4 pt-2 group transition-all ${cat.active ? 'border-primary text-primary' : 'border-transparent text-[#617989] hover:text-[#111518] dark:hover:text-white'}`}>
+                                        <div class={`p-3 rounded-full ${cat.active ? 'bg-primary/10' : 'bg-gray-100 dark:bg-gray-800'}`}>
+                                            <span class="material-symbols-outlined text-2xl">{cat.icon}</span>
+                                        </div>
+                                        <p class="text-sm font-bold tracking-tight">{cat.label}</p>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="px-4 lg:px-40 flex justify-center py-2">
+                        <div class="max-w-[1200px] w-full flex items-center justify-between px-4">
+                            <h2 class="text-[#111518] dark:text-white text-[22px] font-extrabold leading-tight tracking-tight">Profissionais em Destaque</h2>
+                            <Link class="text-primary text-sm font-bold hover:underline" to="/search">Ver todos</Link>
+                        </div>
+                    </div>
+
+                    <main class="px-4 lg:px-40 flex justify-center pb-20">
+                        <div class="max-w-[1200px] w-full flex flex-col gap-4 px-4">
+                            <div class="card-shadow bg-white dark:bg-[#252d35] rounded-xl p-5 border border-gray-100 dark:border-gray-700 flex flex-col md:flex-row gap-6 items-center md:items-stretch">
+                                <div class="relative">
+                                    <div class="size-24 md:size-32 rounded-full bg-cover bg-center border-4 border-white dark:border-gray-800 shadow-sm" style={{backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuCKR01IsH0baQLCVp8QzbDPQ8FF0fXdLMD3umTYfp41wFhEAKC2xlrQLQCBzBAPW-AX3DxrOoftSbdSE5fkjRZdxDS6UQKZAutecOWW06JU7s__i96u8txtyXjQic0Nds5dYcwzIzQmHfDcDDj0fBUxJMf9F5xoznMeA-ml6eQsxtme1GYSkmzio-U0KW6LrAGtjtZmj5tf01dmd2Lb7lXnkJe9hj0aq1UrqK43jvENsFFLUQ_VGWLUoUMcmBgtPG-mEqVe3Z6kjJ_D")'}}></div>
+                                    <div class="absolute bottom-1 right-1 bg-green-500 size-4 rounded-full border-2 border-white dark:border-gray-800 shadow-sm"></div>
+                                </div>
+                                <div class="flex-1 flex flex-col justify-center text-center md:text-left">
+                                    <div class="flex flex-col md:flex-row md:items-center gap-2 mb-1">
+                                        <h3 class="text-xl font-extrabold text-[#111518] dark:text-white">Ricardo Silva</h3>
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 w-fit mx-auto md:mx-0">Disponível Agora</span>
+                                    </div>
+                                    <p class="text-[#617989] dark:text-gray-400 font-semibold text-base mb-2">Eletricista Residencial & Industrial</p>
+                                    <div class="flex items-center justify-center md:justify-start gap-1 mb-3">
+                                        <span class="material-symbols-outlined text-star-yellow text-xl fill-icon">star</span>
+                                        <span class="font-bold text-[#111518] dark:text-white text-base">4.9</span>
+                                        <span class="text-[#617989] dark:text-gray-400 text-sm">(124 avaliações)</span>
+                                        <span class="mx-2 text-gray-300">•</span>
+                                        <span class="text-[#617989] dark:text-gray-400 text-sm">Jardim Água Boa, Dourados</span>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col justify-center gap-3 w-full md:w-auto min-w-[160px]">
+                                    <button onClick={() => navigate('/profile')} class="w-full bg-primary text-white font-bold py-3 px-6 rounded-lg hover:bg-[#0e6eb3] transition-colors">Ver Perfil</button>
+                                    <button class="w-full bg-primary/10 text-primary font-bold py-3 px-6 rounded-lg hover:bg-primary/20 transition-colors">Solicitar Orçamento</button>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                    <Footer />
+                </div>
+            )
+        };
+
+        const SearchPage = () => {
+            const navigate = useNavigate();
+            return (
+                <div class="flex flex-col min-h-screen">
+                    <TopNavBar />
+                    <main class="w-full p-4 lg:px-40 py-8">
+                        <div class="max-w-[1200px] mx-auto">
+                            <h2 class="text-2xl font-extrabold tracking-tight mb-8">Busca de Profissionais em Dourados</h2>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                {[
+                                    { name: 'Ricardo Silva', role: 'Eletricista Residencial', rating: '4.9', count: 120, img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBkQevF2X-RnjsPrxzhLCkqGi2lbbboWoy2fl7H5SJyxscCis_cTvXZSqzfk_ZBTCNA3bQpfOVCjvfqOzOvzFTpvKLAMX1SRS96mIHgvLRlYCSuereoGdTUdefDVrzmiXS0LrAEu4mIqNKyk78C1Vd1HPQAgX33LqUUfUM12ZGzKxPrFG-3I5XftZaGEmc9bRXkEIocENtSON3KbaYJZASoWuFVcWPvLgj7J-uv2pM1D4fRnc1oGkxEWwLWtqkFqVr271sAGtHX5AFT' },
+                                    { name: 'Marina Lins', role: 'Designer de Interiores', rating: '5.0', count: 85, img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAq_izYpbrxhlsR0n8Drj8kfNnoXm_0ARAAw23p4dri5neY-ovME1KEQ1skJ_JIG14wQ7UFGMzBag2hR-VNNZojuN9py_8GGa8XxQIdQfH724EyC0K9HtM5XTTtu9cV0y4R1qlmstMi1TdljVyhytYLY1R_ZbztzKiPOaJJKs26hXRIV-Jul0uwg7w6BeDET4FmDL1ahVVnfZhxq9Cu7f7QlbmdOC5Q3rBbII0DW4Eyx76n9plW4KrBTAPWsdPFiQXv9-yMLrx3ITuz' },
+                                    { name: 'Lucas Mendes', role: 'Assistência Técnica TV', rating: '4.8', count: 210, img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA5-BAdaFLj2i8YYov-hzLa2ECl6zt6cgL2JD96SpqJuLnUsfliGuMALV4zcemqi7Yv7A_fK-GWhldpPGmrZrYPMrpANED-iEqShG_fWWFvwz3aS6c4Q5_iTTMYlhc9q0Mzs2HZ1rrN3SSFge4R0WvjVOTAngWqUhm_eqjzTNT4gr8cFKmkuVa44iQoTZ_fgDtdq0tv6EvNAMp5q1zbJSxSJDLokYQzNEsnLNJk-SZLWrTbIZU8Rta9g072xtUbh38720DJs2MfWObU' }
+                                ].map(pro => (
+                                    <div key={pro.name} class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-xl hover:-translate-y-1 transition-all group">
+                                        <div class="flex items-start justify-between mb-6">
+                                            <div class="relative">
+                                                <img alt="Professional" class="size-20 rounded-2xl object-cover" src={pro.img}/>
+                                                <div class="absolute -bottom-2 -right-2 bg-green-500 border-4 border-white dark:border-slate-800 size-6 rounded-full flex items-center justify-center">
+                                                    <span class="material-symbols-outlined text-white text-[12px] font-bold">check</span>
+                                                </div>
+                                            </div>
+                                            <div class="flex flex-col items-end">
+                                                <div class="flex items-center gap-0.5 mb-1">
+                                                    <span class="material-symbols-outlined text-star-yellow text-[18px] fill-icon">star</span>
+                                                    <span class="text-sm font-bold text-slate-900 dark:text-white">{pro.rating}</span>
+                                                </div>
+                                                <span class="text-[11px] font-medium text-slate-400">({pro.count} avaliações)</span>
+                                            </div>
+                                        </div>
+                                        <div class="mb-6">
+                                            <h3 class="text-xl font-extrabold text-slate-900 dark:text-white mb-1 group-hover:text-primary transition-colors">{pro.name}</h3>
+                                            <p class="text-primary font-bold text-sm uppercase tracking-wide">{pro.role}</p>
+                                        </div>
+                                        <button onClick={() => navigate('/profile')} class="w-full py-3.5 bg-slate-900 dark:bg-slate-700 text-white rounded-2xl font-bold hover:bg-primary transition-colors flex items-center justify-center gap-2">
+                                            <span>Ver Perfil</span>
+                                            <span class="material-symbols-outlined text-sm">open_in_new</span>
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </main>
+                    <Footer />
+                </div>
+            )
+        };
+
+        const AdvertisePage = () => {
+            const navigate = useNavigate();
+            return (
+                <div class="flex flex-col min-h-screen">
+                    <TopNavBar />
+                    <main class="flex-grow">
+                        <section class="relative bg-white dark:bg-background-dark pt-10 pb-16 md:pt-16 md:pb-24 px-6 md:px-20 lg:px-40">
+                            <div class="max-w-[1200px] mx-auto grid md:grid-cols-2 gap-12 items-center text-left">
+                                <div class="flex flex-col gap-6">
+                                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider w-fit">
+                                        <span class="relative flex h-2 w-2">
+                                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                                            <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                                        </span>
+                                        Junte-se a +500 profissionais locais
+                                    </div>
+                                    <h1 class="text-4xl md:text-6xl font-black leading-tight tracking-tight text-[#111417] dark:text-white">
+                                        Destaque seu serviço em <span class="text-primary">Dourados</span>
+                                    </h1>
+                                    <p class="text-lg md:text-xl text-[#647587] dark:text-gray-400 leading-relaxed max-w-lg">
+                                        Seja visto por milhares de clientes locais e aumente seu faturamento com uma presença digital profissional.
+                                    </p>
+                                    <div class="flex flex-col sm:flex-row gap-4 pt-2">
+                                        <button onClick={() => navigate('/success')} class="flex items-center justify-center bg-primary text-white px-8 py-4 rounded font-bold text-lg hover:shadow-lg shadow-primary/20 transition-all">
+                                            Quero me cadastrar
+                                        </button>
+                                        <Link class="flex items-center justify-center border border-[#dce0e5] dark:border-[#3a3f44] px-8 py-4 rounded font-bold text-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-all" to="/profile">
+                                            Ver exemplo de perfil
+                                        </Link>
+                                    </div>
+                                </div>
+                                <div class="relative hidden md:block">
+                                    <div class="aspect-square rounded-2xl bg-primary/5 border border-primary/10 flex items-center justify-center overflow-hidden">
+                                        <div class="w-full h-full bg-cover bg-center opacity-90" style={{backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuC9rrmcMhTxJy7mN5MjtYhdxd_w-kZW7xzjADXW4de7uSdWRdWjU7c8LKzk_sXdixxHfMvl_AWcyJURnLHRCyWLUKjqbnmQGLNGUdhAkkl2cAiqliJ2CS4sD0mFTz1zcn1rtRUHj4BYxqCAaktZ8wBSuFJ5nALsDTLo_jfdR8SqUY4I90_ZpuKlub18Rnh56LLeMGo9YffadqGYjjvSCmcrEFc_F1BGAlVx8_SfOMWxQZQ0aF9k5XE9V3E3v_t_vfHe4k68Mxv0QBUd")'}}></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </main>
+                    <Footer />
+                </div>
+            )
+        };
+
+        const ProfilePage = () => {
+            const navigate = useNavigate();
+            return (
+                <div class="flex flex-col min-h-screen">
+                    <TopNavBar />
+                    <main class="flex-1 flex justify-center py-5 px-4">
+                        <div class="layout-content-container flex flex-col max-w-[800px] flex-1 bg-white dark:bg-gray-900 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-800">
+                            <div class="relative h-48 md:h-64 overflow-hidden">
+                                <div class="w-full h-full bg-center bg-no-repeat bg-cover" style={{backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuCyG86Ga6yCGV6TQ_v5IJC-wAFp2JtduoeSNXczXQIacoA1e2iFrQBya1VrYZosdUaX8F9uJhS_UeMebzhZbbVHEUlisoFAPCwpIvA5Zq06O-srAO78NSLrcNWJLiwYFkToIWskfsJH406ur0nWTCr8uOabi1VxDBR8IWmqJyw4mmIOtdVm9bruMqFF4a2ztb9f9sNNGDZAN8mzvcsTaZjZTDh7oeE1Yqb8SBFgWkdngYn2XVK6DbE8Gc3lCcuIiLREnnnUhD8on_Yx")'}}></div>
+                            </div>
+                            <div class="px-6 pb-6 relative text-center flex flex-col items-center">
+                                <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-xl border-4 border-white dark:border-gray-900 shadow-lg -mt-16 h-32 w-32 md:h-40 md:w-40" style={{backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuA-jWa7aaFF8uVBitRJe5Bh9ULHKORLDGRTd_rB6Gs3AKb3WiRbuU9jYahUVUtI3CZu9UyESVxoP0IXlYIWz6i789xQbzJ56HTtSUKLNd_dXqthSiGMvUh5s7FAFIL-XiN9G5K71UigqZG6hqlwWNeU64WiYWM6GYhJj7oZlAQztzfge0Yj3EvU5f2aQxeLIHaO8H3M-n4vOcZSKI4k-QfEtOGqOChwu-hEMhkhkxD7gFWhxgfMLnR7c5PJSPjv6KeF4_F-1RuJLiJj")'}}></div>
+                                <h1 class="mt-4 text-3xl font-extrabold text-[#121617] dark:text-white">Carlos Silva</h1>
+                                <p class="text-primary font-semibold text-lg">Eletricista Residencial e Industrial</p>
+                                <div class="mt-4 flex flex-wrap justify-center gap-4 text-gray-500 text-sm">
+                                    <span>📍 Dourados, MS</span>
+                                    <span>⚡ 10+ anos exp.</span>
+                                    <span>📋 Orçamento Grátis</span>
+                                </div>
+                                <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                                    <button class="flex items-center justify-center gap-2 rounded-xl h-14 bg-primary text-white font-bold shadow-lg hover:brightness-110">Solicitar Orçamento</button>
+                                    <Link to="/card" class="flex items-center justify-center gap-2 rounded-xl h-14 bg-gray-100 dark:bg-gray-800 text-primary font-bold border border-primary/20">Ver Cartão Digital</Link>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                    <Footer />
+                </div>
+            )
+        }
+
+        const AdminPage = () => {
+            const navigate = useNavigate();
+            return (
+                <div class="flex min-h-screen bg-[#f8fafc] dark:bg-[#16191d]">
+                    <aside class="w-72 border-r border-[#dce0e5] dark:border-[#343a40] bg-white dark:bg-background-dark hidden md:flex flex-col fixed h-full text-left">
+                        <div class="p-6 flex flex-col gap-8 h-full">
+                            <div class="flex items-center gap-3">
+                                <div class="bg-primary size-10 rounded-lg flex items-center justify-center text-white">
+                                    <span class="material-symbols-outlined">dashboard</span>
+                                </div>
+                                <h1 class="text-lg font-bold">Admin Portal</h1>
+                            </div>
+                            <nav class="flex flex-col gap-1">
+                                <Link to="/admin" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary font-bold">Geral</Link>
+                                <Link to="/search" class="flex items-center gap-3 px-4 py-3 rounded-xl text-[#657586] hover:bg-gray-50">Profissionais</Link>
+                                <Link to="/help" class="flex items-center gap-3 px-4 py-3 rounded-xl text-[#657586] hover:bg-gray-50">Suporte</Link>
+                                <Link to="/" class="flex items-center gap-3 px-4 py-3 rounded-xl text-[#657586] hover:bg-gray-50">Sair</Link>
+                            </nav>
+                        </div>
+                    </aside>
+                    <main class="flex-1 md:ml-72 p-10">
+                        <header class="mb-10 text-left">
+                            <h2 class="text-3xl font-black">Dashboard Administrativo</h2>
+                            <p class="text-gray-500">Visão Geral Dourados Services</p>
+                        </header>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                            {[
+                                { label: 'Total Profissionais', val: '1,240', color: 'primary' },
+                                { label: 'Receita Mensal', val: 'R$ 45.200', color: 'green-500' },
+                                { label: 'Novas Assinaturas', val: '85', color: 'blue-500' },
+                                { label: 'Taxa de Churn', val: '2.4%', color: 'red-500' }
+                            ].map(stat => (
+                                <div key={stat.label} class="bg-white dark:bg-slate-800 p-6 rounded-xl border border-gray-100 shadow-sm text-left">
+                                    <p class="text-xs font-bold uppercase text-gray-400 mb-1">{stat.label}</p>
+                                    <p class={`text-2xl font-black text-${stat.color}`}>{stat.val}</p>
+                                </div>
+                            ))}
+                        </div>
+                        <div class="bg-white dark:bg-slate-800 p-8 rounded-xl border border-gray-100 h-64 flex items-center justify-center">
+                            <p class="text-gray-400 font-bold">Gráfico de Crescimento (Simulação)</p>
+                        </div>
+                    </main>
+                </div>
+            )
+        }
+
+        const DigitalCard = () => (
+            <div class="min-h-screen flex items-center justify-center p-4 bg-gray-50 dark:bg-background-dark">
+                <div class="w-full max-w-[420px] bg-white dark:bg-[#1e2530] rounded-xl overflow-hidden card-shadow flex flex-col relative text-center">
+                    <div class="relative w-full aspect-[4/5] bg-cover bg-center" style={{backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuBTAis9_XOrBGhY5wEKD_3DcUVM3GhwkVGlhtUibS7If8zzr58hfbLBPCufdN3b0HNbi6PWMTf68_YYGNS8SbPYvRpbzvPiPLFN9d8BzGErCro1q00XjiRt5yIhbTBpUF8VTVU-8f1BG1mQciVUUmQZGrahRjzO18oBNy0TF2BqtOgTlM8hk3B18i1VTbt3mxhy2PaO7a0UuINn_vc5m-pyNl5BvOve6UNQ_hmDy6O0CFCMzcAA2dKEG4tI7nNP_E1S-OQPDKMA6l7F")'}}>
+                        <div class="absolute inset-0 bg-gradient-to-t from-white dark:from-[#1e2530] via-transparent to-transparent"></div>
+                    </div>
+                    <div class="px-6 pb-8 -mt-20 relative z-20 flex flex-col items-center">
+                        <h1 class="text-3xl font-extrabold">Ana Oliveira</h1>
+                        <p class="text-primary font-bold uppercase tracking-wider">Fotógrafa Profissional</p>
+                        <div class="flex gap-1 mt-3 text-yellow-400">
+                             <span class="material-symbols-outlined fill-icon text-lg">star</span>
+                             <span class="material-symbols-outlined fill-icon text-lg">star</span>
+                             <span class="material-symbols-outlined fill-icon text-lg">star</span>
+                             <span class="material-symbols-outlined fill-icon text-lg">star</span>
+                             <span class="material-symbols-outlined fill-icon text-lg">star</span>
+                        </div>
+                        <div class="w-full flex flex-col gap-3 mt-8">
+                             <button class="flex items-center justify-center h-14 bg-primary text-white rounded-xl font-bold shadow-lg">WhatsApp Profissional</button>
+                             <button class="flex items-center justify-center h-14 bg-gray-100 dark:bg-gray-800 rounded-xl font-bold">Ver Portfólio</button>
+                             <Link to="/" class="text-sm font-bold text-gray-400 mt-4 underline">Voltar para Dourados Services</Link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+
+        const SuccessPage = () => (
+            <div class="min-h-screen flex flex-col items-center justify-center p-6 bg-background-light dark:bg-background-dark">
+                <div class="max-w-[560px] w-full bg-white dark:bg-[#1a2e2e] shadow-2xl border border-primary/5 rounded-xl p-8 md:p-12 text-center">
+                    <div class="mb-8 relative inline-flex">
+                        <div class="absolute inset-0 bg-primary/20 rounded-full blur-xl scale-150"></div>
+                        <div class="relative bg-primary text-white size-20 rounded-full flex items-center justify-center shadow-lg">
+                            <span class="material-symbols-outlined text-5xl">check_circle</span>
+                        </div>
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-extrabold mb-4">Recebemos seu interesse!</h1>
+                    <p class="text-[#648787] text-lg mb-8">Nossa equipe entrará em contato em até <span class="text-primary font-bold">24h via WhatsApp</span> para criar sua mini landing page.</p>
+                    <Link to="/" class="inline-block px-10 py-4 bg-primary text-white rounded-xl font-bold shadow-lg hover:scale-105 transition-transform">Voltar ao Início</Link>
+                </div>
+            </div>
+        )
+
+        const HelpPage = () => {
+            const [open, setOpen] = useState(0);
+            return (
+                <div class="min-h-screen flex flex-col">
+                    <TopNavBar />
+                    <main class="flex-1 max-w-[800px] mx-auto w-full py-12 px-6 text-left">
+                        <h1 class="text-4xl font-extrabold mb-8">Como podemos te ajudar?</h1>
+                        <div class="space-y-4">
+                            {[
+                                { q: "É gratuito para buscar profissionais?", a: "Sim, para quem busca serviços a plataforma é totalmente gratuita. Você pode navegar pelas categorias e ver perfis completos sem pagar nada." },
+                                { q: "Como avalio um profissional?", a: "Após o contato, retorne ao perfil do profissional e deixe uma nota de 1 a 5 estrelas acompanhada de um comentário." },
+                                { q: "Como entro em contato?", a: "No perfil de cada profissional, você encontrará o botão do WhatsApp direto para falar com eles." }
+                            ].map((item, idx) => (
+                                <div key={idx} class="border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden bg-white dark:bg-slate-900">
+                                    <button onClick={() => setOpen(idx === open ? -1 : idx)} class="w-full flex items-center justify-between p-6 font-bold text-left hover:bg-gray-50">
+                                        <span>{item.q}</span>
+                                        <span class="material-symbols-outlined">{open === idx ? 'expand_less' : 'expand_more'}</span>
+                                    </button>
+                                    {open === idx && <div class="p-6 pt-0 text-gray-500 border-t border-gray-50">{item.a}</div>}
+                                </div>
+                            ))}
+                        </div>
+                    </main>
+                    <Footer />
+                </div>
+            )
+        }
+
+        const NotFoundPage = () => (
+            <div class="min-h-screen flex flex-col">
+                <TopNavBar />
+                <main class="flex-grow flex flex-col items-center justify-center p-6 text-center">
+                    <h1 class="text-[120px] font-extrabold text-gray-200 dark:text-gray-800 leading-none">404</h1>
+                    <h2 class="text-3xl font-bold -mt-10 mb-4">Página não encontrada</h2>
+                    <p class="text-gray-500 max-w-md mb-8">Parece que você pegou um caminho sem saída. Não se preocupe, ainda podemos te ajudar.</p>
+                    <Link to="/" class="px-10 py-4 bg-primary text-white rounded-xl font-bold shadow-lg">Voltar ao Painel Principal</Link>
+                </main>
+                <Footer />
+            </div>
+        )
+
+        // --- Router App ---
+
+        const App = () => {
+            const location = useLocation();
+
+            useEffect(() => {
+                window.scrollTo(0, 0);
+            }, [location]);
+
+            return (
+                <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/search" element={<SearchPage />} />
+                    <Route path="/advertise" element={<AdvertisePage />} />
+                    <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="/admin" element={<AdminPage />} />
+                    <Route path="/card" element={<DigitalCard />} />
+                    <Route path="/success" element={<SuccessPage />} />
+                    <Route path="/help" element={<HelpPage />} />
+                    <Route path="/about" element={<AdvertisePage />} /> 
+                    <Route path="/terms" element={<HomePage />} /> 
+                    <Route path="/testimonials" element={<HomePage />} />
+                    <Route path="*" element={<NotFoundPage />} />
+                </Routes>
+            );
+        };
+
+        const root = createRoot(document.getElementById('root'));
+        root.render(
+            <MemoryRouter>
+                <App />
+            </MemoryRouter>
+        );
+    </script>
+</body>
+</html>

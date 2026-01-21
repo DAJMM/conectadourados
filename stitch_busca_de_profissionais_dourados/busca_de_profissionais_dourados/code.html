@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Busca de Profissionais Dourados</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1183d4",
+                        "background-light": "#ffffff",
+                        "background-dark": "#1f262e",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .star-filled {
+            font-variation-settings: 'FILL' 1;
+            color: #FFD700;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111518] dark:text-white transition-colors duration-300">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 w-full border-b border-[#f0f3f4] dark:border-slate-700 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md">
+<div class="max-w-[1200px] mx-auto px-4 sm:px-10 py-3 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="size-8 bg-primary text-white rounded flex items-center justify-center">
+<span class="material-symbols-outlined">handyman</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-[#111518] dark:text-white text-lg font-extrabold leading-none tracking-tight">Dourados Services</h1>
+<span class="text-[10px] uppercase tracking-widest text-primary font-bold">Marketplace Local</span>
+</div>
+</div>
+<div class="hidden md:flex items-center gap-6">
+<div class="flex items-center gap-2 text-sm font-medium text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-sm">location_on</span>
+                    Dourados, MS
+                </div>
+<nav class="flex items-center gap-8">
+<a class="text-sm font-semibold hover:text-primary transition-colors" href="#">Para Profissionais</a>
+<a class="text-sm font-semibold hover:text-primary transition-colors" href="#">Entrar</a>
+</nav>
+<button class="bg-primary hover:bg-primary/90 text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow-sm transition-all transform hover:scale-[1.02] active:scale-[0.98]">
+                    Cadastrar Serviço
+                </button>
+</div>
+<button class="md:hidden p-2">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</header>
+<main class="w-full">
+<!-- Hero Section -->
+<section class="relative w-full pt-10 pb-16 px-4">
+<div class="max-w-[1200px] mx-auto">
+<div class="relative overflow-hidden rounded-3xl bg-slate-900 min-h-[440px] flex flex-col items-center justify-center p-8 text-center">
+<!-- Background Image with Overlay -->
+<div class="absolute inset-0 z-0">
+<img alt="Background image" class="w-full h-full object-cover opacity-40" data-alt="Modern clean workspace with professional tools" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPLwUC_bYYkKurd3A_yBZdsYJxeu36xgfGzQ7j9Tjt6R2ZJ-26p9cPWVfG6nMsngPXiwavqShQLd1rybghrZfBaM18DMpry1CB0jsiaQzL9Lg5pJVucQGrdOTwujvvXabl2UL9vAjf4BND-8lfEViXkuQI-7dBR2VV86vt1A78VCGSEKzZFvUeX9ZCN8xvy32jWHy1PIFJXmos-Mm4ccVQov4HhOyeLsmOKNm7jwUmqfFv_Rz1BLqgBAkc8JZ6te4sn9_R6y1ePdlN"/>
+<div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent"></div>
+</div>
+<div class="relative z-10 max-w-2xl">
+<span class="inline-block py-1 px-3 rounded-full bg-primary/20 text-primary text-xs font-bold mb-4 border border-primary/30 uppercase tracking-widest">
+                            Conectando a cidade
+                        </span>
+<h1 class="text-white text-4xl md:text-6xl font-extrabold leading-[1.1] mb-6 tracking-tight">
+                            Quem você precisa contratar hoje?
+                        </h1>
+<p class="text-slate-300 text-lg mb-10 max-w-xl mx-auto">
+                            De reformas residenciais a aulas particulares, encontre os melhores especialistas verificados em Dourados.
+                        </p>
+<!-- Search Box -->
+<div class="w-full max-w-xl mx-auto flex flex-col md:flex-row gap-2 bg-white dark:bg-slate-800 p-2 rounded-2xl shadow-2xl">
+<div class="flex-1 flex items-center px-4 gap-3 border-b md:border-b-0 md:border-r border-slate-100 dark:border-slate-700 py-2">
+<span class="material-symbols-outlined text-slate-400">search</span>
+<input class="w-full bg-transparent border-none focus:ring-0 text-slate-900 dark:text-white placeholder:text-slate-400 font-medium" placeholder="Ex: Eletricista, Contador, Pintor..." type="text"/>
+</div>
+<div class="flex-1 hidden md:flex items-center px-4 gap-3 py-2">
+<span class="material-symbols-outlined text-slate-400">distance</span>
+<select class="w-full bg-transparent border-none focus:ring-0 text-slate-900 dark:text-white font-medium appearance-none">
+<option>Em toda a cidade</option>
+<option>Centro</option>
+<option>Jardim Água Boa</option>
+<option>Parque Alvorada</option>
+</select>
+</div>
+<button class="bg-primary text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-600 transition-colors flex items-center justify-center gap-2">
+<span>Buscar</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Categories Section -->
+<section class="max-w-[1200px] mx-auto px-4 pb-12">
+<div class="flex items-center justify-between mb-8 px-2">
+<h2 class="text-2xl font-extrabold tracking-tight">Explorar Categorias</h2>
+<a class="text-primary font-bold text-sm flex items-center gap-1 hover:underline" href="#">
+                    Ver todas <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="flex flex-nowrap overflow-x-auto pb-4 gap-6 no-scrollbar">
+<!-- Category Item -->
+<div class="flex flex-col items-center gap-3 min-w-[100px] group cursor-pointer">
+<div class="size-20 rounded-2xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-all shadow-sm">
+<span class="material-symbols-outlined text-3xl">home_repair_service</span>
+</div>
+<span class="text-sm font-bold text-slate-600 dark:text-slate-400 group-hover:text-primary">Reformas</span>
+</div>
+<!-- Category Item -->
+<div class="flex flex-col items-center gap-3 min-w-[100px] group cursor-pointer">
+<div class="size-20 rounded-2xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-all shadow-sm">
+<span class="material-symbols-outlined text-3xl">devices</span>
+</div>
+<span class="text-sm font-bold text-slate-600 dark:text-slate-400 group-hover:text-primary">Tech</span>
+</div>
+<!-- Category Item -->
+<div class="flex flex-col items-center gap-3 min-w-[100px] group cursor-pointer">
+<div class="size-20 rounded-2xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-all shadow-sm">
+<span class="material-symbols-outlined text-3xl">school</span>
+</div>
+<span class="text-sm font-bold text-slate-600 dark:text-slate-400 group-hover:text-primary">Aulas</span>
+</div>
+<!-- Category Item -->
+<div class="flex flex-col items-center gap-3 min-w-[100px] group cursor-pointer">
+<div class="size-20 rounded-2xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-all shadow-sm">
+<span class="material-symbols-outlined text-3xl">spa</span>
+</div>
+<span class="text-sm font-bold text-slate-600 dark:text-slate-400 group-hover:text-primary">Bem-estar</span>
+</div>
+<!-- Category Item -->
+<div class="flex flex-col items-center gap-3 min-w-[100px] group cursor-pointer">
+<div class="size-20 rounded-2xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-all shadow-sm">
+<span class="material-symbols-outlined text-3xl">celebration</span>
+</div>
+<span class="text-sm font-bold text-slate-600 dark:text-slate-400 group-hover:text-primary">Eventos</span>
+</div>
+<!-- Category Item -->
+<div class="flex flex-col items-center gap-3 min-w-[100px] group cursor-pointer">
+<div class="size-20 rounded-2xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-all shadow-sm">
+<span class="material-symbols-outlined text-3xl">cleaning_services</span>
+</div>
+<span class="text-sm font-bold text-slate-600 dark:text-slate-400 group-hover:text-primary">Limpeza</span>
+</div>
+<!-- Category Item -->
+<div class="flex flex-col items-center gap-3 min-w-[100px] group cursor-pointer">
+<div class="size-20 rounded-2xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-all shadow-sm">
+<span class="material-symbols-outlined text-3xl">pets</span>
+</div>
+<span class="text-sm font-bold text-slate-600 dark:text-slate-400 group-hover:text-primary">Pets</span>
+</div>
+<!-- Category Item -->
+<div class="flex flex-col items-center gap-3 min-w-[100px] group cursor-pointer">
+<div class="size-20 rounded-2xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-all shadow-sm">
+<span class="material-symbols-outlined text-3xl">account_balance</span>
+</div>
+<span class="text-sm font-bold text-slate-600 dark:text-slate-400 group-hover:text-primary">Jurídico</span>
+</div>
+</div>
+</section>
+<!-- Results List -->
+<section class="max-w-[1200px] mx-auto px-4 pb-24">
+<div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 border-b border-slate-100 dark:border-slate-800 pb-4">
+<h2 class="text-2xl font-extrabold tracking-tight">Profissionais em Destaque</h2>
+<div class="flex items-center gap-2 overflow-x-auto no-scrollbar">
+<span class="text-sm text-slate-400 font-medium whitespace-nowrap">Ordernar por:</span>
+<button class="px-4 py-1.5 rounded-full bg-primary text-white text-xs font-bold">Relevância</button>
+<button class="px-4 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold hover:bg-slate-200 transition-colors whitespace-nowrap">Mais Próximos</button>
+<button class="px-4 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold hover:bg-slate-200 transition-colors whitespace-nowrap">Melhor Avaliados</button>
+</div>
+</div>
+<!-- Professionals Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Pro Card 1 -->
+<div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-xl hover:-translate-y-1 transition-all group">
+<div class="flex items-start justify-between mb-6">
+<div class="relative">
+<img alt="Professional" class="size-20 rounded-2xl object-cover" data-alt="Portrait of professional Ricardo Silva" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkQevF2X-RnjsPrxzhLCkqGi2lbbboWoy2fl7H5SJyxscCis_cTvXZSqzfk_ZBTCNA3bQpfOVCjvfqOzOvzFTpvKLAMX1SRS96mIHgvLRlYCSuereoGdTUdefDVrzmiXS0LrAEu4mIqNKyk78C1Vd1HPQAgX33LqUUfUM12ZGzKxPrFG-3I5XftZaGEmc9bRXkEIocENtSON3KbaYJZASoWuFVcWPvLgj7J-uv2pM1D4fRnc1oGkxEWwLWtqkFqVr271sAGtHX5AFT"/>
+<div class="absolute -bottom-2 -right-2 bg-green-500 border-4 border-white dark:border-slate-800 size-6 rounded-full flex items-center justify-center" title="Verificado">
+<span class="material-symbols-outlined text-white text-[12px] font-bold">check</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<div class="flex items-center gap-0.5 mb-1">
+<span class="material-symbols-outlined star-filled text-[18px]">star</span>
+<span class="text-sm font-bold text-slate-900 dark:text-white">4.9</span>
+</div>
+<span class="text-[11px] font-medium text-slate-400">(120 avaliações)</span>
+</div>
+</div>
+<div class="mb-6">
+<h3 class="text-xl font-extrabold text-slate-900 dark:text-white mb-1 group-hover:text-primary transition-colors">Ricardo Silva</h3>
+<p class="text-primary font-bold text-sm uppercase tracking-wide">Eletricista Residencial</p>
+</div>
+<div class="flex flex-wrap gap-2 mb-8">
+<span class="px-3 py-1 bg-slate-50 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-[11px] font-bold rounded-lg">Instalações</span>
+<span class="px-3 py-1 bg-slate-50 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-[11px] font-bold rounded-lg">Manutenção</span>
+<span class="px-3 py-1 bg-slate-50 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-[11px] font-bold rounded-lg">Padrão Energisa</span>
+</div>
+<button class="w-full py-3.5 bg-slate-900 dark:bg-slate-700 text-white rounded-2xl font-bold hover:bg-primary dark:hover:bg-primary transition-colors flex items-center justify-center gap-2">
+<span>Ver Perfil</span>
+<span class="material-symbols-outlined text-sm">open_in_new</span>
+</button>
+</div>
+<!-- Pro Card 2 -->
+<div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-xl hover:-translate-y-1 transition-all group">
+<div class="flex items-start justify-between mb-6">
+<div class="relative">
+<img alt="Professional" class="size-20 rounded-2xl object-cover" data-alt="Portrait of professional Marina Lins" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAq_izYpbrxhlsR0n8Drj8kfNnoXm_0ARAAw23p4dri5neY-ovME1KEQ1skJ_JIG14wQ7UFGMzBag2hR-VNNZojuN9py_8GGa8XxQIdQfH724EyC0K9HtM5XTTtu9cV0y4R1qlmstMi1TdljVyhytYLY1R_ZbztzKiPOaJJKs26hXRIV-Jul0uwg7w6BeDET4FmDL1ahVVnfZhxq9Cu7f7QlbmdOC5Q3rBbII0DW4Eyx76n9plW4KrBTAPWsdPFiQXv9-yMLrx3ITuz"/>
+<div class="absolute -bottom-2 -right-2 bg-primary border-4 border-white dark:border-slate-800 size-6 rounded-full flex items-center justify-center" title="Destaque">
+<span class="material-symbols-outlined text-white text-[12px] font-bold">workspace_premium</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<div class="flex items-center gap-0.5 mb-1">
+<span class="material-symbols-outlined star-filled text-[18px]">star</span>
+<span class="text-sm font-bold text-slate-900 dark:text-white">5.0</span>
+</div>
+<span class="text-[11px] font-medium text-slate-400">(85 avaliações)</span>
+</div>
+</div>
+<div class="mb-6">
+<h3 class="text-xl font-extrabold text-slate-900 dark:text-white mb-1 group-hover:text-primary transition-colors">Marina Lins</h3>
+<p class="text-primary font-bold text-sm uppercase tracking-wide">Designer de Interiores</p>
+</div>
+<div class="flex flex-wrap gap-2 mb-8">
+<span class="px-3 py-1 bg-slate-50 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-[11px] font-bold rounded-lg">Projetos 3D</span>
+<span class="px-3 py-1 bg-slate-50 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-[11px] font-bold rounded-lg">Cozinhas</span>
+<span class="px-3 py-1 bg-slate-50 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-[11px] font-bold rounded-lg">Consultoria</span>
+</div>
+<button class="w-full py-3.5 bg-slate-900 dark:bg-slate-700 text-white rounded-2xl font-bold hover:bg-primary dark:hover:bg-primary transition-colors flex items-center justify-center gap-2">
+<span>Ver Perfil</span>
+<span class="material-symbols-outlined text-sm">open_in_new</span>
+</button>
+</div>
+<!-- Pro Card 3 -->
+<div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-xl hover:-translate-y-1 transition-all group">
+<div class="flex items-start justify-between mb-6">
+<div class="relative">
+<img alt="Professional" class="size-20 rounded-2xl object-cover" data-alt="Portrait of professional Lucas Mendes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5-BAdaFLj2i8YYov-hzLa2ECl6zt6cgL2JD96SpqJuLnUsfliGuMALV4zcemqi7Yv7A_fK-GWhldpPGmrZrYPMrpANED-iEqShG_fWWFvwz3aS6c4Q5_iTTMYlhc9q0Mzs2HZ1rrN3SSFge4R0WvjVOTAngWqUhm_eqjzTNT4gr8cFKmkuVa44iQoTZ_fgDtdq0tv6EvNAMp5q1zbJSxSJDLokYQzNEsnLNJk-SZLWrTbIZU8Rta9g072xtUbh38720DJs2MfWObU"/>
+</div>
+<div class="flex flex-col items-end">
+<div class="flex items-center gap-0.5 mb-1">
+<span class="material-symbols-outlined star-filled text-[18px]">star</span>
+<span class="text-sm font-bold text-slate-900 dark:text-white">4.8</span>
+</div>
+<span class="text-[11px] font-medium text-slate-400">(210 avaliações)</span>
+</div>
+</div>
+<div class="mb-6">
+<h3 class="text-xl font-extrabold text-slate-900 dark:text-white mb-1 group-hover:text-primary transition-colors">Lucas Mendes</h3>
+<p class="text-primary font-bold text-sm uppercase tracking-wide">Assistência Técnica TV</p>
+</div>
+<div class="flex flex-wrap gap-2 mb-8">
+<span class="px-3 py-1 bg-slate-50 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-[11px] font-bold rounded-lg">Smart TV</span>
+<span class="px-3 py-1 bg-slate-50 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-[11px] font-bold rounded-lg">Home Theater</span>
+<span class="px-3 py-1 bg-slate-50 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-[11px] font-bold rounded-lg">Samsung/LG</span>
+</div>
+<button class="w-full py-3.5 bg-slate-900 dark:bg-slate-700 text-white rounded-2xl font-bold hover:bg-primary dark:hover:bg-primary transition-colors flex items-center justify-center gap-2">
+<span>Ver Perfil</span>
+<span class="material-symbols-outlined text-sm">open_in_new</span>
+</button>
+</div>
+</div>
+<!-- Loading More / Pagination -->
+<div class="mt-16 flex justify-center">
+<button class="flex items-center gap-3 px-10 py-4 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-2xl font-extrabold hover:bg-slate-200 dark:hover:bg-slate-700 transition-all group">
+<span>Carregar mais profissionais</span>
+<span class="material-symbols-outlined group-hover:rotate-180 transition-transform duration-500">refresh</span>
+</button>
+</div>
+</section>
+</main>
+<!-- Simple Footer -->
+<footer class="bg-slate-50 dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 py-12 px-4">
+<div class="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="col-span-1 md:col-span-1">
+<div class="flex items-center gap-2 mb-6">
+<div class="size-6 bg-primary text-white rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-xs">handyman</span>
+</div>
+<h2 class="text-slate-900 dark:text-white font-extrabold tracking-tight">Dourados Services</h2>
+</div>
+<p class="text-sm text-slate-500 leading-relaxed mb-6">
+                    A maior plataforma de conexão entre prestadores e clientes da região da Grande Dourados.
+                </p>
+<div class="flex gap-4">
+<a class="size-10 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center hover:bg-primary hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-lg">share</span>
+</a>
+</div>
+</div>
+<div>
+<h4 class="font-bold text-slate-900 dark:text-white mb-6 uppercase text-xs tracking-widest">Para Clientes</h4>
+<ul class="space-y-4 text-sm font-medium text-slate-500">
+<li><a class="hover:text-primary" href="#">Como funciona</a></li>
+<li><a class="hover:text-primary" href="#">Segurança</a></li>
+<li><a class="hover:text-primary" href="#">Profissionais verificados</a></li>
+<li><a class="hover:text-primary" href="#">Central de Ajuda</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold text-slate-900 dark:text-white mb-6 uppercase text-xs tracking-widest">Para Profissionais</h4>
+<ul class="space-y-4 text-sm font-medium text-slate-500">
+<li><a class="hover:text-primary" href="#">Seja um parceiro</a></li>
+<li><a class="hover:text-primary" href="#">Planos e Preços</a></li>
+<li><a class="hover:text-primary" href="#">Academy</a></li>
+<li><a class="hover:text-primary" href="#">Suporte Pro</a></li>
+</ul>
+</div>
+<div class="bg-primary/5 dark:bg-primary/10 p-6 rounded-2xl border border-primary/10">
+<h4 class="font-bold text-primary mb-4">Anuncie seu serviço</h4>
+<p class="text-xs text-slate-600 dark:text-slate-400 mb-6 font-medium">
+                    Aumente sua visibilidade e conquiste novos clientes em Dourados hoje mesmo.
+                </p>
+<button class="w-full bg-primary text-white py-3 rounded-xl text-sm font-bold shadow-lg shadow-primary/20 hover:shadow-xl transition-all">
+                    Começar Grátis
+                </button>
+</div>
+</div>
+<div class="max-w-[1200px] mx-auto mt-16 pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
+<p>© 2024 Dourados Services. Todos os direitos reservados.</p>
+<div class="flex gap-8">
+<a class="hover:text-primary" href="#">Privacidade</a>
+<a class="hover:text-primary" href="#">Termos</a>
+<a class="hover:text-primary" href="#">Cookies</a>
+</div>
+</div>
+</footer>
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</body></html>
