@@ -21,6 +21,7 @@ import AdminLayout from './layouts/AdminLayout';
 import AdminDashboard from './pages/admin/Dashboard';
 import AdminSubscriptions from './pages/admin/Subscriptions';
 import AdminProfessionals from './pages/admin/Professionals';
+import AdminCustomers from './pages/admin/Customers';
 import MeusAnunciosPage from './pages/MeusAnunciosPage';
 
 // Layout wrapper for public pages to include Header/Footer
@@ -77,7 +78,7 @@ function App() {
             <Route path="subscriptions" element={<AdminSubscriptions />} />
             {/* Placeholders for other admin links */}
             <Route path="professionals" element={<AdminProfessionals />} />
-            <Route path="customers" element={<div className="font-bold text-2xl">Gestão de Clientes (Em breve)</div>} />
+            <Route path="customers" element={<AdminCustomers />} />
             <Route path="settings" element={<div className="font-bold text-2xl">Configurações (Em breve)</div>} />
           </Route>
 
