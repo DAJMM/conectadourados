@@ -39,6 +39,7 @@ export default function Register() {
                         profession: formData.category,
                         description: formData.description,
                         experience_years: parseInt(formData.experience) || 0,
+                        service_areas: formData.service_area,
                         address_city: 'Dourados', // Default city
                         is_active: true
                     }
@@ -54,9 +55,9 @@ export default function Register() {
                     phone: formData.phone
                 }
             });
-        } catch (error) {
+        } catch (error: any) {
             console.error('Erro ao cadastrar:', error);
-            alert('Ocorreu um erro ao salvar seu cadastro. Por favor, tente novamente.');
+            alert(`Ocorreu um erro ao salvar seu cadastro: ${error.message || 'Verifique sua conexão.'}`);
         } finally {
             setLoading(false);
         }
