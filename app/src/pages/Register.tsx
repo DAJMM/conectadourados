@@ -25,11 +25,15 @@ export default function Register() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        console.log("Iniciando submissão do formulário...");
+        // alert("Iniciando envio..."); // Debug alert
         setLoading(true);
 
         try {
+            console.log("Dados do formulário:", formData);
+
             // Save to Supabase (professionals table)
-            const { error } = await supabase
+            const { data, error } = await supabase
                 .from('professionals')
                 .insert([
                     {
@@ -43,9 +47,15 @@ export default function Register() {
                         address_city: 'Dourados', // Default city
                         is_active: true
                     }
-                ]);
+                ])
+                .select();
 
-            if (error) throw error;
+            if (error) {
+                console.error("Erro retornado pelo Supabase:", error);
+                throw error;
+            }
+
+            console.log("Cadastro realizado com sucesso:", data);
 
             // Success: Pass data to success page
             navigate('/register/success', {
@@ -56,8 +66,9 @@ export default function Register() {
                 }
             });
         } catch (error: any) {
-            console.error('Erro ao cadastrar:', error);
-            alert(`Ocorreu um erro ao salvar seu cadastro: ${error.message || 'Verifique sua conexão.'}`);
+            console.error('Erro detalhado ao cadastrar:', error);
+            const msg = error.message || error.error_description || 'Erro desconhecido';
+            alert(`Falha no cadastro: ${msg}`);
         } finally {
             setLoading(false);
         }
