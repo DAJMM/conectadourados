@@ -1,9 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { User, Mail, Phone, Briefcase, Globe, HelpCircle, CheckCircle, ArrowRight, Loader2, DollarSign, Tag } from 'lucide-react';
+import { User, Mail, Phone, Briefcase, Globe, Loader2, Tag } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function CriarAnuncio() {
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    const [userId, setUserId] = useState<string | null>(null);
+    const [checkingAuth, setCheckingAuth] = useState(true);
+
     const [formData, setFormData] = useState({
         titulo: '',
         preco: '',
@@ -18,6 +23,13 @@ export default function CriarAnuncio() {
         website: ''
     });
 
+    useEffect(() => {
+        supabase.auth.getUser().then(({ data: { user } }) => {
+            setUserId(user?.id || null);
+            setCheckingAuth(false);
+        });
+    }, []);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
@@ -28,9 +40,7 @@ export default function CriarAnuncio() {
         setLoading(true);
 
         try {
-            const { data: { user } } = await supabase.auth.getUser();
-
-            if (!user) {
+            if (!userId) {
                 alert('Você precisa estar logado para anunciar.');
                 setLoading(false);
                 return;
@@ -40,7 +50,7 @@ export default function CriarAnuncio() {
                 .from('anuncios')
                 .insert([
                     {
-                        usuario_id: user.id,
+                        usuario_id: userId,
                         titulo: formData.titulo,
                         preco: parseFloat(formData.preco) || 0,
                         nome_prestador: formData.full_name,
@@ -58,7 +68,6 @@ export default function CriarAnuncio() {
             if (error) throw error;
 
             alert('Anúncio publicado com sucesso!');
-            // Reset form or redirect? I'll just reset for now as per previous behavior
             setFormData({
                 titulo: '',
                 preco: '',
@@ -79,6 +88,36 @@ export default function CriarAnuncio() {
             setLoading(false);
         }
     };
+
+    if (checkingAuth) {
+        return (
+            <div className="flex justify-center p-8">
+                <Loader2 className="animate-spin text-primary" size={32} />
+            </div>
+        );
+    }
+
+    if (!userId) {
+        return (
+            <div className="bg-white dark:bg-[#1a2027] rounded-xl p-8 shadow-sm border border-gray-200 dark:border-gray-700 text-center space-y-4">
+                <div className="mx-auto bg-gray-100 dark:bg-gray-800 w-16 h-16 rounded-full flex items-center justify-center mb-4">
+                    <span className="material-symbols-outlined text-3xl text-gray-500">lock</span>
+                </div>
+                <h2 className="text-xl font-bold text-[#111417] dark:text-white">Faça login para anunciar</h2>
+                <p className="text-[#647587] dark:text-gray-400 max-w-md mx-auto">
+                    Você precisa estar conectado na sua conta para criar novos anúncios e gerenciar suas publicações.
+                </p>
+                <div className="pt-4">
+                    <Link to="/login" className="inline-block bg-primary text-white font-bold px-8 py-3 rounded-xl shadow hover:bg-primary-light transition-all">
+                        Fazer Login
+                    </Link>
+                </div>
+                <p className="text-sm text-gray-500 mt-4">
+                    Não tem uma conta? <Link to="/signup" className="text-primary hover:underline">Cadastre-se grátis</Link>
+                </p>
+            </div>
+        );
+    }
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
