@@ -21,6 +21,7 @@ import AdminLayout from './layouts/AdminLayout';
 import AdminDashboard from './pages/admin/Dashboard';
 import AdminSubscriptions from './pages/admin/Subscriptions';
 import AdminProfessionals from './pages/admin/Professionals';
+import MeusAnunciosPage from './pages/MeusAnunciosPage';
 
 // Layout wrapper for public pages to include Header/Footer
 function PublicLayout() {
@@ -55,6 +56,7 @@ function App() {
             <Route path="/testimonials" element={<Testimonials />} />
             <Route path="/profile/:id" element={<ProfessionalProfile />} />
             <Route path="/profile" element={<ProfessionalProfile />} />
+            <Route path="/meus-anuncios" element={<MeusAnunciosPage />} />
           </Route>
 
           {/* Standalone Route (No Header/Footer) */}
