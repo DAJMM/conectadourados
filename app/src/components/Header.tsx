@@ -40,7 +40,12 @@ export default function Header() {
                     <Link className={isActive("/")} to="/">Início</Link>
                     <Link className={isActive("/testimonials")} to="/testimonials">Profissionais</Link>
                     <Link className={isActive("/about")} to="/about">Sobre Nós</Link>
-                    <Link className={`${isActive("/advertise")} text-primary font-bold`} to="/advertise">Seja um Prestador</Link>
+                    <Link
+                        className={`px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary-light transition-all shadow-sm hover:shadow-md font-bold ${location.pathname === "/advertise" ? "ring-2 ring-primary ring-offset-2" : ""}`}
+                        to="/advertise"
+                    >
+                        Seja um Prestador
+                    </Link>
                 </nav>
 
                 <div className="flex gap-2 items-center">
@@ -65,22 +70,7 @@ export default function Header() {
                                 <span className="hidden sm:inline text-sm font-medium">Sair</span>
                             </button>
                         </>
-                    ) : (
-                        <>
-                            <button
-                                onClick={handleLoginClick}
-                                className="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-[#f0f2f4] text-[#111518] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-3.5 sm:px-6 hover:bg-gray-200 transition-colors"
-                            >
-                                <span className="truncate">Entrar</span>
-                            </button>
-                            <Link
-                                to="/signup"
-                                className="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-primary text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-3.5 sm:px-6 hover:bg-primary-light transition-colors"
-                            >
-                                <span className="truncate">Cadastrar</span>
-                            </Link>
-                        </>
-                    )}
+                    ) : null}
                 </div>
             </div>
         </header>

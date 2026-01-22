@@ -34,3 +34,5 @@ app/.env.local
 *.zip
 stitch_busca_de_profissionais_dourados/
 code.html
+.vercel
+.env*.local
