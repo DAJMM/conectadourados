@@ -1,8 +1,20 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Check, MessageCircle } from 'lucide-react';
 
 export default function RegisterSuccess() {
     const navigate = useNavigate();
+    const location = useLocation();
+
+    // Get data passed from the Register page
+    const { name, category, phone } = location.state || {
+        name: 'Visitante',
+        category: 'Não informada',
+        phone: '5567999999999'
+    };
+
+    // Format phone for WhatsApp link
+    const cleanPhone = phone.replace(/\D/g, '');
+    const waPhone = cleanPhone.length > 0 ? (cleanPhone.startsWith('55') ? cleanPhone : `55${cleanPhone}`) : '5567999999999';
 
     return (
         <div className="bg-[#f0f2f4] dark:bg-background-dark min-h-screen flex items-center justify-center px-4 font-display">
@@ -12,7 +24,7 @@ export default function RegisterSuccess() {
                 <div className="text-center mb-8 flex items-center justify-center gap-2">
                     <div className="size-8 text-primary">
                         <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path fillRule="evenodd" clipRule="evenodd" d="M24 4H6V17.3333V30.6667H24V44H42V30.6667V17.3333H24V4Z" fill="currentColor"></path>
+                            <path fillRule="evenodd" clipRule="evenodd" d="M24 4H6V17.3333V30.6667H24V44H42V30.6667V17.3333H24V44Z" fill="currentColor"></path>
                         </svg>
                     </div>
                     <h2 className="text-[#111518] dark:text-white text-xl font-bold">Conecta Dourados</h2>
@@ -45,17 +57,17 @@ export default function RegisterSuccess() {
                         </div>
                         <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
                             <span className="text-sm text-gray-500">Profissional</span>
-                            <span className="text-sm font-bold text-[#111417] dark:text-white">João Silva</span>
+                            <span className="text-sm font-bold text-[#111417] dark:text-white">{name}</span>
                         </div>
                         <div className="flex justify-between items-center py-2">
                             <span className="text-sm text-gray-500">Categoria</span>
-                            <span className="text-sm font-bold text-[#111417] dark:text-white">Reformas e Pintura</span>
+                            <span className="text-sm font-bold text-[#111417] dark:text-white">{category}</span>
                         </div>
                     </div>
 
                     <div className="space-y-4">
                         <a
-                            href="https://wa.me/5567999999999"
+                            href={`https://wa.me/${waPhone}`}
                             target="_blank"
                             className="w-full flex items-center justify-center gap-2 bg-[#25D366] text-white font-bold py-4 rounded-xl shadow-lg hover:bg-[#128C7E] transition-all transform hover:-translate-y-1"
                         >

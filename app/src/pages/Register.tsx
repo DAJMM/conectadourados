@@ -1,13 +1,65 @@
 import { useNavigate } from 'react-router-dom';
-import { User, Mail, Phone, Briefcase, Globe, HelpCircle, CheckCircle, ArrowRight } from 'lucide-react';
+import { useState } from 'react';
+import { User, Mail, Phone, Briefcase, Globe, HelpCircle, CheckCircle, ArrowRight, Loader2 } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 export default function Register() {
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+    const [formData, setFormData] = useState({
+        full_name: '',
+        email: '',
+        phone: '',
+        category: '',
+        experience: '',
+        service_area: '',
+        description: '',
+        instagram: '',
+        website: ''
+    });
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // In a real app, validation and API call would go here
-        navigate('/register/success');
+        setLoading(true);
+
+        try {
+            // Save to Supabase (professionals table)
+            const { error } = await supabase
+                .from('professionals')
+                .insert([
+                    {
+                        full_name: formData.full_name,
+                        email: formData.email,
+                        phone: formData.phone,
+                        profession: formData.category,
+                        description: formData.description,
+                        experience_years: parseInt(formData.experience) || 0,
+                        address_city: 'Dourados', // Default city
+                        is_active: true
+                    }
+                ]);
+
+            if (error) throw error;
+
+            // Success: Pass data to success page
+            navigate('/register/success', {
+                state: {
+                    name: formData.full_name,
+                    category: formData.category,
+                    phone: formData.phone
+                }
+            });
+        } catch (error) {
+            console.error('Erro ao cadastrar:', error);
+            alert('Ocorreu um erro ao salvar seu cadastro. Por favor, tente novamente.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -39,6 +91,9 @@ export default function Register() {
                                         <div className="relative">
                                             <input
                                                 type="text"
+                                                name="full_name"
+                                                value={formData.full_name}
+                                                onChange={handleChange}
                                                 placeholder="Ex: João da Silva"
                                                 className="w-full pl-4 pr-10 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-800 outline-none focus:ring-2 focus:ring-primary transition-all dark:text-white"
                                                 required
@@ -51,6 +106,9 @@ export default function Register() {
                                         <div className="relative">
                                             <input
                                                 type="email"
+                                                name="email"
+                                                value={formData.email}
+                                                onChange={handleChange}
                                                 placeholder="seu@email.com"
                                                 className="w-full pl-4 pr-10 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-800 outline-none focus:ring-2 focus:ring-primary transition-all dark:text-white"
                                                 required
@@ -63,6 +121,9 @@ export default function Register() {
                                         <div className="relative">
                                             <input
                                                 type="tel"
+                                                name="phone"
+                                                value={formData.phone}
+                                                onChange={handleChange}
                                                 placeholder="(67) 9 9999-9999"
                                                 className="w-full pl-4 pr-10 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-800 outline-none focus:ring-2 focus:ring-primary transition-all dark:text-white"
                                                 required
@@ -83,7 +144,13 @@ export default function Register() {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="md:col-span-2">
                                         <label className="block text-sm font-bold mb-2">Categoria de Serviço</label>
-                                        <select className="w-full pl-4 pr-10 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-800 outline-none focus:ring-2 focus:ring-primary transition-all dark:text-white appearance-none h-[52px]">
+                                        <select
+                                            name="category"
+                                            value={formData.category}
+                                            onChange={handleChange}
+                                            className="w-full pl-4 pr-10 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-800 outline-none focus:ring-2 focus:ring-primary transition-all dark:text-white appearance-none h-[52px]"
+                                            required
+                                        >
                                             <option value="">Selecione uma categoria principal...</option>
                                             <optgroup label="Reformas e Reparos">
                                                 <option>Eletricista</option>
@@ -144,6 +211,9 @@ export default function Register() {
                                         <label className="block text-sm font-bold mb-2">Anos de Experiência</label>
                                         <input
                                             type="text"
+                                            name="experience"
+                                            value={formData.experience}
+                                            onChange={handleChange}
                                             placeholder="Ex: 5"
                                             className="w-full pl-4 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-800 outline-none focus:ring-2 focus:ring-primary transition-all dark:text-white"
                                         />
@@ -152,6 +222,9 @@ export default function Register() {
                                         <label className="block text-sm font-bold mb-2">Bairros atendidos em Dourados</label>
                                         <input
                                             type="text"
+                                            name="service_area"
+                                            value={formData.service_area}
+                                            onChange={handleChange}
                                             placeholder="Ex: Centro, Jardim Água Boa..."
                                             className="w-full pl-4 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-800 outline-none focus:ring-2 focus:ring-primary transition-all dark:text-white"
                                         />
@@ -159,6 +232,9 @@ export default function Register() {
                                     <div className="md:col-span-2">
                                         <label className="block text-sm font-bold mb-2">Descrição dos Serviços Oferecidos</label>
                                         <textarea
+                                            name="description"
+                                            value={formData.description}
+                                            onChange={handleChange}
                                             placeholder="Descreva detalhadamente o que você faz, suas especialidades, ferramentas que utiliza e diferenciais do seu atendimento..."
                                             className="w-full pl-4 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-800 outline-none focus:ring-2 focus:ring-primary transition-all dark:text-white h-32 resize-none"
                                             required
@@ -182,6 +258,9 @@ export default function Register() {
                                             <span className="absolute left-4 top-3.5 text-gray-400">@</span>
                                             <input
                                                 type="text"
+                                                name="instagram"
+                                                value={formData.instagram}
+                                                onChange={handleChange}
                                                 placeholder="usuario"
                                                 className="w-full pl-8 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-800 outline-none focus:ring-2 focus:ring-primary transition-all dark:text-white"
                                             />
@@ -192,6 +271,9 @@ export default function Register() {
                                         <div className="relative">
                                             <input
                                                 type="text"
+                                                name="website"
+                                                value={formData.website}
+                                                onChange={handleChange}
                                                 placeholder="https://meusite.com"
                                                 className="w-full pl-4 pr-10 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-800 outline-none focus:ring-2 focus:ring-primary transition-all dark:text-white"
                                             />
@@ -204,9 +286,17 @@ export default function Register() {
                             <div className="flex justify-end pt-4">
                                 <button
                                     type="submit"
-                                    className="w-full md:w-auto bg-primary text-white font-bold text-lg px-8 py-4 rounded-xl shadow-lg hover:bg-primary-light transition-all active:scale-[0.98]"
+                                    disabled={loading}
+                                    className="w-full md:w-auto bg-primary text-white font-bold text-lg px-8 py-4 rounded-xl shadow-lg hover:bg-primary-light transition-all active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                                 >
-                                    Finalizar Meu Cadastro
+                                    {loading ? (
+                                        <>
+                                            <Loader2 size={24} className="animate-spin" />
+                                            Enviando...
+                                        </>
+                                    ) : (
+                                        'Finalizar Meu Cadastro'
+                                    )}
                                 </button>
                             </div>
 
