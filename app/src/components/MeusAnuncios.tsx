@@ -6,6 +6,7 @@ interface Anuncio {
     id: string;
     titulo: string;
     preco: number;
+    imagem_url?: string;
 }
 
 export default function MeusAnuncios() {
@@ -57,12 +58,21 @@ export default function MeusAnuncios() {
             <div className="space-y-4">
                 {anuncios.length === 0 && <p className="text-gray-500 dark:text-gray-400">Nenhum anúncio encontrado.</p>}
                 {anuncios.map(anuncio => (
-                    <div key={anuncio.id} className="p-4 border rounded-xl shadow-sm bg-white dark:bg-[#1a2027] dark:border-gray-700 dark:text-white flex justify-between items-center">
-                        <div>
-                            <h3 className="font-bold text-lg">{anuncio.titulo}</h3>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">ID: {anuncio.id.slice(0, 8)}...</p>
+                    <div key={anuncio.id} className="p-4 border rounded-xl shadow-sm bg-white dark:bg-[#1a2027] dark:border-gray-700 dark:text-white flex justify-between items-center gap-4">
+                        <div className="flex items-center gap-4">
+                            {anuncio.imagem_url ? (
+                                <img src={anuncio.imagem_url} alt={anuncio.titulo} className="w-16 h-16 object-cover rounded-lg bg-gray-100 dark:bg-gray-800" />
+                            ) : (
+                                <div className="w-16 h-16 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-400">
+                                    <span className="material-symbols-outlined">image_not_supported</span>
+                                </div>
+                            )}
+                            <div>
+                                <h3 className="font-bold text-lg">{anuncio.titulo}</h3>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">ID: {anuncio.id.slice(0, 8)}...</p>
+                            </div>
                         </div>
-                        <p className="text-green-600 dark:text-green-400 font-bold text-lg">
+                        <p className="text-green-600 dark:text-green-400 font-bold text-lg whitespace-nowrap">
                             {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(anuncio.preco)}
                         </p>
                     </div>

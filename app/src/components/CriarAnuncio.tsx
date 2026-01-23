@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { User, Mail, Phone, Briefcase, Globe, Loader2, Tag } from 'lucide-react';
+import { User, Mail, Phone, Briefcase, Globe, Loader2, Tag, Camera, X, Upload } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
 export default function CriarAnuncio() {
@@ -8,6 +8,11 @@ export default function CriarAnuncio() {
     const [loading, setLoading] = useState(false);
     const [userId, setUserId] = useState<string | null>(null);
     const [checkingAuth, setCheckingAuth] = useState(true);
+
+    // Image upload state
+    const [imageFile, setImageFile] = useState<File | null>(null);
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const [uploadingImage, setUploadingImage] = useState(false);
 
     const [formData, setFormData] = useState({
         titulo: '',
@@ -35,6 +40,48 @@ export default function CriarAnuncio() {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            setImageFile(file);
+            setImagePreview(URL.createObjectURL(file));
+        }
+    };
+
+    const removeImage = () => {
+        setImageFile(null);
+        if (imagePreview) {
+            URL.revokeObjectURL(imagePreview);
+            setImagePreview(null);
+        }
+    };
+
+    const uploadImage = async (file: File): Promise<string | null> => {
+        try {
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Math.random()}.${fileExt}`;
+            const filePath = `${userId}/${fileName}`;
+
+            const { error: uploadError } = await supabase.storage
+                .from('ad-photos')
+                .upload(filePath, file);
+
+            if (uploadError) {
+                console.error('Error uploading image:', uploadError);
+                throw uploadError;
+            }
+
+            const { data } = supabase.storage
+                .from('ad-photos')
+                .getPublicUrl(filePath);
+
+            return data.publicUrl;
+        } catch (error) {
+            console.error('Error in uploadImage:', error);
+            return null;
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
@@ -44,6 +91,17 @@ export default function CriarAnuncio() {
                 alert('Você precisa estar logado para anunciar.');
                 setLoading(false);
                 return;
+            }
+
+            let imageUrl = null;
+            if (imageFile) {
+                setUploadingImage(true);
+                imageUrl = await uploadImage(imageFile);
+                setUploadingImage(false);
+
+                if (!imageUrl) {
+                    throw new Error('Falha ao fazer upload da imagem.');
+                }
             }
 
             const { error } = await supabase
@@ -61,25 +119,21 @@ export default function CriarAnuncio() {
                         areas_atendimento: formData.service_area,
                         descricao: formData.description,
                         instagram: formData.instagram,
-                        website: formData.website
+                        website: formData.website,
+                        imagem_url: imageUrl
                     }
                 ]);
 
             if (error) throw error;
 
-            alert('Anúncio publicado com sucesso!');
-            setFormData({
-                titulo: '',
-                preco: '',
-                full_name: '',
-                email: '',
-                phone: '',
-                category: '',
-                experience: '',
-                service_area: '',
-                description: '',
-                instagram: '',
-                website: ''
+            // Redirect to success page with data
+            navigate('/anuncio-success', {
+                state: {
+                    name: formData.full_name,
+                    category: formData.category,
+                    titulo: formData.titulo,
+                    phone: formData.phone
+                }
             });
 
         } catch (error: any) {
@@ -122,7 +176,7 @@ export default function CriarAnuncio() {
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
 
-            {/* Detalhes do Anúncio (Novo) */}
+            {/* Detalhes do Anúncio */}
             <div className="bg-white dark:bg-[#1a2027] rounded-xl p-8 shadow-sm border border-gray-200 dark:border-gray-700">
                 <div className="flex items-center gap-2 mb-6 text-primary">
                     <Tag size={24} />
@@ -156,6 +210,45 @@ export default function CriarAnuncio() {
                                 required
                             />
                         </div>
+                    </div>
+                </div>
+
+                {/* Upload de Imagem */}
+                <div className="mt-6">
+                    <label className="block text-sm font-bold mb-2">Foto do Anúncio (Opcional)</label>
+                    <div className="mt-2">
+                        {!imagePreview ? (
+                            <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-all">
+                                <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <Camera className="w-8 h-8 mb-2 text-gray-400" />
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                                        <span className="font-semibold">Clique para enviar</span> ou arraste a foto
+                                    </p>
+                                    <p className="text-xs text-gray-400">PNG, JPG ou JPEG</p>
+                                </div>
+                                <input
+                                    type="file"
+                                    className="hidden"
+                                    accept="image/*"
+                                    onChange={handleImageChange}
+                                />
+                            </label>
+                        ) : (
+                            <div className="relative w-full md:w-1/2 h-48 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+                                <img
+                                    src={imagePreview}
+                                    alt="Preview"
+                                    className="w-full h-full object-cover"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={removeImage}
+                                    className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white p-1 rounded-full transition-all"
+                                >
+                                    <X size={20} />
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
@@ -372,7 +465,7 @@ export default function CriarAnuncio() {
                 {loading ? (
                     <>
                         <Loader2 size={24} className="animate-spin" />
-                        Publicando...
+                        {uploadingImage ? 'Enviando imagem...' : 'Publicando...'}
                     </>
                 ) : (
                     'Publicar Anúncio'

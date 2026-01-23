@@ -1,6 +1,75 @@
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { supabase } from '../lib/supabase';
+import { MessageCircle, Loader2, User } from 'lucide-react';
+
+interface Anuncio {
+    id: string;
+    titulo: string;
+    nome_prestador: string;
+    categoria: string;
+    telefone: string;
+    areas_atendimento: string;
+    anos_experiencia: number;
+    descricao: string;
+    preco: number;
+    criado_em: string;
+    imagem_url?: string;
+}
 
 export default function Home() {
+    const [anuncios, setAnuncios] = useState<Anuncio[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetchAnuncios();
+    }, []);
+
+    const fetchAnuncios = async () => {
+        try {
+            const { data, error } = await supabase
+                .from('anuncios')
+                .select('*')
+                .order('criado_em', { ascending: false })
+                .limit(6);
+
+            if (error) throw error;
+            setAnuncios(data || []);
+        } catch (error) {
+            console.error('Erro ao buscar anúncios:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Format phone for WhatsApp
+    const formatWhatsApp = (phone: string) => {
+        const clean = phone?.replace(/\D/g, '') || '';
+        return clean.startsWith('55') ? clean : `55${clean}`;
+    };
+
+    // Generate initials for avatar placeholder
+    const getInitials = (name: string) => {
+        if (!name) return '?';
+        return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+    };
+
+    // Generate a consistent color based on the name
+    const getAvatarColor = (name: string) => {
+        const colors = [
+            'bg-blue-500',
+            'bg-green-500',
+            'bg-purple-500',
+            'bg-orange-500',
+            'bg-pink-500',
+            'bg-teal-500',
+            'bg-indigo-500',
+            'bg-red-500',
+        ];
+        const index = name?.length ? name.charCodeAt(0) % colors.length : 0;
+        return colors[index];
+    };
+
     return (
         <div className="flex flex-col w-full">
             {/* HeroSection */}
@@ -88,73 +157,111 @@ export default function Home() {
             <div className="px-4 lg:px-40 flex justify-center py-2">
                 <div className="max-w-[1200px] w-full flex items-center justify-between px-4">
                     <h2 className="text-[#111518] dark:text-white text-[22px] font-extrabold leading-tight tracking-tight">Profissionais em Destaque</h2>
-                    <a className="text-primary text-sm font-bold hover:underline" href="#">Ver todos</a>
+                    <Link className="text-primary text-sm font-bold hover:underline" to="/testimonials">Ver todos</Link>
                 </div>
             </div>
 
-            {/* Professional List */}
+            {/* Professional List - Dynamic from Supabase */}
             <main className="px-4 lg:px-40 flex justify-center pb-20">
                 <div className="max-w-[1200px] w-full flex flex-col gap-4 px-4">
-                    {/* Card 1: Ricardo Silva -> Linked to Carlos (Standard Profile) for demo */}
-                    <div className="card-shadow bg-white dark:bg-[#252d35] rounded-xl p-5 border border-gray-100 dark:border-gray-700 flex flex-col md:flex-row gap-6 items-center md:items-stretch transition-all hover:shadow-lg hover:-translate-y-1">
-                        <div className="relative">
-                            <div className="size-24 md:size-32 rounded-full bg-cover bg-center border-4 border-white dark:border-gray-800 shadow-sm" style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuCKR01IsH0baQLCVp8QzbDPQ8FF0fXdLMD3umTYfp41wFhEAKC2xlrQLQCBzBAPW-AX3DxrOoftSbdSE5fkjRZdxDS6UQKZAutecOWW06JU7s__i96u8txtyXjQic0Nds5dYcwzIzQmHfDcDDj0fBUxJMf9F5xoznMeA-ml6eQsxtme1GYSkmzio-U0KW6LrAGtjtZmj5tf01dmd2Lb7lXnkJe9hj0aq1UrqK43jvENsFFLUQ_VGWLUoUMcmBgtPG-mEqVe3Z6kjJ_D")' }}></div>
-                            <div className="absolute bottom-1 right-1 bg-green-500 size-4 rounded-full border-2 border-white dark:border-gray-800 shadow-sm"></div>
+                    {loading ? (
+                        <div className="flex justify-center items-center py-16">
+                            <Loader2 className="animate-spin text-primary" size={48} />
                         </div>
-                        <div className="flex-1 flex flex-col justify-center text-center md:text-left">
-                            <div className="flex flex-col md:flex-row md:items-center gap-2 mb-1">
-                                <h3 className="text-xl font-extrabold text-[#111518] dark:text-white">Ricardo Silva</h3>
-                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 w-fit mx-auto md:mx-0">
-                                    Disponível Agora
-                                </span>
+                    ) : anuncios.length === 0 ? (
+                        <div className="bg-white dark:bg-[#252d35] rounded-xl p-12 text-center border border-gray-100 dark:border-gray-700">
+                            <div className="size-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <User className="text-gray-400" size={32} />
                             </div>
-                            <p className="text-[#617989] dark:text-gray-400 font-semibold text-base mb-2">Eletricista Residencial & Industrial</p>
-                            <div className="flex items-center justify-center md:justify-start gap-1 mb-3">
-                                <span className="material-symbols-outlined text-star-yellow text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                                <span className="font-bold text-[#111518] dark:text-white text-base">4.9</span>
-                                <span className="text-[#617989] dark:text-gray-400 text-sm">(124 avaliações)</span>
-                                <span className="mx-2 text-gray-300">•</span>
-                                <span className="text-[#617989] dark:text-gray-400 text-sm">Jardim Água Boa, Dourados</span>
-                            </div>
-                        </div>
-                        <div className="flex flex-col justify-center gap-3 w-full md:w-auto min-w-[160px]">
-                            {/* Linking to 'carlos' profile for demo of Standard layout */}
-                            <Link to="/profile/carlos" className="w-full bg-primary text-white font-bold py-3 px-6 rounded-lg hover:bg-primary-light transition-colors text-center inline-flex items-center justify-center">
-                                Ver Perfil
+                            <h3 className="text-xl font-bold text-[#111518] dark:text-white mb-2">Nenhum profissional cadastrado ainda</h3>
+                            <p className="text-[#617989] dark:text-gray-400 mb-6">Seja o primeiro a anunciar seus serviços!</p>
+                            <Link
+                                to="/meus-anuncios"
+                                className="inline-flex items-center gap-2 bg-primary text-white font-bold px-6 py-3 rounded-xl hover:bg-primary-light transition-all"
+                            >
+                                Cadastrar meu Serviço
                             </Link>
-                            <button className="w-full bg-primary/10 text-primary font-bold py-3 px-6 rounded-lg hover:bg-primary/20 transition-colors">
-                                Solicitar Orçamento
-                            </button>
                         </div>
-                    </div>
-                    {/* Card 2: Maria -> Linked to Joao (Premium Profile) for demo */}
-                    <div className="card-shadow bg-white dark:bg-[#252d35] rounded-xl p-5 border border-gray-100 dark:border-gray-700 flex flex-col md:flex-row gap-6 items-center md:items-stretch transition-all hover:shadow-lg hover:-translate-y-1">
-                        <div className="relative">
-                            <div className="size-24 md:size-32 rounded-full bg-cover bg-center border-4 border-white dark:border-gray-800 shadow-sm" style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuDd30sHjg1-d_y7tAVAetB_Zc7Et7oQmeF-J68FWDMZc94TUYjHSrboTY_MoEtgCH_YXnTKTDgzc2wssV-O5VI3UMxt228cRnkDx67onHsN52Ks35sgYFQs6dwOJZsFOs5aWlyH1m-c19SpfTwufD5Qvxcf8EZ-4l7NABNX79c8yZO3JVzi2zzMJV_HpZz7LFdjYmUc4tmB-m5kGeVO7-MkQWGKcqP9byEQ96M4F3rDMSd_QT7xhyHh8xag0pHkgyW8aQ0OL5zWFHOy")' }}></div>
-                        </div>
-                        <div className="flex-1 flex flex-col justify-center text-center md:text-left">
-                            <div className="flex flex-col md:flex-row md:items-center gap-2 mb-1">
-                                <h3 className="text-xl font-extrabold text-[#111518] dark:text-white">Maria Eduarda Santos</h3>
+                    ) : (
+                        anuncios.map((anuncio) => (
+                            <div
+                                key={anuncio.id}
+                                className="card-shadow bg-white dark:bg-[#252d35] rounded-xl p-5 border border-gray-100 dark:border-gray-700 flex flex-col md:flex-row gap-6 items-center md:items-stretch transition-all hover:shadow-lg hover:-translate-y-1"
+                            >
+                                {/* Avatar or Image */}
+                                <div className="relative shrink-0">
+                                    {anuncio.imagem_url ? (
+                                        <div className="size-24 md:size-32 rounded-lg overflow-hidden border border-gray-100 dark:border-gray-700">
+                                            <img
+                                                src={anuncio.imagem_url}
+                                                alt={anuncio.nome_prestador}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div
+                                            className={`size-24 md:size-32 rounded-full ${getAvatarColor(anuncio.nome_prestador)} flex items-center justify-center border-4 border-white dark:border-gray-800 shadow-sm text-white text-2xl md:text-3xl font-bold`}
+                                        >
+                                            {getInitials(anuncio.nome_prestador)}
+                                        </div>
+                                    )}
+                                    {!anuncio.imagem_url && (
+                                        <div className="absolute bottom-1 right-1 bg-green-500 size-4 rounded-full border-2 border-white dark:border-gray-800 shadow-sm"></div>
+                                    )}
+                                </div>
+
+                                {/* Info */}
+                                <div className="flex-1 flex flex-col justify-center text-center md:text-left">
+                                    <div className="flex flex-col md:flex-row md:items-center gap-2 mb-1">
+                                        <h3 className="text-xl font-extrabold text-[#111518] dark:text-white">{anuncio.nome_prestador}</h3>
+                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 w-fit mx-auto md:mx-0">
+                                            Disponível
+                                        </span>
+                                    </div>
+                                    <p className="text-primary font-bold text-lg mb-1">{anuncio.titulo}</p>
+                                    <p className="text-[#617989] dark:text-gray-400 font-semibold text-base mb-2">{anuncio.categoria}</p>
+                                    <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-3 text-sm">
+                                        {anuncio.anos_experiencia > 0 && (
+                                            <>
+                                                <span className="text-[#617989] dark:text-gray-400">
+                                                    <strong className="text-[#111518] dark:text-white">{anuncio.anos_experiencia}</strong> anos de experiência
+                                                </span>
+                                                <span className="text-gray-300">•</span>
+                                            </>
+                                        )}
+                                        <span className="text-[#617989] dark:text-gray-400">{anuncio.areas_atendimento || 'Dourados, MS'}</span>
+                                        {anuncio.preco > 0 && (
+                                            <>
+                                                <span className="text-gray-300">•</span>
+                                                <span className="text-primary font-bold">R$ {Number(anuncio.preco).toFixed(2)}</span>
+                                            </>
+                                        )}
+                                    </div>
+                                    {anuncio.descricao && (
+                                        <p className="text-[#617989] dark:text-gray-400 text-sm line-clamp-2">{anuncio.descricao}</p>
+                                    )}
+                                </div>
+
+                                {/* Actions */}
+                                <div className="flex flex-col justify-center gap-3 w-full md:w-auto min-w-[180px]">
+                                    <a
+                                        href={`https://wa.me/${formatWhatsApp(anuncio.telefone)}?text=Olá! Vi seu anúncio "${anuncio.titulo}" no Conecta Dourados e gostaria de mais informações.`}
+                                        target="_blank"
+                                        className="w-full bg-[#25D366] text-white font-bold py-3 px-6 rounded-lg hover:bg-[#128C7E] transition-colors text-center inline-flex items-center justify-center gap-2"
+                                    >
+                                        <MessageCircle size={20} />
+                                        WhatsApp
+                                    </a>
+                                    <Link
+                                        to={`/profile/${anuncio.id}`}
+                                        className="w-full bg-primary/10 text-primary font-bold py-3 px-6 rounded-lg hover:bg-primary/20 transition-colors text-center"
+                                    >
+                                        Ver Perfil
+                                    </Link>
+                                </div>
                             </div>
-                            <p className="text-[#617989] dark:text-gray-400 font-semibold text-base mb-2">Professora Particular de Inglês e Espanhol</p>
-                            <div className="flex items-center justify-center md:justify-start gap-1 mb-3">
-                                <span className="material-symbols-outlined text-star-yellow text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                                <span className="font-bold text-[#111518] dark:text-white text-base">5.0</span>
-                                <span className="text-[#617989] dark:text-gray-400 text-sm">(89 avaliações)</span>
-                                <span className="mx-2 text-gray-300">•</span>
-                                <span className="text-[#617989] dark:text-gray-400 text-sm">Centro, Dourados</span>
-                            </div>
-                        </div>
-                        <div className="flex flex-col justify-center gap-3 w-full md:w-auto min-w-[160px]">
-                            {/* Linking to 'joao' profile for demo of Premium layout */}
-                            <Link to="/profile/joao" className="w-full bg-primary text-white font-bold py-3 px-6 rounded-lg hover:bg-primary-light transition-colors text-center inline-flex items-center justify-center">
-                                Ver Perfil
-                            </Link>
-                            <button className="w-full bg-primary/10 text-primary font-bold py-3 px-6 rounded-lg hover:bg-primary/20 transition-colors">
-                                Solicitar Orçamento
-                            </button>
-                        </div>
-                    </div>
+                        ))
+                    )}
                 </div>
             </main>
         </div>

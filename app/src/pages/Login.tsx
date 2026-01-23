@@ -18,11 +18,16 @@ export default function Login() {
         setLoading(true);
 
         try {
-            const { error } = await signIn(email, password);
+            const { error, role } = await signIn(email, password);
             if (error) {
                 setError(error.message);
             } else {
-                navigate('/admin');
+                // Role-based redirect
+                if (role === 'admin') {
+                    navigate('/admin');
+                } else {
+                    navigate('/area-do-cliente');
+                }
             }
         } catch (err) {
             setError('Ocorreu um erro ao fazer login. Tente novamente.');

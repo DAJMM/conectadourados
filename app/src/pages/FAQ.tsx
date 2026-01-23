@@ -28,7 +28,7 @@ export default function FAQ() {
         professionals: [
             {
                 question: "Como faço para anunciar meus serviços?",
-                answer: "Basta clicar em 'Seja um Prestador' no menu superior, preencher um breve cadastro e nossa equipe entrará em contato para ativar seu perfil."
+                answer: "Basta acessar a 'Área do Anunciante' no menu superior, fazer login ou criar uma conta, e preencher o formulário com os detalhes do seu serviço. Seu anúncio ficará visível imediatamente para clientes da região!"
             },
             {
                 question: "Quanto custa para anunciar?",

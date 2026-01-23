@@ -23,6 +23,8 @@ import AdminSubscriptions from './pages/admin/Subscriptions';
 import AdminProfessionals from './pages/admin/Professionals';
 import AdminCustomers from './pages/admin/Customers';
 import MeusAnunciosPage from './pages/MeusAnunciosPage';
+import AnuncioSuccess from './pages/AnuncioSuccess';
+import AreaDoCliente from './pages/AreaDoCliente';
 
 // Layout wrapper for public pages to include Header/Footer
 function PublicLayout() {
@@ -58,16 +60,28 @@ function App() {
             <Route path="/profile/:id" element={<ProfessionalProfile />} />
             <Route path="/profile" element={<ProfessionalProfile />} />
             <Route path="/meus-anuncios" element={<MeusAnunciosPage />} />
+            <Route path="/anuncio-success" element={<AnuncioSuccess />} />
           </Route>
+
+          {/* Client Area Route - Protected */}
+          <Route path="/area-do-cliente" element={
+            <ProtectedRoute>
+              <>
+                <Header />
+                <AreaDoCliente />
+                <Footer />
+              </>
+            </ProtectedRoute>
+          } />
 
           {/* Standalone Route (No Header/Footer) */}
           <Route path="/card/:id" element={<DigitalCard />} />
 
-          {/* Admin Routes - Protected */}
+          {/* Admin Routes - Protected (Admin Only) */}
           <Route
             path="/admin"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute requiredRole="admin">
                 <AdminLayout>
                   <Outlet />
                 </AdminLayout>

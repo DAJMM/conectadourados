@@ -41,16 +41,10 @@ export default function Header() {
                     <Link className={isActive("/testimonials")} to="/testimonials">Profissionais</Link>
                     <Link className={isActive("/about")} to="/about">Sobre Nós</Link>
                     <Link
-                        className={`px-4 py-2 rounded-lg bg-white border border-gray-200 text-[#111518] hover:bg-gray-50 transition-all shadow-sm hover:shadow-md font-bold ${location.pathname === "/meus-anuncios" ? "ring-2 ring-gray-200 ring-offset-2" : ""}`}
+                        className={`px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary-light transition-all shadow-sm hover:shadow-md font-bold ${location.pathname === "/meus-anuncios" ? "ring-2 ring-primary ring-offset-2" : ""}`}
                         to="/meus-anuncios"
                     >
                         Área do Anunciante
-                    </Link>
-                    <Link
-                        className={`px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary-light transition-all shadow-sm hover:shadow-md font-bold ${location.pathname === "/advertise" ? "ring-2 ring-primary ring-offset-2" : ""}`}
-                        to="/advertise"
-                    >
-                        Seja um Prestador
                     </Link>
                 </nav>
 

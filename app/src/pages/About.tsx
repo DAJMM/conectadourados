@@ -123,7 +123,7 @@ export default function About() {
                         Seja você um profissional autônomo ou uma empresa local, estamos aqui para ajudar você a crescer.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center relative z-10">
-                        <Link to="/advertise" className="bg-white text-primary px-8 py-4 rounded-xl text-lg font-bold shadow-xl hover:bg-gray-100 transition-all inline-block">
+                        <Link to="/meus-anuncios" className="bg-white text-primary px-8 py-4 rounded-xl text-lg font-bold shadow-xl hover:bg-gray-100 transition-all inline-block">
                             Cadastrar meu Serviço
                         </Link>
                         <a href="https://wa.me/5567999999999" target="_blank" className="bg-primary/20 backdrop-blur-md border border-white/30 text-white px-8 py-4 rounded-xl text-lg font-bold hover:bg-white/10 transition-all inline-block">

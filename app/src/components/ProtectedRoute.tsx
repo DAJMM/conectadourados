@@ -1,13 +1,15 @@
 import type { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import type { UserRole } from '../contexts/AuthContext';
 
 interface ProtectedRouteProps {
     children: ReactNode;
+    requiredRole?: UserRole;
 }
 
-export default function ProtectedRoute({ children }: ProtectedRouteProps) {
-    const { user, loading } = useAuth();
+export default function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
+    const { user, loading, role } = useAuth();
 
     if (loading) {
         return (
@@ -24,5 +26,18 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
         return <Navigate to="/login" replace />;
     }
 
+    // Check role if required
+    if (requiredRole && role !== requiredRole) {
+        // Redirect non-admin users trying to access admin pages
+        if (requiredRole === 'admin') {
+            return <Navigate to="/area-do-cliente" replace />;
+        }
+        // Redirect admin users trying to access user-only pages
+        if (requiredRole === 'user') {
+            return <Navigate to="/admin" replace />;
+        }
+    }
+
     return <>{children}</>;
 }
+
