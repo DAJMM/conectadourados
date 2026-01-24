@@ -21,8 +21,13 @@ export default function Header() {
     };
 
     const handleLogout = async () => {
-        await signOut();
-        navigate('/');
+        try {
+            await signOut();
+            navigate('/');
+        } catch (error) {
+            console.error('[Header] Logout error:', error);
+            navigate('/');
+        }
     };
 
     const isActive = (path: string) => {

@@ -34,8 +34,16 @@ export default function AreaDoCliente() {
     }, [user, role, loading, navigate]);
 
     const handleLogout = async () => {
-        await signOut();
-        navigate('/');
+        try {
+            console.log('[AreaDoCliente] Initiating logout');
+            await signOut();
+            console.log('[AreaDoCliente] Logout successful, navigating to home');
+            navigate('/');
+        } catch (error) {
+            console.error('[AreaDoCliente] Error during logout:', error);
+            // Fallback: force navigation even if error
+            navigate('/');
+        }
     };
 
     if (loading) {
@@ -118,7 +126,7 @@ export default function AreaDoCliente() {
                         </div>
                         <button
                             onClick={handleLogout}
-                            className="flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                            className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg transition-colors border border-red-100"
                         >
                             <LogOut size={20} />
                             <span className="font-medium">Sair</span>

@@ -1,6 +1,8 @@
 import { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Users, UserCircle, CreditCard, Settings, LogOut } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 interface AdminLayoutProps {
     children: ReactNode;
@@ -8,6 +10,13 @@ interface AdminLayoutProps {
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
     const location = useLocation();
+    const navigate = useNavigate();
+    const { signOut } = useAuth();
+
+    const handleLogout = async () => {
+        await signOut();
+        navigate('/');
+    };
 
     const isActive = (path: string) => {
         return location.pathname === path ? 'bg-[#eef4ff] text-primary' : 'text-[#647587] hover:bg-gray-50 hover:text-[#111417]';
@@ -56,10 +65,13 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 </nav>
 
                 <div className="p-4 border-t border-[#f0f2f4]">
-                    <div className="flex items-center gap-3 px-4 py-2 rounded-lg bg-[#fff0f0] text-red-600 cursor-pointer hover:bg-[#ffe5e5] transition-colors">
+                    <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center gap-3 px-4 py-2 rounded-lg bg-[#fff0f0] text-red-600 cursor-pointer hover:bg-[#ffe5e5] transition-colors"
+                    >
                         <LogOut size={18} />
                         <span className="text-sm font-bold">Sair</span>
-                    </div>
+                    </button>
                 </div>
             </aside>
 
