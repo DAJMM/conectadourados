@@ -17,12 +17,18 @@ export default function AreaDoCliente() {
     const { user, role, loading, signOut } = useAuth();
     const navigate = useNavigate();
 
+    console.log('[AreaDoCliente] Render - loading:', loading, 'user:', user?.email, 'role:', role);
+
     useEffect(() => {
+        console.log('[AreaDoCliente] useEffect - loading:', loading, 'user:', user?.email, 'role:', role);
+
         if (!loading && !user) {
+            console.log('[AreaDoCliente] No user, redirecting to login');
             navigate('/login');
         }
         // Redirect admin to admin area
         if (!loading && role === 'admin') {
+            console.log('[AreaDoCliente] Admin user, redirecting to /admin');
             navigate('/admin');
         }
     }, [user, role, loading, navigate]);
@@ -33,12 +39,15 @@ export default function AreaDoCliente() {
     };
 
     if (loading) {
+        console.log('[AreaDoCliente] Showing loading spinner');
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-background-dark">
                 <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent"></div>
             </div>
         );
     }
+
+    console.log('[AreaDoCliente] Rendering main content');
 
     const menuItems = [
         {

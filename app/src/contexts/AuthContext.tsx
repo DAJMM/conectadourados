@@ -27,6 +27,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const fetchUserRole = async (userId: string): Promise<UserRole> => {
         try {
+            console.log('[AuthContext] Fetching role for user:', userId);
+
             const { data, error } = await supabase
                 .from('profiles')
                 .select('role')
@@ -34,28 +36,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 .single();
 
             if (error) {
-                console.error('Error fetching user role:', error);
-                return 'user'; // Default to user on error
+                console.error('[AuthContext] Error fetching user role:', error);
+                // Se o perfil não existir, retornar 'user' como padrão
+                if (error.code === 'PGRST116') {
+                    console.warn('[AuthContext] Profile not found, defaulting to user role');
+                }
+                return 'user';
             }
 
-            return (data?.role as UserRole) || 'user';
+            const userRole = (data?.role as UserRole) || 'user';
+            console.log('[AuthContext] User role fetched:', userRole);
+            return userRole;
         } catch (error) {
-            console.error('Error fetching user role:', error);
+            console.error('[AuthContext] Exception fetching user role:', error);
             return 'user';
         }
     };
 
     useEffect(() => {
+        console.log('[AuthContext] Initializing auth state');
+
         // Get initial session
         supabase.auth.getSession().then(async ({ data: { session } }) => {
+            console.log('[AuthContext] Initial session:', session ? 'exists' : 'null');
             setSession(session);
             setUser(session?.user ?? null);
 
             if (session?.user) {
+                console.log('[AuthContext] Fetching role for initial session');
                 const userRole = await fetchUserRole(session.user.id);
                 setRole(userRole);
             }
 
+            console.log('[AuthContext] Setting loading to false');
             setLoading(false);
         });
 
@@ -63,10 +76,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const {
             data: { subscription },
         } = supabase.auth.onAuthStateChange(async (_event, session) => {
+            console.log('[AuthContext] Auth state changed:', _event, session ? 'session exists' : 'no session');
             setSession(session);
             setUser(session?.user ?? null);
 
             if (session?.user) {
+                console.log('[AuthContext] Fetching role after auth change');
                 const userRole = await fetchUserRole(session.user.id);
                 setRole(userRole);
             } else {
