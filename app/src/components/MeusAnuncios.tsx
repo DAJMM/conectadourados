@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { useAuth } from '../contexts/AuthContext';
 
 interface Anuncio {
     id: string;
@@ -10,16 +10,9 @@ interface Anuncio {
 }
 
 export default function MeusAnuncios() {
+    const { user } = useAuth();
     const [anuncios, setAnuncios] = useState<Anuncio[]>([]);
-    const [userId, setUserId] = useState<string | null>(null);
-
-    useEffect(() => {
-        async function getUser() {
-            const { data: { user } } = await supabase.auth.getUser();
-            setUserId(user?.id || null);
-        }
-        getUser();
-    }, []);
+    const userId = user?.id;
 
     useEffect(() => {
         async function carregarAnuncios() {
@@ -36,20 +29,7 @@ export default function MeusAnuncios() {
     }, [userId]);
 
     if (!userId) {
-        return (
-            <div className="mt-8 p-6 bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-200 dark:border-yellow-900/30 rounded-xl flex flex-col md:flex-row items-center justify-between gap-4">
-                <div className="flex items-center gap-3 text-yellow-800 dark:text-yellow-500">
-                    <span className="material-symbols-outlined text-2xl">lock</span>
-                    <div>
-                        <p className="font-bold">Faça login para ver seus anúncios</p>
-                        <p className="text-sm opacity-80">Você precisa estar conectado para gerenciar suas publicações.</p>
-                    </div>
-                </div>
-                <Link to="/login" className="bg-white dark:bg-gray-800 text-yellow-800 dark:text-yellow-500 font-bold px-6 py-2 rounded-lg shadow-sm hover:shadow transition-all whitespace-nowrap">
-                    Fazer Login
-                </Link>
-            </div>
-        );
+        return null;
     }
 
     return (

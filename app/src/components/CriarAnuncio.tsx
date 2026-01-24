@@ -2,12 +2,13 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { User, Mail, Phone, Briefcase, Globe, Loader2, Tag, Camera, X, Upload } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function CriarAnuncio() {
     const navigate = useNavigate();
+    const { user, loading: authLoading } = useAuth();
     const [loading, setLoading] = useState(false);
-    const [userId, setUserId] = useState<string | null>(null);
-    const [checkingAuth, setCheckingAuth] = useState(true);
+    const userId = user?.id;
 
     // Image upload state
     const [imageFile, setImageFile] = useState<File | null>(null);
@@ -27,13 +28,6 @@ export default function CriarAnuncio() {
         instagram: '',
         website: ''
     });
-
-    useEffect(() => {
-        supabase.auth.getUser().then(({ data: { user } }) => {
-            setUserId(user?.id || null);
-            setCheckingAuth(false);
-        });
-    }, []);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -143,7 +137,7 @@ export default function CriarAnuncio() {
         }
     };
 
-    if (checkingAuth) {
+    if (authLoading) {
         return (
             <div className="flex justify-center p-8">
                 <Loader2 className="animate-spin text-primary" size={32} />
@@ -152,25 +146,7 @@ export default function CriarAnuncio() {
     }
 
     if (!userId) {
-        return (
-            <div className="bg-white dark:bg-[#1a2027] rounded-xl p-8 shadow-sm border border-gray-200 dark:border-gray-700 text-center space-y-4">
-                <div className="mx-auto bg-gray-100 dark:bg-gray-800 w-16 h-16 rounded-full flex items-center justify-center mb-4">
-                    <span className="material-symbols-outlined text-3xl text-gray-500">lock</span>
-                </div>
-                <h2 className="text-xl font-bold text-[#111417] dark:text-white">Faça login para anunciar</h2>
-                <p className="text-[#647587] dark:text-gray-400 max-w-md mx-auto">
-                    Você precisa estar conectado na sua conta para criar novos anúncios e gerenciar suas publicações.
-                </p>
-                <div className="pt-4">
-                    <Link to="/login" className="inline-block bg-primary text-white font-bold px-8 py-3 rounded-xl shadow hover:bg-primary-light transition-all">
-                        Fazer Login
-                    </Link>
-                </div>
-                <p className="text-sm text-gray-500 mt-4">
-                    Não tem uma conta? <Link to="/signup" className="text-primary hover:underline">Cadastre-se grátis</Link>
-                </p>
-            </div>
-        );
+        return null;
     }
 
     return (

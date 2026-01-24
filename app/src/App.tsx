@@ -59,9 +59,19 @@ function App() {
             <Route path="/testimonials" element={<Testimonials />} />
             <Route path="/profile/:id" element={<ProfessionalProfile />} />
             <Route path="/profile" element={<ProfessionalProfile />} />
-            <Route path="/meus-anuncios" element={<MeusAnunciosPage />} />
             <Route path="/anuncio-success" element={<AnuncioSuccess />} />
           </Route>
+
+          {/* User/Ad Routes - Protected */}
+          <Route path="/meus-anuncios" element={
+            <ProtectedRoute requiredRole="user">
+              <>
+                <Header />
+                <MeusAnunciosPage />
+                <Footer />
+              </>
+            </ProtectedRoute>
+          } />
 
           {/* Client Area Route - Protected (User Only) */}
           <Route path="/area-do-cliente" element={
