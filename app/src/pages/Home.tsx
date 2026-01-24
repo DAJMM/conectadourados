@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { MessageCircle, Loader2, User } from 'lucide-react';
+import { useCategoryFilter } from '../contexts/CategoryFilterContext';
 
 interface Anuncio {
     id: string;
@@ -20,18 +21,28 @@ interface Anuncio {
 export default function Home() {
     const [anuncios, setAnuncios] = useState<Anuncio[]>([]);
     const [loading, setLoading] = useState(true);
+    const { selectedCategory } = useCategoryFilter();
 
     useEffect(() => {
         fetchAnuncios();
-    }, []);
+    }, [selectedCategory]); // Re-fetch when category changes
 
     const fetchAnuncios = async () => {
         try {
-            const { data, error } = await supabase
+            setLoading(true);
+            let query = supabase
                 .from('anuncios')
                 .select('*')
-                .order('criado_em', { ascending: false })
-                .limit(6);
+                .order('criado_em', { ascending: false });
+
+            // Apply category filter if selected
+            if (selectedCategory) {
+                query = query.eq('categoria', selectedCategory);
+            } else {
+                query = query.limit(6);
+            }
+
+            const { data, error } = await query;
 
             if (error) throw error;
             setAnuncios(data || []);
@@ -156,7 +167,16 @@ export default function Home() {
             {/* SectionHeader: Profissionais */}
             <div className="px-4 lg:px-40 flex justify-center py-2">
                 <div className="max-w-[1200px] w-full flex items-center justify-between px-4">
-                    <h2 className="text-[#111518] dark:text-white text-[22px] font-extrabold leading-tight tracking-tight">Profissionais em Destaque</h2>
+                    <div className="flex items-center gap-3">
+                        <h2 className="text-[#111518] dark:text-white text-[22px] font-extrabold leading-tight tracking-tight">
+                            Profissionais em Destaque
+                        </h2>
+                        {selectedCategory && (
+                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-primary/10 text-primary border border-primary/20">
+                                Filtro: {selectedCategory}
+                            </span>
+                        )}
+                    </div>
                     <Link className="text-primary text-sm font-bold hover:underline" to="/testimonials">Ver todos</Link>
                 </div>
             </div>

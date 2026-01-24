@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import { User, Mail, Phone, Briefcase, Globe, Loader2, Tag, Camera, X, Upload } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { serviceCategories } from '../data/categories';
 
 export default function CriarAnuncio() {
     const navigate = useNavigate();
@@ -303,59 +304,15 @@ export default function CriarAnuncio() {
                             required
                         >
                             <option value="">Selecione uma categoria principal...</option>
-                            <optgroup label="Reformas e Reparos">
-                                <option>Eletricista</option>
-                                <option>Encanador (Bombeiro Hidráulico)</option>
-                                <option>Pintor Residencial/Comercial</option>
-                                <option>Pedreiro / Mestre de Obras</option>
-                                <option>Marceneiro</option>
-                                <option>Serralheiro</option>
-                                <option>Gesseiro</option>
-                                <option>Montador de Móveis</option>
-                                <option>Técnico em Ar Condicionado</option>
-                                <option>Vidraceiro</option>
-                            </optgroup>
-                            <optgroup label="Serviços Domésticos">
-                                <option>Diarista / Faxineira</option>
-                                <option>Passadeira</option>
-                                <option>Cozinheira</option>
-                                <option>Babá / Cuidador Infantil</option>
-                                <option>Cuidador de Idosos</option>
-                                <option>Jardineiro / Piscineiro</option>
-                                <option>Passeador de Cães (Dog Walker)</option>
-                            </optgroup>
-                            <optgroup label="Saúde e Bem-Estar">
-                                <option>Personal Trainer</option>
-                                <option>Fisioterapeuta</option>
-                                <option>Nutricionista</option>
-                                <option>Psicólogo</option>
-                                <option>Manicure / Pedicure</option>
-                                <option>Cabeleireiro(a)</option>
-                                <option>Esteticista / Maquiadora</option>
-                                <option>Massoterapeuta</option>
-                            </optgroup>
-                            <optgroup label="Educação e Aulas">
-                                <option>Professor Particular (Reforço)</option>
-                                <option>Professor de Idiomas</option>
-                                <option>Professor de Música</option>
-                                <option>Instrutor de Informática</option>
-                                <option>Aulas de Culinária</option>
-                            </optgroup>
-                            <optgroup label="Tecnologia e Digital">
-                                <option>Suporte Técnico / Formatação</option>
-                                <option>Desenvolvedor / Programador</option>
-                                <option>Designer Gráfico</option>
-                                <option>Social Media</option>
-                                <option>Fotógrafo / Videomaker</option>
-                                <option>Marketing Digital</option>
-                            </optgroup>
-                            <optgroup label="Eventos e Outros">
-                                <option>Churrasqueiro / Garçom</option>
-                                <option>Decoração de Festas</option>
-                                <option>Segurança Particular</option>
-                                <option>Fretes e Mudanças</option>
-                                <option>Outros Serviços Especializados</option>
-                            </optgroup>
+                            {serviceCategories.map((group) => (
+                                <optgroup key={group.group} label={group.group}>
+                                    {group.items.map((category) => (
+                                        <option key={category} value={category}>
+                                            {category}
+                                        </option>
+                                    ))}
+                                </optgroup>
+                            ))}
                         </select>
                     </div>
                     <div>

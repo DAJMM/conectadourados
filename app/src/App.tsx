@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
+import { CategoryFilterProvider } from './contexts/CategoryFilterContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -45,127 +46,129 @@ function PublicLayout() {
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          {/* Auth Routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
+      <CategoryFilterProvider>
+        <BrowserRouter>
+          <Routes>
+            {/* Auth Routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
 
-          {/* Public Routes */}
-          <Route element={<PublicLayout />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/advertise" element={<Advertise />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/register/success" element={<RegisterSuccess />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/testimonials" element={<Testimonials />} />
-            <Route path="/profile/:id" element={<ProfessionalProfile />} />
-            <Route path="/profile" element={<ProfessionalProfile />} />
-            <Route path="/anuncio-success" element={<AnuncioSuccess />} />
-          </Route>
+            {/* Public Routes */}
+            <Route element={<PublicLayout />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/advertise" element={<Advertise />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/register/success" element={<RegisterSuccess />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/testimonials" element={<Testimonials />} />
+              <Route path="/profile/:id" element={<ProfessionalProfile />} />
+              <Route path="/profile" element={<ProfessionalProfile />} />
+              <Route path="/anuncio-success" element={<AnuncioSuccess />} />
+            </Route>
 
-          {/* User/Ad Routes - Protected */}
-          <Route path="/meus-anuncios" element={
-            <ProtectedRoute requiredRole="user">
-              <>
-                <Header />
-                <MeusAnunciosPage />
-                <Footer />
-              </>
-            </ProtectedRoute>
-          } />
-
-          {/* Client Area Route - Protected (User Only) */}
-          <Route path="/area-do-cliente" element={
-            <ProtectedRoute requiredRole="user">
-              <>
-                <Header />
-                <AreaDoCliente />
-                <Footer />
-              </>
-            </ProtectedRoute>
-          } />
-
-          {/* User Profile Routes - Protected */}
-          <Route path="/meu-perfil" element={
-            <ProtectedRoute requiredRole="user">
-              <>
-                <Header />
-                <MeuPerfil />
-                <Footer />
-              </>
-            </ProtectedRoute>
-          } />
-
-          <Route path="/mensagens" element={
-            <ProtectedRoute requiredRole="user">
-              <>
-                <Header />
-                <Mensagens />
-                <Footer />
-              </>
-            </ProtectedRoute>
-          } />
-
-          <Route path="/avaliacoes" element={
-            <ProtectedRoute requiredRole="user">
-              <>
-                <Header />
-                <Avaliacoes />
-                <Footer />
-              </>
-            </ProtectedRoute>
-          } />
-
-          <Route path="/notificacoes" element={
-            <ProtectedRoute requiredRole="user">
-              <>
-                <Header />
-                <Notificacoes />
-                <Footer />
-              </>
-            </ProtectedRoute>
-          } />
-
-          <Route path="/configuracoes" element={
-            <ProtectedRoute requiredRole="user">
-              <>
-                <Header />
-                <Configuracoes />
-                <Footer />
-              </>
-            </ProtectedRoute>
-          } />
-
-          {/* Standalone Route (No Header/Footer) */}
-          <Route path="/card/:id" element={<DigitalCard />} />
-
-          {/* Admin Routes - Protected (Admin Only) */}
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute requiredRole="admin">
-                <AdminLayout>
-                  <Outlet />
-                </AdminLayout>
+            {/* User/Ad Routes - Protected */}
+            <Route path="/meus-anuncios" element={
+              <ProtectedRoute requiredRole="user">
+                <>
+                  <Header />
+                  <MeusAnunciosPage />
+                  <Footer />
+                </>
               </ProtectedRoute>
-            }
-          >
-            <Route index element={<AdminDashboard />} />
-            <Route path="subscriptions" element={<AdminSubscriptions />} />
-            {/* Placeholders for other admin links */}
-            <Route path="professionals" element={<AdminProfessionals />} />
-            <Route path="customers" element={<AdminCustomers />} />
-            <Route path="settings" element={<div className="font-bold text-2xl">Configurações (Em breve)</div>} />
-          </Route>
+            } />
 
-          {/* Fallback route for 404 */}
-          <Route path="*" element={<LinkWrapperNotFound />} />
-        </Routes>
-      </BrowserRouter>
+            {/* Client Area Route - Protected (User Only) */}
+            <Route path="/area-do-cliente" element={
+              <ProtectedRoute requiredRole="user">
+                <>
+                  <Header />
+                  <AreaDoCliente />
+                  <Footer />
+                </>
+              </ProtectedRoute>
+            } />
+
+            {/* User Profile Routes - Protected */}
+            <Route path="/meu-perfil" element={
+              <ProtectedRoute requiredRole="user">
+                <>
+                  <Header />
+                  <MeuPerfil />
+                  <Footer />
+                </>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/mensagens" element={
+              <ProtectedRoute requiredRole="user">
+                <>
+                  <Header />
+                  <Mensagens />
+                  <Footer />
+                </>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/avaliacoes" element={
+              <ProtectedRoute requiredRole="user">
+                <>
+                  <Header />
+                  <Avaliacoes />
+                  <Footer />
+                </>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/notificacoes" element={
+              <ProtectedRoute requiredRole="user">
+                <>
+                  <Header />
+                  <Notificacoes />
+                  <Footer />
+                </>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/configuracoes" element={
+              <ProtectedRoute requiredRole="user">
+                <>
+                  <Header />
+                  <Configuracoes />
+                  <Footer />
+                </>
+              </ProtectedRoute>
+            } />
+
+            {/* Standalone Route (No Header/Footer) */}
+            <Route path="/card/:id" element={<DigitalCard />} />
+
+            {/* Admin Routes - Protected (Admin Only) */}
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute requiredRole="admin">
+                  <AdminLayout>
+                    <Outlet />
+                  </AdminLayout>
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<AdminDashboard />} />
+              <Route path="subscriptions" element={<AdminSubscriptions />} />
+              {/* Placeholders for other admin links */}
+              <Route path="professionals" element={<AdminProfessionals />} />
+              <Route path="customers" element={<AdminCustomers />} />
+              <Route path="settings" element={<div className="font-bold text-2xl">Configurações (Em breve)</div>} />
+            </Route>
+
+            {/* Fallback route for 404 */}
+            <Route path="*" element={<LinkWrapperNotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </CategoryFilterProvider>
     </AuthProvider>
   )
 }
