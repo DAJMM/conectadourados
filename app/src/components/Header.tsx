@@ -62,7 +62,10 @@ export default function Header() {
     };
 
     const isActive = (path: string) => {
-        return location.pathname === path ? "text-primary font-bold" : "text-[#111518] font-medium hover:text-primary";
+        const baseClasses = "px-3 py-2 rounded-lg transition-all font-medium";
+        return location.pathname === path
+            ? `${baseClasses} bg-primary text-white hover:bg-primary-light`
+            : `${baseClasses} bg-gray-100 text-gray-700 hover:bg-gray-200`;
     }
 
     return (
@@ -77,7 +80,7 @@ export default function Header() {
             </Link>
 
             <div className="flex flex-1 justify-end gap-2 md:gap-8 items-center">
-                <nav className="hidden md:flex items-center gap-4 lg:gap-8 text-sm">
+                <nav className="hidden md:flex items-center gap-2 lg:gap-4 text-sm">
                     <Link className={isActive("/")} to="/">Início</Link>
 
                     {/* Category Filter Dropdown */}
