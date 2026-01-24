@@ -5,11 +5,16 @@ import { LogOut, User } from 'lucide-react';
 export default function Header() {
     const navigate = useNavigate();
     const location = useLocation();
-    const { user, signOut } = useAuth();
+    const { user, role, signOut } = useAuth();
 
     const handleLoginClick = () => {
         if (user) {
-            navigate('/admin');
+            // Redirect based on role
+            if (role === 'admin') {
+                navigate('/admin');
+            } else {
+                navigate('/area-do-cliente');
+            }
         } else {
             navigate('/login');
         }
@@ -54,11 +59,11 @@ export default function Header() {
                             <button
                                 onClick={handleLoginClick}
                                 className="flex items-center gap-2 px-3.5 py-2 rounded-lg hover:bg-gray-100 transition-colors"
-                                title="Ir para Admin"
+                                title={role === 'admin' ? 'Ir para Admin' : 'Ir para Área do Cliente'}
                             >
                                 <User className="w-5 h-5 text-primary" />
                                 <span className="hidden sm:inline text-sm font-medium text-gray-700">
-                                    {user.email?.split('@')[0]}
+                                    {role === 'admin' ? '👑 Admin' : user.email?.split('@')[0]}
                                 </span>
                             </button>
                             <button

@@ -63,9 +63,9 @@ function App() {
             <Route path="/anuncio-success" element={<AnuncioSuccess />} />
           </Route>
 
-          {/* Client Area Route - Protected */}
+          {/* Client Area Route - Protected (User Only) */}
           <Route path="/area-do-cliente" element={
-            <ProtectedRoute>
+            <ProtectedRoute requiredRole="user">
               <>
                 <Header />
                 <AreaDoCliente />
