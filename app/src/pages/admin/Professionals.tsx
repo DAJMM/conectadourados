@@ -15,7 +15,8 @@ import {
     Briefcase,
     DollarSign,
     AlertCircle,
-    Loader2
+    Loader2,
+    Megaphone
 } from 'lucide-react';
 
 interface Professional {
@@ -35,6 +36,8 @@ interface Professional {
     rating: number | null;
     total_reviews: number | null;
     created_at: string;
+    ad_count?: number;
+    source?: 'professional' | 'anuncio';
 }
 
 export default function Professionals() {
@@ -68,13 +71,69 @@ export default function Professionals() {
     const fetchProfessionals = async () => {
         try {
             setLoading(true);
-            const { data, error } = await supabase
+
+            // 1. Fetch professionals from the dedicated table
+            const { data: pros, error: prosError } = await supabase
                 .from('professionals')
                 .select('*')
                 .order('created_at', { ascending: false });
 
-            if (error) throw error;
-            setProfessionals(data || []);
+            if (prosError) throw prosError;
+
+            // 2. Fetch unique providers from anuncios table to sync with real ads
+            const { data: ads, error: adsError } = await supabase
+                .from('anuncios')
+                .select('nome_prestador, email_contato, telefone, categoria, areas_atendimento, criado_em');
+
+            if (adsError) throw adsError;
+
+            // 3. Count ads per email/name
+            const adCounts: Record<string, number> = {};
+            ads?.forEach(ad => {
+                const key = ad.email_contato?.toLowerCase() || ad.nome_prestador?.toLowerCase();
+                if (key) adCounts[key] = (adCounts[key] || 0) + 1;
+            });
+
+            // 4. Map professionals with ad counts
+            const mappedPros: Professional[] = (pros || []).map(p => ({
+                ...p,
+                ad_count: adCounts[p.email.toLowerCase()] || adCounts[p.full_name.toLowerCase()] || 0,
+                source: 'professional'
+            }));
+
+            // 5. Add providers from ads who aren't in the professionals table yet
+            const existingEmails = new Set(mappedPros.map(p => p.email.toLowerCase()));
+            const adPros: Professional[] = [];
+
+            // We group by email/name to avoid duplicates from ads
+            const uniqueAdPros = new Map();
+            ads?.forEach(ad => {
+                const email = ad.email_contato?.toLowerCase();
+                if (email && !existingEmails.has(email) && !uniqueAdPros.has(email)) {
+                    uniqueAdPros.set(email, {
+                        id: `ad-${ad.nome_prestador}-${ad.criado_em}`, // Pseudo ID
+                        full_name: ad.nome_prestador,
+                        email: ad.email_contato,
+                        phone: ad.telefone,
+                        profession: ad.categoria,
+                        specialties: null,
+                        description: 'Usuário cadastrado via anúncio',
+                        experience_years: null,
+                        hourly_rate: null,
+                        avatar_url: null,
+                        address_city: ad.areas_atendimento,
+                        is_active: true,
+                        is_verified: false,
+                        rating: 0,
+                        total_reviews: 0,
+                        created_at: ad.criado_em,
+                        ad_count: adCounts[email],
+                        source: 'anuncio'
+                    });
+                }
+            });
+
+            setProfessionals([...mappedPros, ...Array.from(uniqueAdPros.values())]);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Ocorreu um erro desconhecido');
         } finally {
@@ -274,6 +333,11 @@ export default function Professionals() {
                                             <p className="text-blue-600 font-medium">{professional.profession}</p>
                                         </div>
                                         <div className="flex gap-2">
+                                            {professional.source === 'anuncio' && (
+                                                <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs font-bold rounded-full">
+                                                    Novo Anunciante
+                                                </span>
+                                            )}
                                             {professional.is_verified && (
                                                 <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full flex items-center gap-1">
                                                     <CheckCircle className="w-3 h-3" />
@@ -306,10 +370,10 @@ export default function Professionals() {
                                                 {professional.address_city}
                                             </div>
                                         )}
-                                        {professional.hourly_rate && (
+                                        {professional.ad_count !== undefined && (
                                             <div className="flex items-center gap-2">
-                                                <DollarSign className="w-4 h-4 text-gray-400" />
-                                                R$ {professional.hourly_rate.toFixed(2)}/hora
+                                                <Megaphone className="w-4 h-4 text-primary" strokeWidth={3} />
+                                                <span className="font-bold text-primary">{professional.ad_count} anúncio(s) ativo(s)</span>
                                             </div>
                                         )}
                                     </div>
