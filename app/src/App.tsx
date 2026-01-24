@@ -13,6 +13,7 @@ import About from './pages/About';
 import FAQ from './pages/FAQ';
 import Privacy from './pages/Privacy';
 import NotFound from './pages/NotFound';
+import Professionals from './pages/Professionals';
 import Testimonials from './pages/Testimonials';
 import DigitalCard from './pages/DigitalCard';
 import Login from './pages/Login';
@@ -63,6 +64,7 @@ function App() {
               <Route path="/register/success" element={<RegisterSuccess />} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/privacy" element={<Privacy />} />
+              <Route path="/profissionais" element={<Professionals />} />
               <Route path="/testimonials" element={<Testimonials />} />
               <Route path="/profile/:id" element={<ProfessionalProfile />} />
               <Route path="/profile" element={<ProfessionalProfile />} />

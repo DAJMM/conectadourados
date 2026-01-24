@@ -150,7 +150,7 @@ export default function Header() {
                         )}
                     </div>
 
-                    <Link className={isActive("/testimonials")} to="/testimonials">Profissionais</Link>
+                    <Link className={isActive("/profissionais")} to="/profissionais">Profissionais</Link>
                     <Link className={isActive("/about")} to="/about">Sobre Nós</Link>
                     <Link
                         className={`px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary-light transition-all shadow-sm hover:shadow-md font-bold ${location.pathname === "/meus-anuncios" ? "ring-2 ring-primary ring-offset-2" : ""}`}

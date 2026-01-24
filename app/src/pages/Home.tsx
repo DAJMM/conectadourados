@@ -177,7 +177,7 @@ export default function Home() {
                             </span>
                         )}
                     </div>
-                    <Link className="text-primary text-sm font-bold hover:underline" to="/testimonials">Ver todos</Link>
+                    <Link className="text-primary text-sm font-bold hover:underline" to="/profissionais">Ver todos</Link>
                 </div>
             </div>
 
