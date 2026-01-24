@@ -76,33 +76,29 @@ export default function AreaDoCliente() {
             icon: MessageCircle,
             title: 'Mensagens',
             description: 'Veja suas conversas com clientes',
-            href: '#',
-            color: 'bg-purple-500',
-            badge: 'Em breve'
+            href: '/mensagens',
+            color: 'bg-purple-500'
         },
         {
             icon: Star,
             title: 'Avaliações',
             description: 'Confira o feedback dos seus clientes',
-            href: '#',
-            color: 'bg-yellow-500',
-            badge: 'Em breve'
+            href: '/avaliacoes',
+            color: 'bg-yellow-500'
         },
         {
             icon: Bell,
             title: 'Notificações',
             description: 'Configure alertas e preferências',
-            href: '#',
-            color: 'bg-red-500',
-            badge: 'Em breve'
+            href: '/notificacoes',
+            color: 'bg-red-500'
         },
         {
             icon: Settings,
             title: 'Configurações',
             description: 'Ajuste suas preferências de conta',
-            href: '#',
-            color: 'bg-gray-500',
-            badge: 'Em breve'
+            href: '/configuracoes',
+            color: 'bg-gray-500'
         }
     ];
 
@@ -186,11 +182,6 @@ export default function AreaDoCliente() {
                                 <div className="flex-1">
                                     <div className="flex items-center gap-2">
                                         <h3 className="font-bold text-gray-900 dark:text-white">{item.title}</h3>
-                                        {item.badge && (
-                                            <span className="text-xs px-2 py-0.5 bg-gray-100 dark:bg-gray-800 text-gray-500 rounded-full">
-                                                {item.badge}
-                                            </span>
-                                        )}
                                     </div>
                                     <p className="text-sm text-gray-500 dark:text-gray-400">{item.description}</p>
                                 </div>

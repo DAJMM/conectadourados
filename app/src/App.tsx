@@ -25,6 +25,11 @@ import AdminCustomers from './pages/admin/Customers';
 import MeusAnunciosPage from './pages/MeusAnunciosPage';
 import AnuncioSuccess from './pages/AnuncioSuccess';
 import AreaDoCliente from './pages/AreaDoCliente';
+import MeuPerfil from './pages/MeuPerfil';
+import Mensagens from './pages/Mensagens';
+import Avaliacoes from './pages/Avaliacoes';
+import Notificacoes from './pages/Notificacoes';
+import Configuracoes from './pages/Configuracoes';
 
 // Layout wrapper for public pages to include Header/Footer
 function PublicLayout() {
@@ -79,6 +84,57 @@ function App() {
               <>
                 <Header />
                 <AreaDoCliente />
+                <Footer />
+              </>
+            </ProtectedRoute>
+          } />
+
+          {/* User Profile Routes - Protected */}
+          <Route path="/meu-perfil" element={
+            <ProtectedRoute requiredRole="user">
+              <>
+                <Header />
+                <MeuPerfil />
+                <Footer />
+              </>
+            </ProtectedRoute>
+          } />
+
+          <Route path="/mensagens" element={
+            <ProtectedRoute requiredRole="user">
+              <>
+                <Header />
+                <Mensagens />
+                <Footer />
+              </>
+            </ProtectedRoute>
+          } />
+
+          <Route path="/avaliacoes" element={
+            <ProtectedRoute requiredRole="user">
+              <>
+                <Header />
+                <Avaliacoes />
+                <Footer />
+              </>
+            </ProtectedRoute>
+          } />
+
+          <Route path="/notificacoes" element={
+            <ProtectedRoute requiredRole="user">
+              <>
+                <Header />
+                <Notificacoes />
+                <Footer />
+              </>
+            </ProtectedRoute>
+          } />
+
+          <Route path="/configuracoes" element={
+            <ProtectedRoute requiredRole="user">
+              <>
+                <Header />
+                <Configuracoes />
                 <Footer />
               </>
             </ProtectedRoute>
