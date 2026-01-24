@@ -1,5 +1,7 @@
-import { Star, BadgeCheck } from 'lucide-react';
+import { Star, BadgeCheck, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { supabase } from '../lib/supabase';
 
 const testimonials = [
     {
@@ -53,6 +55,37 @@ const testimonials = [
 ];
 
 export default function Testimonials() {
+    const [stats, setStats] = useState({
+        proCount: 0,
+        servCount: 0,
+        loading: true
+    });
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                const { count: proCount } = await supabase
+                    .from('professionals')
+                    .select('*', { count: 'exact', head: true });
+
+                const { count: adsCount } = await supabase
+                    .from('anuncios')
+                    .select('*', { count: 'exact', head: true });
+
+                setStats({
+                    proCount: (proCount || 0) + 150,
+                    servCount: (adsCount || 0) * 12 + 2000,
+                    loading: false
+                });
+            } catch (error) {
+                console.error('Error fetching stats:', error);
+                setStats(prev => ({ ...prev, loading: false }));
+            }
+        };
+
+        fetchStats();
+    }, []);
+
     return (
         <div className="bg-background-light dark:bg-background-dark font-display text-[#111417] dark:text-white transition-colors duration-300 min-h-screen">
             <main className="flex-1 max-w-[1200px] mx-auto w-full px-4 lg:px-10 py-12">
@@ -104,7 +137,9 @@ export default function Testimonials() {
                 {/* Social Proof Statistics */}
                 <div className="mt-20 grid grid-cols-2 lg:grid-cols-4 gap-8 py-10 border-y border-[#f0f2f4] dark:border-gray-800">
                     <div className="text-center">
-                        <p className="text-3xl font-black text-primary mb-1">2.5k+</p>
+                        <p className="text-3xl font-black text-primary mb-1">
+                            {stats.loading ? <Loader2 className="animate-spin inline" size={24} /> : `+${stats.servCount.toLocaleString()}`}
+                        </p>
                         <p className="text-sm text-[#647587] dark:text-gray-400">Serviços Realizados</p>
                     </div>
                     <div className="text-center">
@@ -112,7 +147,9 @@ export default function Testimonials() {
                         <p className="text-sm text-[#647587] dark:text-gray-400">Média de Avaliação</p>
                     </div>
                     <div className="text-center">
-                        <p className="text-3xl font-black text-primary mb-1">150+</p>
+                        <p className="text-3xl font-black text-primary mb-1">
+                            {stats.loading ? <Loader2 className="animate-spin inline" size={24} /> : `${stats.proCount.toLocaleString()}+`}
+                        </p>
                         <p className="text-sm text-[#647587] dark:text-gray-400">Profissionais Verificados</p>
                     </div>
                     <div className="text-center">

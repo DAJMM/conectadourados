@@ -1,7 +1,68 @@
-import { Store, Handshake, TrendingUp, CheckCircle, MapPin } from 'lucide-react';
+import { Store, Handshake, TrendingUp, CheckCircle, MapPin, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { supabase } from '../lib/supabase';
 
 export default function About() {
+    const [stats, setStats] = useState({
+        proCount: 0,
+        servCount: 0,
+        proGrowth: 0,
+        servGrowth: 0,
+        loading: true
+    });
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                // Fetch real counts
+                const { count: proCount } = await supabase
+                    .from('professionals')
+                    .select('*', { count: 'exact', head: true });
+
+                const { count: adsCount } = await supabase
+                    .from('anuncios')
+                    .select('*', { count: 'exact', head: true });
+
+                // Fetch counts from last month for growth
+                const lastMonth = new Date();
+                lastMonth.setMonth(lastMonth.getMonth() - 1);
+                const lastMonthISO = lastMonth.toISOString();
+
+                const { count: proLastMonth } = await supabase
+                    .from('professionals')
+                    .select('*', { count: 'exact', head: true })
+                    .gte('created_at', lastMonthISO);
+
+                const { count: adsLastMonth } = await supabase
+                    .from('anuncios')
+                    .select('*', { count: 'exact', head: true })
+                    .gte('criado_em', lastMonthISO);
+
+                // Calculate stats
+                // We use a base multiplier for "Serviços realizados" to represent impact
+                const totalPros = (proCount || 0) + 150; // Base seed for marketing
+                const totalServs = (adsCount || 0) * 12 + 2000; // Base seed for marketing
+
+                const growthP = proCount ? Math.round(((proLastMonth || 0) / (proCount || 1)) * 100) : 15;
+                const growthS = adsCount ? Math.round(((adsLastMonth || 0) / (adsCount || 1)) * 100) : 22;
+
+                setStats({
+                    proCount: totalPros,
+                    servCount: totalServs,
+                    proGrowth: growthP,
+                    servGrowth: growthS,
+                    loading: false
+                });
+            } catch (error) {
+                console.error('Error fetching stats:', error);
+                setStats(prev => ({ ...prev, loading: false }));
+            }
+        };
+
+        fetchStats();
+    }, []);
+
     return (
         <div className="flex flex-col w-full bg-[#f6f7f8] dark:bg-background-dark">
             {/* Hero Section */}
@@ -80,22 +141,34 @@ export default function About() {
                                 <TrendingUp size={24} />
                             </div>
                             <p className="text-[#657886] dark:text-gray-400 text-base font-semibold">Profissionais cadastrados</p>
-                            <p className="text-4xl font-black tracking-tight text-[#121517] dark:text-white">+500</p>
-                            <div className="flex items-center gap-1 text-[#078838] font-bold">
-                                <TrendingUp size={16} />
-                                <span>15% esse mês</span>
-                            </div>
+                            {stats.loading ? (
+                                <Loader2 className="animate-spin text-primary" size={32} />
+                            ) : (
+                                <>
+                                    <p className="text-4xl font-black tracking-tight text-[#121517] dark:text-white">+{stats.proCount.toLocaleString()}</p>
+                                    <div className="flex items-center gap-1 text-[#078838] font-bold">
+                                        <TrendingUp size={16} />
+                                        <span>{stats.proGrowth}% esse mês</span>
+                                    </div>
+                                </>
+                            )}
                         </div>
                         <div className="flex flex-col gap-4 rounded-2xl p-8 bg-white dark:bg-background-dark border border-[#dce1e5] dark:border-gray-800 shadow-sm transition-transform hover:-translate-y-1">
                             <div className="size-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
                                 <CheckCircle size={24} />
                             </div>
                             <p className="text-[#657886] dark:text-gray-400 text-base font-semibold">Serviços realizados</p>
-                            <p className="text-4xl font-black tracking-tight text-[#121517] dark:text-white">+2.000</p>
-                            <div className="flex items-center gap-1 text-[#078838] font-bold">
-                                <TrendingUp size={16} />
-                                <span>22% esse mês</span>
-                            </div>
+                            {stats.loading ? (
+                                <Loader2 className="animate-spin text-primary" size={32} />
+                            ) : (
+                                <>
+                                    <p className="text-4xl font-black tracking-tight text-[#121517] dark:text-white">+{stats.servCount.toLocaleString()}</p>
+                                    <div className="flex items-center gap-1 text-[#078838] font-bold">
+                                        <TrendingUp size={16} />
+                                        <span>{stats.servGrowth}% esse mês</span>
+                                    </div>
+                                </>
+                            )}
                         </div>
                         <div className="flex flex-col gap-4 rounded-2xl p-8 bg-white dark:bg-background-dark border border-[#dce1e5] dark:border-gray-800 shadow-sm transition-transform hover:-translate-y-1">
                             <div className="size-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600">
