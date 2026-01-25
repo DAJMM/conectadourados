@@ -1,29 +1,12 @@
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { useCategoryFilter } from '../contexts/CategoryFilterContext';
-import { LogOut, User, Filter, X } from 'lucide-react';
-import { serviceCategories } from '../data/categories';
-import { useState, useRef, useEffect } from 'react';
+import { LogOut, User } from 'lucide-react';
+import { useState } from 'react';
 
 export default function Header() {
     const navigate = useNavigate();
     const location = useLocation();
     const { user, role, signOut } = useAuth();
-    const { selectedCategory, setSelectedCategory } = useCategoryFilter();
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const dropdownRef = useRef<HTMLDivElement>(null);
-
-    // Close dropdown when clicking outside
-    useEffect(() => {
-        function handleClickOutside(event: MouseEvent) {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-                setIsDropdownOpen(false);
-            }
-        }
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
-
     const handleLoginClick = () => {
         if (user) {
             // Redirect based on role
@@ -47,20 +30,6 @@ export default function Header() {
         }
     };
 
-    const handleCategorySelect = (category: string) => {
-        setSelectedCategory(category);
-        setIsDropdownOpen(false);
-        // Navigate to home if not already there
-        if (location.pathname !== '/') {
-            navigate('/');
-        }
-    };
-
-    const handleClearFilter = () => {
-        setSelectedCategory('');
-        setIsDropdownOpen(false);
-    };
-
     const isActive = (path: string) => {
         const baseClasses = "px-3 py-2 rounded-lg transition-all font-medium";
         return location.pathname === path
@@ -82,74 +51,6 @@ export default function Header() {
             <div className="flex flex-1 justify-end gap-2 md:gap-8 items-center">
                 <nav className="hidden md:flex items-center gap-2 lg:gap-4 text-sm">
                     <Link className={isActive("/")} to="/">Início</Link>
-
-                    {/* Category Filter Dropdown */}
-                    <div className="relative" ref={dropdownRef}>
-                        <button
-                            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                            className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${selectedCategory
-                                ? 'bg-primary text-white hover:bg-primary-light'
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                }`}
-                        >
-                            <Filter size={16} />
-                            <span className="font-medium">
-                                {selectedCategory || 'Categorias'}
-                            </span>
-                            {selectedCategory && (
-                                <X
-                                    size={16}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleClearFilter();
-                                    }}
-                                    className="hover:bg-white/20 rounded-full"
-                                />
-                            )}
-                        </button>
-
-                        {/* Dropdown Menu */}
-                        {isDropdownOpen && (
-                            <div className="absolute top-full left-0 mt-2 w-72 bg-white dark:bg-[#1a2027] rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 z-50 max-h-[500px] overflow-y-auto overflow-x-hidden">
-                                <div className="p-4">
-                                    <div className="flex items-center justify-between mb-3">
-                                        <h3 className="font-bold text-gray-900 dark:text-white">Filtrar por Categoria</h3>
-                                        {selectedCategory && (
-                                            <button
-                                                onClick={handleClearFilter}
-                                                className="text-xs text-primary hover:underline font-medium"
-                                            >
-                                                Limpar filtro
-                                            </button>
-                                        )}
-                                    </div>
-
-                                    {serviceCategories.map((group) => (
-                                        <div key={group.group} className="mb-4 last:mb-0">
-                                            <h4 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
-                                                {group.group}
-                                            </h4>
-                                            <div className="flex flex-col space-y-1">
-                                                {group.items.map((category) => (
-                                                    <button
-                                                        key={category}
-                                                        onClick={() => handleCategorySelect(category)}
-                                                        className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all whitespace-normal break-words ${selectedCategory === category
-                                                            ? 'bg-primary text-white font-medium'
-                                                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
-                                                            }`}
-                                                    >
-                                                        {category}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-
                     <Link className={isActive("/profissionais")} to="/profissionais">Profissionais</Link>
                     <Link className={isActive("/about")} to="/about">Sobre Nós</Link>
                     <Link

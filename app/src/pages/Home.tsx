@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { MessageCircle, Loader2, User } from 'lucide-react';
 import { useCategoryFilter } from '../contexts/CategoryFilterContext';
+import CategoryBar from '../components/CategoryBar';
 
 interface Anuncio {
     id: string;
@@ -21,7 +22,7 @@ interface Anuncio {
 export default function Home() {
     const [anuncios, setAnuncios] = useState<Anuncio[]>([]);
     const [loading, setLoading] = useState(true);
-    const { selectedCategory } = useCategoryFilter();
+    const { selectedCategory, setSelectedCategory } = useCategoryFilter();
 
     useEffect(() => {
         fetchAnuncios();
@@ -116,53 +117,17 @@ export default function Home() {
                             </label>
                             <div className="flex gap-4 mt-2 text-sm text-[#617989] dark:text-gray-400 font-medium">
                                 <span>Popular:</span>
-                                <a className="underline hover:text-primary" href="#">Diaristas</a>
-                                <a className="underline hover:text-primary" href="#">Pintores</a>
-                                <a className="underline hover:text-primary" href="#">Manicure</a>
+                                <button onClick={() => setSelectedCategory('Diarista / Faxineira')} className="underline hover:text-primary">Diaristas</button>
+                                <button onClick={() => setSelectedCategory('Pintor')} className="underline hover:text-primary">Pintores</button>
+                                <button onClick={() => setSelectedCategory('Manicure / Pedicure')} className="underline hover:text-primary">Manicure</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* SectionHeader: Categorias */}
-            <div className="px-4 lg:px-40 flex justify-center py-2">
-                <div className="max-w-[1200px] w-full">
-                    <h2 className="text-[#111518] dark:text-white text-[22px] font-extrabold leading-tight tracking-tight px-4 pb-4">Navegue por Categorias</h2>
-                </div>
-            </div>
-
-            {/* Tabs: Categories */}
-            <div className="px-4 lg:px-40 flex justify-center pb-8">
-                <div className="max-w-[1200px] w-full">
-                    <div className="flex border-b border-[#dbe1e6] dark:border-[#2f3944] px-4 gap-12 overflow-x-auto no-scrollbar">
-                        <a className="flex flex-col items-center justify-center border-b-[3px] border-primary text-primary gap-2 pb-4 pt-2 group" href="#">
-                            <div className="p-3 rounded-full bg-primary/10 transition-colors group-hover:bg-primary/20">
-                                <span className="material-symbols-outlined text-2xl">home_repair_service</span>
-                            </div>
-                            <p className="text-sm font-bold tracking-tight">Reformas</p>
-                        </a>
-                        <a className="flex flex-col items-center justify-center border-b-[3px] border-transparent text-[#617989] gap-2 pb-4 pt-2 group hover:text-[#111518] dark:hover:text-white transition-all" href="#">
-                            <div className="p-3 rounded-full bg-gray-100 dark:bg-gray-800 transition-colors group-hover:bg-gray-200 dark:group-hover:bg-gray-700">
-                                <span className="material-symbols-outlined text-2xl">celebration</span>
-                            </div>
-                            <p className="text-sm font-bold tracking-tight">Eventos</p>
-                        </a>
-                        <a className="flex flex-col items-center justify-center border-b-[3px] border-transparent text-[#617989] gap-2 pb-4 pt-2 group hover:text-[#111518] dark:hover:text-white transition-all" href="#">
-                            <div className="p-3 rounded-full bg-gray-100 dark:bg-gray-800 transition-colors group-hover:bg-gray-200 dark:group-hover:bg-gray-700">
-                                <span className="material-symbols-outlined text-2xl">favorite</span>
-                            </div>
-                            <p className="text-sm font-bold tracking-tight">Saúde</p>
-                        </a>
-                        <a className="flex flex-col items-center justify-center border-b-[3px] border-transparent text-[#617989] gap-2 pb-4 pt-2 group hover:text-[#111518] dark:hover:text-white transition-all" href="#">
-                            <div className="p-3 rounded-full bg-gray-100 dark:bg-gray-800 transition-colors group-hover:bg-gray-200 dark:group-hover:bg-gray-700">
-                                <span className="material-symbols-outlined text-2xl">school</span>
-                            </div>
-                            <p className="text-sm font-bold tracking-tight">Aulas</p>
-                        </a>
-                    </div>
-                </div>
-            </div>
+            {/* Category Bar Navigation */}
+            <CategoryBar />
 
             {/* SectionHeader: Profissionais */}
             <div className="px-4 lg:px-40 flex justify-center py-2">

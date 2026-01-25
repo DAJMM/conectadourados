@@ -4,6 +4,7 @@ import { MessageCircle, Loader2, User, Search, Filter as FilterIcon } from 'luci
 import { Link } from 'react-router-dom';
 import { useCategoryFilter } from '../contexts/CategoryFilterContext';
 import { serviceCategories } from '../data/categories';
+import CategoryBar from '../components/CategoryBar';
 
 interface Anuncio {
     id: string;
@@ -89,7 +90,7 @@ export default function Professionals() {
                         Encontre os melhores prestadores de serviço da cidade. Profissionais verificados e recomendados pela comunidade.
                     </p>
 
-                    {/* Search & Filter Bar */}
+                    {/* Search Bar */}
                     <div className="flex flex-col md:flex-row gap-4">
                         <div className="relative flex-1">
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
@@ -98,38 +99,19 @@ export default function Professionals() {
                                 placeholder="Buscar por nome, serviço ou palavra-chave..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-12 pr-4 py-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#252d35] dark:text-white outline-none focus:ring-2 focus:ring-primary shadow-sm transition-all"
+                                className="w-full pl-12 pr-4 py-4 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#252d35] dark:text-white outline-none focus:ring-2 focus:ring-primary shadow-sm transition-all"
                             />
                         </div>
-                        <select
-                            value={selectedCategory}
-                            onChange={(e) => setSelectedCategory(e.target.value)}
-                            className="bg-white dark:bg-[#252d35] dark:text-white px-6 py-4 rounded-xl border border-gray-200 dark:border-gray-700 outline-none focus:ring-2 focus:ring-primary shadow-sm"
-                        >
-                            <option value="">Todas as Categorias</option>
-                            {serviceCategories.flatMap(g => g.items).map(cat => (
-                                <option key={cat} value={cat}>{cat}</option>
-                            ))}
-                        </select>
                     </div>
                 </div>
             </div>
 
+            {/* Icon Category Bar */}
+            <CategoryBar />
+
             {/* Results Grid */}
             <main className="max-w-[1200px] mx-auto px-4 lg:px-10 -mt-8">
-                {selectedCategory && (
-                    <div className="mb-6 flex items-center gap-2">
-                        <span className="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                            Filtro Ativo:
-                        </span>
-                        <div className="bg-primary px-4 py-1.5 rounded-full text-white text-sm font-bold flex items-center gap-2">
-                            {selectedCategory}
-                            <button onClick={() => setSelectedCategory('')} className="hover:bg-white/20 rounded-full p-0.5">
-                                <FilterIcon size={14} />
-                            </button>
-                        </div>
-                    </div>
-                )}
+                {/* Active Filter Display removed as it's now in CategoryBar */}
 
                 {loading ? (
                     <div className="flex flex-col justify-center items-center py-20">

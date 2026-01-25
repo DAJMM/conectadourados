@@ -1,74 +1,141 @@
-// Categorias de serviços disponíveis no Conecta Dourados
-export const serviceCategories = [
+export interface CategoryGroup {
+    group: string;
+    icon: string;
+    items: string[];
+}
+
+export const serviceCategories: CategoryGroup[] = [
+    {
+        group: "Assistência Técnica",
+        icon: "Wrench",
+        items: [
+            "Celular / Smartphone",
+            "Computador / Notebook",
+            "Eletrodomésticos",
+            "Televisão",
+            "Ar Condicionado",
+            "Fogão / Micro-ondas",
+            "Máquina de Lavar"
+        ]
+    },
+    {
+        group: "Aulas",
+        icon: "GraduationCap",
+        items: [
+            "Professor Particular (Reforço)",
+            "Idiomas",
+            "Música / Instrumentos",
+            "Informática",
+            "Culinária",
+            "Esportes",
+            "Artes / Artesanato"
+        ]
+    },
+    {
+        group: "Autos",
+        icon: "Car",
+        items: [
+            "Mecânica",
+            "Funilaria / Pintura",
+            "Elétrica Automotiva",
+            "Lava-Jato / Estética",
+            "Borracharia",
+            "Guincho",
+            "Insulfilm / Som"
+        ]
+    },
+    {
+        group: "Consultoria",
+        icon: "Handshake",
+        items: [
+            "Advogado",
+            "Contador",
+            "Administração",
+            "Finanças",
+            "Recursos Humanos",
+            "Tradução",
+            "Consultoria de Imagem"
+        ]
+    },
+    {
+        group: "Design e Tecnologia",
+        icon: "Code",
+        items: [
+            "Desenvolvimento Web",
+            "Aplicativos Celular",
+            "Design Gráfico",
+            "Social Media",
+            "Marketing Digital",
+            "Edição de Vídeo",
+            "SEO"
+        ]
+    },
+    {
+        group: "Eventos",
+        icon: "PartyPopper",
+        items: [
+            "Churrasqueiro / Cozinheiro",
+            "Garçom / Recepcionista",
+            "Decoração",
+            "Fotografia / Filmagem",
+            "Som e Iluminação",
+            "Buffet",
+            "Animação / Mágico"
+        ]
+    },
+    {
+        group: "Moda e Beleza",
+        icon: "Shirt",
+        items: [
+            "Manicure / Pedicure",
+            "Cabeleireiro(a)",
+            "Maquiadora",
+            "Esteticista",
+            "Depilação",
+            "Massoterapeuta",
+            "Costureira"
+        ]
+    },
     {
         group: "Reformas e Reparos",
+        icon: "Hammer",
         items: [
             "Eletricista",
-            "Encanador (Bombeiro Hidráulico)",
-            "Pintor Residencial/Comercial",
-            "Pedreiro / Mestre de Obras",
+            "Encanador",
+            "Pintor",
+            "Pedreiro",
             "Marceneiro",
             "Serralheiro",
             "Gesseiro",
             "Montador de Móveis",
-            "Técnico em Ar Condicionado",
             "Vidraceiro"
         ]
     },
     {
-        group: "Serviços Domésticos",
-        items: [
-            "Diarista / Faxineira",
-            "Passadeira",
-            "Cozinheira",
-            "Babá / Cuidador Infantil",
-            "Cuidador de Idosos",
-            "Jardineiro / Piscineiro",
-            "Passeador de Cães (Dog Walker)"
-        ]
-    },
-    {
-        group: "Saúde e Bem-Estar",
+        group: "Saúde",
+        icon: "HeartPulse",
         items: [
             "Personal Trainer",
             "Fisioterapeuta",
             "Nutricionista",
             "Psicólogo",
-            "Manicure / Pedicure",
-            "Cabeleireiro(a)",
-            "Esteticista / Maquiadora",
-            "Massoterapeuta"
+            "Cuidador de Idosos",
+            "Enfermagem",
+            "Fonoaudiólogo"
         ]
     },
     {
-        group: "Educação e Aulas",
+        group: "Serviços Domésticos",
+        icon: "Home",
         items: [
-            "Professor Particular (Reforço)",
-            "Professor de Idiomas",
-            "Professor de Música",
-            "Instrutor de Informática",
-            "Aulas de Culinária"
-        ]
-    },
-    {
-        group: "Tecnologia e Digital",
-        items: [
-            "Suporte Técnico / Formatação",
-            "Desenvolvedor / Programador",
-            "Designer Gráfico",
-            "Social Media",
-            "Fotógrafo / Videomaker",
-            "Marketing Digital"
-        ]
-    },
-    {
-        group: "Eventos e Outros",
-        items: [
-            "Churrasqueiro / Garçom",
-            "Decoração de Festas",
-            "Segurança Particular",
-            "Fretes e Mudanças",
-            "Outros Serviços Especializados"
+            "Diarista / Faxineira",
+            "Passadeira",
+            "Cozinheira",
+            "Babá",
+            "Jardineiro",
+            "Piscineiro",
+            "Passeador de Cães",
+            "Personal Organizer"
         ]
     }
 ];
