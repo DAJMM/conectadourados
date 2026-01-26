@@ -215,12 +215,13 @@ export default function Home() {
                                             </>
                                         )}
                                         <span className="text-[#617989] dark:text-gray-400">{anuncio.areas_atendimento || 'Dourados, MS'}</span>
-                                        {anuncio.preco > 0 && (
-                                            <>
-                                                <span className="text-gray-300">•</span>
-                                                <span className="text-primary font-bold">R$ {Number(anuncio.preco).toFixed(2)}</span>
-                                            </>
-                                        )}
+                                        <span className="text-gray-300">•</span>
+                                        <span className="text-primary font-bold">
+                                            {(anuncio as any).preco_a_combinar || anuncio.preco <= 0
+                                                ? 'Preço a Combinar'
+                                                : `R$ ${Number(anuncio.preco).toFixed(2)}`
+                                            }
+                                        </span>
                                     </div>
                                     {anuncio.descricao && (
                                         <p className="text-[#617989] dark:text-gray-400 text-sm line-clamp-2">{anuncio.descricao}</p>

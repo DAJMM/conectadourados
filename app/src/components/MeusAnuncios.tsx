@@ -6,6 +6,7 @@ interface Anuncio {
     id: string;
     titulo: string;
     preco: number;
+    preco_a_combinar?: boolean;
     imagem_url?: string;
 }
 
@@ -53,7 +54,10 @@ export default function MeusAnuncios() {
                             </div>
                         </div>
                         <p className="text-green-600 dark:text-green-400 font-bold text-lg whitespace-nowrap">
-                            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(anuncio.preco)}
+                            {anuncio.preco_a_combinar || anuncio.preco <= 0
+                                ? 'A Combinar'
+                                : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(anuncio.preco)
+                            }
                         </p>
                     </div>
                 ))}

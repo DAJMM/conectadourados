@@ -177,10 +177,17 @@ export default function Professionals() {
                                             <p className="text-[10px] font-black text-gray-400 uppercase tracking-tighter">Experiência</p>
                                             <p className="text-sm font-bold text-[#111518] dark:text-white">{anuncio.anos_experiencia} anos</p>
                                         </div>
-                                        {anuncio.preco > 0 && (
+                                        {((anuncio as any).preco_a_combinar || anuncio.preco >= 0) && (
                                             <div className="text-right">
-                                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-tighter">A partir de</p>
-                                                <p className="text-sm font-black text-primary">R$ {anuncio.preco}</p>
+                                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-tighter">
+                                                    {(anuncio as any).preco_a_combinar || anuncio.preco <= 0 ? 'Valor' : 'A partir de'}
+                                                </p>
+                                                <p className="text-sm font-black text-primary">
+                                                    {(anuncio as any).preco_a_combinar || anuncio.preco <= 0
+                                                        ? 'Preço a Combinar'
+                                                        : `R$ ${anuncio.preco}`
+                                                    }
+                                                </p>
                                             </div>
                                         )}
                                     </div>
