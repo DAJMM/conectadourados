@@ -12,6 +12,18 @@ export default function CategoryBar() {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [showLeftArrow, setShowLeftArrow] = useState(false);
     const [showRightArrow, setShowRightArrow] = useState(true);
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    // Close on click outside
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+                setActiveGroup(null);
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     // Sync activeGroup with selectedCategory on mount/change
     useEffect(() => {
@@ -63,7 +75,10 @@ export default function CategoryBar() {
     };
 
     return (
-        <div className="w-full bg-white dark:bg-[#1a2027] border-b border-gray-100 dark:border-gray-800 sticky top-[64px] z-40 transition-all duration-300 shadow-sm">
+        <div
+            ref={containerRef}
+            className="w-full bg-white dark:bg-[#1a2027] border-b border-gray-100 dark:border-gray-800 sticky top-[64px] z-40 transition-all duration-300 shadow-sm"
+        >
             <div className="max-w-[1200px] mx-auto relative px-4 lg:px-10">
                 {/* Left Arrow */}
                 {showLeftArrow && (
