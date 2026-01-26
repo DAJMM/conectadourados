@@ -1,10 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import * as LucideIcons from 'lucide-react';
 import { serviceCategories, CategoryGroup } from '../data/categories';
 import { useCategoryFilter } from '../contexts/CategoryFilterContext';
-import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Plus } from 'lucide-react';
 
 export default function CategoryBar() {
+    const navigate = useNavigate();
     const { selectedCategory, setSelectedCategory } = useCategoryFilter();
     const [activeGroup, setActiveGroup] = useState<CategoryGroup | null>(null);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -160,6 +162,17 @@ export default function CategoryBar() {
                                         {category}
                                     </button>
                                 ))}
+
+                                {/* New Register Service Button */}
+                                <button
+                                    onClick={() => navigate('/meus-anuncios')}
+                                    className="text-left px-4 py-3 rounded-xl text-sm font-bold transition-all bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border border-dashed border-green-300 dark:border-green-800 hover:bg-green-100 dark:hover:bg-green-900/30 flex items-center gap-2 group/btn shadow-sm"
+                                >
+                                    <div className="bg-green-100 dark:bg-green-800 p-1 rounded-full group-hover/btn:scale-110 transition-transform">
+                                        <Plus size={16} />
+                                    </div>
+                                    Cadastrar meu serviço
+                                </button>
                             </div>
                         </div>
                     </div>
