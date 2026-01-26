@@ -14,16 +14,17 @@ export default function CategoryBar() {
     const [showRightArrow, setShowRightArrow] = useState(true);
     const containerRef = useRef<HTMLDivElement>(null);
 
-    // Close on click outside
+    // Close and clear on click outside
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
             if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
                 setActiveGroup(null);
+                setSelectedCategory(''); // Reset selection when clicking outside
             }
         }
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
+    }, [setSelectedCategory]);
 
     // Sync activeGroup with selectedCategory on mount/change
     useEffect(() => {
