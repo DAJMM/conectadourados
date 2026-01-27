@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 export default function Footer() {
     return (
         <footer className="bg-[#f0f3f4] dark:bg-[#151a20] px-4 lg:px-40 py-12">
-            <div className="max-w-[1200px] w-full mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div className="col-span-1 md:col-span-1">
+            <div className="max-w-[1200px] w-full mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+                <div className="col-span-1">
                     <div className="flex items-center gap-2 text-[#111518] dark:text-white mb-4">
                         <span className="material-symbols-outlined text-primary text-2xl">handyman</span>
                         <h2 className="text-lg font-extrabold">Conecta Dourados</h2>
@@ -38,6 +38,12 @@ export default function Footer() {
                             <span>Dourados, Mato Grosso do Sul, Brasil</span>
                         </div>
                     </div>
+                </div>
+                <div>
+                    <h4 className="font-bold text-[#111518] dark:text-white mb-4">Aviso Legal</h4>
+                    <p className="text-[#617989] dark:text-gray-400 text-xs leading-relaxed">
+                        O Conecta Dourados atua exclusivamente como plataforma de divulgação e aproximação entre clientes e prestadores de serviços. O site não participa das negociações, não recebe pagamentos e não interfere na execução dos trabalhos contratados. Portanto, a responsabilidade pela qualidade, garantia e entrega dos serviços é inteiramente do prestador, inexistindo qualquer vínculo ou responsabilidade solidária por parte dos administradores desta plataforma.
+                    </p>
                 </div>
             </div>
             <div className="max-w-[1200px] w-full mx-auto mt-12 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4 text-[#617989] dark:text-gray-500 text-xs font-medium">
