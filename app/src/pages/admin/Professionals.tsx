@@ -16,7 +16,8 @@ import {
     DollarSign,
     AlertCircle,
     Loader2,
-    Megaphone
+    Megaphone,
+    X
 } from 'lucide-react';
 
 interface Professional {
@@ -83,7 +84,7 @@ export default function Professionals() {
             // 2. Fetch unique providers from anuncios table to sync with real ads
             const { data: ads, error: adsError } = await supabase
                 .from('anuncios')
-                .select('nome_prestador, email_contato, telefone, categoria, areas_atendimento, criado_em');
+                .select('id, nome_prestador, email_contato, telefone, categoria, areas_atendimento, criado_em');
 
             if (adsError) throw adsError;
 
@@ -111,7 +112,7 @@ export default function Professionals() {
                 const email = ad.email_contato?.toLowerCase();
                 if (email && !existingEmails.has(email) && !uniqueAdPros.has(email)) {
                     uniqueAdPros.set(email, {
-                        id: `ad-${ad.nome_prestador}-${ad.criado_em}`, // Pseudo ID
+                        id: ad.id, // Using real Ad ID now
                         full_name: ad.nome_prestador,
                         email: ad.email_contato,
                         phone: ad.telefone,
@@ -162,14 +163,35 @@ export default function Professionals() {
             };
 
             if (editingProfessional) {
-                // Update
-                const { error } = await supabase
-                    .from('professionals')
-                    .update(professionalData)
-                    .eq('id', editingProfessional.id);
+                if (editingProfessional.source === 'anuncio') {
+                    // Update the anuncio table
+                    const anuncioUpdate = {
+                        nome_prestador: formData.full_name,
+                        email_contato: formData.email,
+                        telefone: formData.phone || null,
+                        categoria: formData.profession,
+                        areas_atendimento: formData.address_city,
+                        anos_experiencia: formData.experience_years ? parseInt(formData.experience_years) : 0,
+                        descricao: formData.description || null,
+                    };
 
-                if (error) throw error;
-                setSuccess('Profissional atualizado com sucesso!');
+                    const { error } = await supabase
+                        .from('anuncios')
+                        .update(anuncioUpdate)
+                        .eq('id', editingProfessional.id);
+
+                    if (error) throw error;
+                    setSuccess('Anúncio atualizado com sucesso!');
+                } else {
+                    // Update specialists table
+                    const { error } = await supabase
+                        .from('professionals')
+                        .update(professionalData)
+                        .eq('id', editingProfessional.id);
+
+                    if (error) throw error;
+                    setSuccess('Profissional atualizado com sucesso!');
+                }
             } else {
                 // Insert
                 const { error } = await supabase
@@ -443,10 +465,19 @@ export default function Professionals() {
             {showModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
                     <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-                        <div className="p-6 border-b border-gray-200">
+                        <div className="p-6 border-b border-gray-200 flex justify-between items-center">
                             <h2 className="text-2xl font-bold text-gray-900">
                                 {editingProfessional ? 'Editar Profissional' : 'Novo Profissional'}
                             </h2>
+                            <button
+                                onClick={() => {
+                                    setShowModal(false);
+                                    resetForm();
+                                }}
+                                className="text-gray-400 hover:text-gray-600 transition-colors"
+                            >
+                                <X className="w-6 h-6" />
+                            </button>
                         </div>
 
                         <form onSubmit={handleSubmit} className="p-6 space-y-4">

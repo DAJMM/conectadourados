@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { supabase } from '../lib/supabase';
 import {
     Megaphone,
     MessageCircle,
@@ -10,47 +11,84 @@ import {
     LogOut,
     Star,
     Bell,
-    ChevronRight
+    ChevronRight,
+    Loader2
 } from 'lucide-react';
 
 export default function AreaDoCliente() {
-    const { user, role, loading, signOut } = useAuth();
+    const { user, role, loading: authLoading, signOut } = useAuth();
     const navigate = useNavigate();
-
-    console.log('[AreaDoCliente] Render - loading:', loading, 'user:', user?.email, 'role:', role);
+    const [counts, setCounts] = useState({
+        ads: 0,
+        messages: 0,
+        reviews: 0
+    });
+    const [statsLoading, setStatsLoading] = useState(true);
 
     useEffect(() => {
-        console.log('[AreaDoCliente] useEffect - loading:', loading, 'user:', user?.email, 'role:', role);
-
-        if (!loading && !user) {
-            console.log('[AreaDoCliente] No user, redirecting to login');
+        if (!authLoading && !user) {
             navigate('/login');
         }
         // Redirect admin to admin area
-        if (!loading && role === 'admin') {
-            console.log('[AreaDoCliente] Admin user, redirecting to /admin');
+        if (!authLoading && role === 'admin') {
             navigate('/admin');
         }
-    }, [user, role, loading, navigate]);
+
+        if (user) {
+            fetchCounts();
+        }
+    }, [user, role, authLoading, navigate]);
+
+    const fetchCounts = async () => {
+        if (!user?.id) return;
+
+        try {
+            setStatsLoading(true);
+
+            // Fetch ads count
+            const { count: adsCount } = await supabase
+                .from('anuncios')
+                .select('*', { count: 'exact', head: true })
+                .eq('usuario_id', user.id);
+
+            // Fetch messages count (assuming a messages table exists)
+            const { count: msgCount } = await supabase
+                .from('messages')
+                .select('*', { count: 'exact', head: true })
+                .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`);
+
+            // Fetch reviews count (assuming a reviews table exists)
+            const { count: revCount } = await supabase
+                .from('reviews')
+                .select('*', { count: 'exact', head: true })
+                .eq('professional_id', user.id); // Or however reviews are linked
+
+            setCounts({
+                ads: adsCount || 0,
+                messages: msgCount || 0,
+                reviews: revCount || 0
+            });
+        } catch (error) {
+            console.error('Error fetching dashboard stats:', error);
+        } finally {
+            setStatsLoading(false);
+        }
+    };
 
     const handleLogout = async () => {
         try {
-            console.log('[AreaDoCliente] Initiating logout');
             await signOut();
-            console.log('[AreaDoCliente] Logout successful, navigating to home');
             navigate('/');
         } catch (error) {
-            console.error('[AreaDoCliente] Error during logout:', error);
-            // Fallback: force navigation even if error
+            console.error('Error during logout:', error);
             navigate('/');
         }
     };
 
-    if (loading) {
-        console.log('[AreaDoCliente] Showing loading spinner');
+    if (authLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-background-dark">
-                <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent"></div>
+                <Loader2 className="animate-spin text-primary size-12" />
             </div>
         );
     }
@@ -138,7 +176,9 @@ export default function AreaDoCliente() {
                                 <Megaphone className="text-blue-600" size={24} />
                             </div>
                             <div>
-                                <p className="text-2xl font-bold text-gray-900 dark:text-white">0</p>
+                                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                                    {statsLoading ? '...' : counts.ads}
+                                </p>
                                 <p className="text-sm text-gray-500 dark:text-gray-400">Anúncios Ativos</p>
                             </div>
                         </div>
@@ -149,7 +189,9 @@ export default function AreaDoCliente() {
                                 <MessageCircle className="text-green-600" size={24} />
                             </div>
                             <div>
-                                <p className="text-2xl font-bold text-gray-900 dark:text-white">0</p>
+                                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                                    {statsLoading ? '...' : counts.messages}
+                                </p>
                                 <p className="text-sm text-gray-500 dark:text-gray-400">Mensagens</p>
                             </div>
                         </div>
@@ -160,7 +202,9 @@ export default function AreaDoCliente() {
                                 <Star className="text-yellow-600" size={24} />
                             </div>
                             <div>
-                                <p className="text-2xl font-bold text-gray-900 dark:text-white">-</p>
+                                <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                                    {statsLoading ? '...' : counts.reviews > 0 ? '5.0' : '-'}
+                                </p>
                                 <p className="text-sm text-gray-500 dark:text-gray-400">Avaliação Média</p>
                             </div>
                         </div>

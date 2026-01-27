@@ -1,12 +1,15 @@
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { LogOut, User } from 'lucide-react';
+import { LogOut, User, Search } from 'lucide-react';
 import { useState } from 'react';
+import { useCategoryFilter } from '../contexts/CategoryFilterContext';
 
 export default function Header() {
     const navigate = useNavigate();
     const location = useLocation();
     const { user, role, signOut } = useAuth();
+    const { searchTerm, setSearchTerm } = useCategoryFilter();
+
     const handleLoginClick = () => {
         if (user) {
             // Redirect based on role
@@ -27,6 +30,13 @@ export default function Header() {
         } catch (error) {
             console.error('[Header] Logout error:', error);
             navigate('/');
+        }
+    };
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(e.target.value);
+        if (location.pathname !== '/profissionais') {
+            navigate('/profissionais');
         }
     };
 
@@ -53,6 +63,19 @@ export default function Header() {
                     <Link className={isActive("/")} to="/">Início</Link>
                     <Link className={isActive("/profissionais")} to="/profissionais">Profissionais</Link>
                     <Link className={isActive("/about")} to="/about">Sobre Nós</Link>
+
+                    {/* Search Bar in Header */}
+                    <div className="relative group mx-2">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors" size={16} />
+                        <input
+                            type="text"
+                            placeholder="Buscar profissional..."
+                            value={searchTerm}
+                            onChange={handleSearchChange}
+                            className="pl-9 pr-4 py-2 bg-gray-100 dark:bg-gray-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary w-44 lg:w-64 transition-all"
+                        />
+                    </div>
+
                     <Link
                         className={`px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary-light transition-all shadow-sm hover:shadow-md font-bold ${location.pathname === "/meus-anuncios" ? "ring-2 ring-primary ring-offset-2" : ""}`}
                         to="/meus-anuncios"

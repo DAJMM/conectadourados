@@ -18,13 +18,16 @@ interface Anuncio {
     preco: number;
     criado_em: string;
     imagem_url?: string;
+    avatar_url?: string;
+    profiles?: {
+        avatar_url: string | null;
+    };
 }
 
 export default function Professionals() {
     const [anuncios, setAnuncios] = useState<Anuncio[]>([]);
     const [loading, setLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState('');
-    const { selectedCategory, setSelectedCategory } = useCategoryFilter();
+    const { selectedCategory, setSelectedCategory, searchTerm, setSearchTerm } = useCategoryFilter();
 
     useEffect(() => {
         fetchAnuncios();
@@ -35,7 +38,8 @@ export default function Professionals() {
             setLoading(true);
             let query = supabase
                 .from('anuncios')
-                .select('*')
+                .select('*, profiles(avatar_url)')
+                .eq('status', 'approved')
                 .order('criado_em', { ascending: false });
 
             if (selectedCategory) {
@@ -90,19 +94,6 @@ export default function Professionals() {
                         Encontre os melhores prestadores de serviço da cidade. Profissionais verificados e recomendados pela comunidade.
                     </p>
 
-                    {/* Search Bar */}
-                    <div className="flex flex-col md:flex-row gap-4">
-                        <div className="relative flex-1">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-                            <input
-                                type="text"
-                                placeholder="Buscar por nome, serviço ou palavra-chave..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-12 pr-4 py-4 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#252d35] dark:text-white outline-none focus:ring-2 focus:ring-primary shadow-sm transition-all"
-                            />
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -110,7 +101,7 @@ export default function Professionals() {
             <CategoryBar />
 
             {/* Results Grid */}
-            <main className="max-w-[1200px] mx-auto px-4 lg:px-10 -mt-8">
+            <main className="max-w-[1200px] mx-auto px-4 lg:px-10 mt-6">
                 {/* Active Filter Display removed as it's now in CategoryBar */}
 
                 {loading ? (
@@ -145,12 +136,12 @@ export default function Professionals() {
                             >
                                 {/* Professional Head */}
                                 <div className="p-6 pb-0 flex items-center gap-4">
-                                    {anuncio.imagem_url ? (
-                                        <div className="size-16 rounded-2xl overflow-hidden shadow-sm">
-                                            <img src={anuncio.imagem_url} alt={anuncio.nome_prestador} className="w-full h-full object-cover" />
+                                    {(anuncio.avatar_url || anuncio.profiles?.avatar_url) ? (
+                                        <div className="size-16 rounded-full overflow-hidden shadow-sm border-2 border-primary/10">
+                                            <img src={anuncio.avatar_url || anuncio.profiles?.avatar_url || ''} alt={anuncio.nome_prestador} className="w-full h-full object-cover" />
                                         </div>
                                     ) : (
-                                        <div className={`size-16 rounded-2xl ${getAvatarColor(anuncio.nome_prestador)} flex items-center justify-center text-white text-xl font-black shadow-sm`}>
+                                        <div className={`size-16 rounded-full ${getAvatarColor(anuncio.nome_prestador)} flex items-center justify-center text-white text-xl font-black shadow-sm`}>
                                             {getInitials(anuncio.nome_prestador)}
                                         </div>
                                     )}

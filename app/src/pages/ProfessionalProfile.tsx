@@ -1,267 +1,487 @@
-import { useParams } from 'react-router-dom';
-import { professionalsData } from '../data/professionals';
+import { useParams, Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { supabase } from '../lib/supabase';
+import { useAuth } from '../contexts/AuthContext';
+import {
+    MessageCircle,
+    FileText,
+    Loader2,
+    User,
+    Share2,
+    Calendar,
+    MapPin,
+    Award,
+    Clock,
+    ExternalLink,
+    Instagram,
+    Globe,
+    CheckCircle,
+    Image
+} from 'lucide-react';
+
+interface AnuncioProfile {
+    id: string;
+    usuario_id: string;
+    titulo: string;
+    descricao: string;
+    preco: number;
+    imagem_url?: string;
+    nome_prestador: string;
+    email_contato: string;
+    telefone: string;
+    categoria: string;
+    anos_experiencia: number;
+    areas_atendimento: string;
+    instagram?: string;
+    website?: string;
+    preco_a_combinar: boolean;
+    criado_em: string;
+    avatar_url?: string;
+    full_name?: string;
+    status?: 'pending' | 'approved' | 'rejected';
+}
 
 export default function ProfessionalProfile() {
     const { id } = useParams<{ id: string }>();
-    // Default to 'joao' if no ID or ID not found, just for demo purposes
-    const profile = professionalsData.find(p => p.id === id) || professionalsData[1];
-    const isPremium = profile.type === 'premium';
+    const { user } = useAuth();
+    const userId = user?.id;
+    const [profile, setProfile] = useState<AnuncioProfile | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-    if (!profile) return <div>Profissional não encontrado</div>;
+    useEffect(() => {
+        if (!id) return;
+        fetchProfile();
+    }, [id]);
+
+    const fetchProfile = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+
+            // 1. Try to fetch as an announcement ID
+            let { data, error: fetchError } = await supabase
+                .from('anuncios')
+                .select(`
+                    *,
+                    profiles:usuario_id (
+                        avatar_url,
+                        full_name
+                    )
+                `)
+                .eq('id', id)
+                .single();
+
+            // 2. If not found or error, try to fetch as a profile ID
+            if (fetchError || !data) {
+                console.log('Not found as announcement, trying as profile ID...');
+
+                // Fetch the first announcement for this user ID
+                const { data: ads, error: adsError } = await supabase
+                    .from('anuncios')
+                    .select(`
+                        *,
+                        profiles:usuario_id (
+                            avatar_url,
+                            full_name
+                        )
+                    `)
+                    .eq('usuario_id', id)
+                    .order('criado_em', { ascending: false })
+                    .limit(1);
+
+                if (ads && ads.length > 0) {
+                    data = ads[0];
+                } else {
+                    // 3. Last fallback: Fetch profile info and show a basic profile even without ads
+                    const { data: profileData, error: profileError } = await supabase
+                        .from('profiles')
+                        .select('*')
+                        .eq('id', id)
+                        .single();
+
+                    if (!profileError && profileData) {
+                        data = {
+                            id: profileData.id,
+                            usuario_id: profileData.id,
+                            nome_prestador: profileData.full_name || 'Profissional',
+                            titulo: 'Perfil Conecta Dourados',
+                            descricao: 'Este profissional ainda não cadastrou uma descrição detalhada.',
+                            preco: 0,
+                            categoria: 'Profissional',
+                            anos_experiencia: 0,
+                            areas_atendimento: 'Dourados, MS',
+                            telefone: '', // Should ideally be in profile
+                            email_contato: profileData.email || '',
+                            criado_em: profileData.created_at,
+                            preco_a_combinar: true,
+                            profiles: {
+                                avatar_url: profileData.avatar_url,
+                                full_name: profileData.full_name
+                            }
+                        };
+                    }
+                }
+            }
+
+            if (!data) {
+                setError('Profissional não encontrado.');
+                return;
+            }
+
+            // Flatten data structure and handle profile data
+            const profileData = (data as any).profiles;
+            const flattened: AnuncioProfile = {
+                ...data,
+                // Prioritize ad-specific avatar_url, fallback to profile avatar_url
+                avatar_url: data.avatar_url || profileData?.avatar_url,
+                full_name: profileData?.full_name,
+                // Use profile name if nome_prestador is missing or use both?
+                // Usually nome_prestador is the business name, so it takes priority
+                nome_prestador: data.nome_prestador || profileData?.full_name || 'Profissional'
+            };
+            if (flattened.status !== 'approved' && flattened.usuario_id !== userId) {
+                setError('Este perfil está aguardando aprovação ou não está disponível publicamente.');
+                return;
+            }
+
+            setProfile(flattened);
+
+        } catch (err) {
+            console.error('Erro inesperado:', err);
+            setError('Ocorreu um erro ao carregar o perfil.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleShare = () => {
+        if (navigator.share) {
+            navigator.share({
+                title: profile ? `${profile.nome_prestador} - ${profile.titulo}` : 'Conecta Dourados',
+                text: profile ? `Confira os serviços de ${profile.nome_prestador} no Conecta Dourados.` : '',
+                url: window.location.href,
+            });
+        } else {
+            navigator.clipboard.writeText(window.location.href);
+            alert('Link copiado para a área de transferência!');
+        }
+    };
+
+    const formatWhatsApp = (phone: string) => {
+        const clean = phone?.replace(/\D/g, '') || '';
+        return clean.startsWith('55') ? clean : `55${clean}`;
+    };
+
+    const getInitials = (name: string) => {
+        if (!name) return '?';
+        return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+    };
+
+    const getAvatarColor = (name: string) => {
+        const colors = [
+            'bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-orange-500',
+            'bg-pink-500', 'bg-teal-500', 'bg-indigo-500', 'bg-red-500',
+        ];
+        const index = name?.length ? name.charCodeAt(0) % colors.length : 0;
+        return colors[index];
+    };
+
+    if (loading) {
+        return (
+            <div className="flex-1 flex flex-col items-center justify-center min-h-[60vh]">
+                <Loader2 className="animate-spin text-primary size-12" />
+                <p className="mt-4 text-gray-500 font-medium">Carregando perfil...</p>
+            </div>
+        );
+    }
+
+    if (error || !profile) {
+        return (
+            <div className="flex-1 flex flex-col items-center justify-center min-h-[60vh] px-4">
+                <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-sm text-center max-w-md border border-gray-100 dark:border-gray-700">
+                    <User className="size-16 text-gray-300 mx-auto mb-4" />
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{error || 'Perfil não encontrado'}</h2>
+                    <p className="text-gray-500 dark:text-gray-400 mb-6">
+                        O link pode estar quebrado ou o serviço não está mais disponível.
+                    </p>
+                    <Link to="/" className="inline-block bg-primary text-white font-bold px-8 py-3 rounded-xl hover:bg-primary-light transition-all">
+                        Voltar para o Início
+                    </Link>
+                </div>
+            </div>
+        );
+    }
 
     return (
-        <div className="font-display w-full flex flex-col items-center bg-[#f6f7f8] dark:bg-background-dark min-h-screen">
-            <main className="flex-1 flex flex-col items-center w-full px-4 py-8">
-                <div className={`w-full ${isPremium ? 'max-w-[680px]' : 'max-w-[800px] bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden'}`}>
-
-                    {/* Standard Profile Layout (Carlos Silva style) */}
-                    {!isPremium && (
-                        <>
-                            {/* Hero Banner */}
-                            <div className="relative h-48 md:h-64 overflow-hidden">
-                                <div className="w-full h-full bg-center bg-no-repeat bg-cover transition-transform hover:scale-105 duration-700" style={{ backgroundImage: `url("${profile.heroImage}")` }}></div>
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                            </div>
-
-                            {/* Profile Header Overlap */}
-                            <div className="px-6 pb-6 relative">
-                                <div className="flex flex-col items-center -mt-16">
-                                    <div className="bg-center bg-no-repeat aspect-square bg-cover rounded-xl border-4 border-white dark:border-gray-900 shadow-lg min-h-32 w-32 md:min-h-40 md:w-40" style={{ backgroundImage: `url("${profile.avatar}")` }}></div>
-                                    <div className="mt-4 flex flex-col items-center text-center">
-                                        <h1 className="text-[#121617] dark:text-white text-3xl font-extrabold leading-tight tracking-tight">{profile.name}</h1>
-                                        <p className="text-primary font-semibold text-lg">{profile.role}</p>
-
-                                        {/* Stats Grid */}
-                                        <div className="mt-4 flex flex-wrap justify-center gap-y-2 gap-x-4 text-[#677f83] dark:text-gray-400 text-sm font-medium">
-                                            {profile.stats?.map((stat, idx) => (
-                                                <div key={idx} className="flex items-center gap-1">
-                                                    <span className="material-symbols-outlined text-primary text-[18px]">{stat.icon}</span>
-                                                    {stat.value}
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Action Buttons */}
-                                <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <button className="flex items-center justify-center gap-2 rounded-xl h-14 px-6 bg-primary text-white text-base font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform">
-                                        <span className="material-symbols-outlined">description</span>
-                                        <span>Solicitar Orçamento</span>
-                                    </button>
-                                    <button className="flex items-center justify-center gap-2 rounded-xl h-14 px-6 bg-[#f0f3f4] dark:bg-gray-800 text-primary dark:text-primary text-base font-bold border border-primary/20 hover:bg-primary/5 transition-colors">
-                                        <span className="material-symbols-outlined">grid_view</span>
-                                        <span>Ver Portfólio</span>
-                                    </button>
-                                </div>
-
-                                {/* Social Bar */}
-                                <div className="mt-8 pt-8 border-t border-gray-100 dark:border-gray-800">
-                                    <div className="flex justify-center gap-8">
-                                        <a href="#" className="flex flex-col items-center gap-2 group">
-                                            <div className="size-12 rounded-full bg-[#f0f3f4] dark:bg-gray-800 flex items-center justify-center text-[#121617] dark:text-white group-hover:bg-primary group-hover:text-white transition-all">
-                                                <span className="material-symbols-outlined">photo_camera</span>
-                                            </div>
-                                            <span className="text-[10px] font-bold text-[#677f83] tracking-widest">INSTAGRAM</span>
-                                        </a>
-                                        <a href="#" className="flex flex-col items-center gap-2 group">
-                                            <div className="size-12 rounded-full bg-[#f0f3f4] dark:bg-gray-800 flex items-center justify-center text-[#121617] dark:text-white group-hover:bg-primary group-hover:text-white transition-all">
-                                                <span className="material-symbols-outlined">work</span>
-                                            </div>
-                                            <span className="text-[10px] font-bold text-[#677f83] tracking-widest">LINKEDIN</span>
-                                        </a>
-                                        <a href="#" className="flex flex-col items-center gap-2 group">
-                                            <div className="size-12 rounded-full bg-[#f0f3f4] dark:bg-gray-800 flex items-center justify-center text-[#121617] dark:text-white group-hover:bg-primary group-hover:text-white transition-all">
-                                                <span className="material-symbols-outlined">language</span>
-                                            </div>
-                                            <span className="text-[10px] font-bold text-[#677f83] tracking-widest">WEBSITE</span>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                {/* Reviews Section */}
-                                <div className="mt-12">
-                                    <div className="flex items-center justify-between mb-6">
-                                        <h2 className="text-[#121617] dark:text-white text-xl font-bold leading-tight">Avaliações dos Clientes</h2>
-                                        <div className="flex items-center gap-1 text-primary">
-                                            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                                            <span className="font-bold">{profile.rating}</span>
-                                            <span className="text-sm text-[#677f83] dark:text-gray-400 font-normal">({profile.reviewCount} reviews)</span>
-                                        </div>
-                                    </div>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        {profile.reviews.map(review => (
-                                            <div key={review.id} className="p-5 rounded-xl bg-[#f8fafc] dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700">
-                                                <div className="flex items-center gap-1 mb-2">
-                                                    {[...Array(5)].map((_, i) => (
-                                                        <span key={i} className={`material-symbols-outlined text-sm ${i < review.rating ? 'text-primary' : 'text-gray-300'}`} style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                                                    ))}
-                                                </div>
-                                                <p className="text-[#121617] dark:text-gray-200 text-sm italic leading-relaxed">"{review.text}"</p>
-                                                <p className="mt-4 text-[#677f83] dark:text-gray-400 text-xs font-bold">— {review.author}</p>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                <footer className="mt-8 pt-8 border-t border-gray-100 dark:border-gray-800 text-center">
-                                    <p className="text-[#677f83] text-[10px] font-bold uppercase tracking-widest">Plataforma Conecta Dourados © 2024</p>
-                                </footer>
-                            </div>
-                        </>
-                    )}
-
-                    {/* Premium Profile Layout (João Silva / Link-in-bio style) */}
-                    {isPremium && (
-                        <div className="flex flex-col gap-8">
-                            {/* Header */}
-                            <div className="flex flex-col items-center text-center gap-4 transition-all duration-700 ease-out">
-                                <div className="relative">
-                                    <div className="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-32 w-32 ring-4 ring-primary/10" style={{ backgroundImage: `url("${profile.avatar}")` }}>
-                                    </div>
-                                    {profile.verified && (
-                                        <div className="absolute bottom-1 right-1 bg-green-500 border-2 border-white dark:border-background-dark w-6 h-6 rounded-full flex items-center justify-center">
-                                            <span className="material-symbols-outlined text-white text-[12px]">check</span>
-                                        </div>
-                                    )}
-                                </div>
-                                <div className="flex flex-col items-center">
-                                    <h1 className="text-2xl font-bold leading-tight tracking-[-0.015em] text-[#111417] dark:text-white">{profile.name}</h1>
-                                    <p className="text-primary font-medium">{profile.role}</p>
-                                    <div className="flex items-center gap-1 mt-1 text-[#647587] dark:text-[#a0aab6] text-sm">
-                                        <span className="material-symbols-outlined text-sm">location_on</span>
-                                        <span>{profile.location}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Promo Banner */}
-                            {profile.promoBanner && (
-                                <div className="p-0.5 rounded-xl bg-gradient-to-br from-primary to-blue-400">
-                                    <div className="flex flex-col items-stretch justify-start rounded-xl overflow-hidden bg-white dark:bg-[#1a1f24] shadow-lg">
-                                        <div className="w-full bg-center bg-no-repeat aspect-[21/9] bg-cover" style={{ backgroundImage: `url("${profile.promoBanner.image}")` }}>
-                                        </div>
-                                        <div className="flex w-full grow flex-col gap-3 p-6">
-                                            <div className="flex items-center gap-2 text-primary font-bold uppercase tracking-wider text-xs">
-                                                <span className="material-symbols-outlined text-sm">campaign</span>
-                                                <span>{profile.promoBanner.discountText}</span>
-                                            </div>
-                                            <h3 className="text-xl font-bold leading-tight tracking-tight text-[#111417] dark:text-white">{profile.promoBanner.title}</h3>
-                                            <div className="flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
-                                                <p className="text-[#647587] dark:text-[#a0aab6] text-base leading-relaxed max-w-[360px]">{profile.promoBanner.description}</p>
-                                                <button className="flex min-w-[140px] cursor-pointer items-center justify-center rounded-lg h-11 px-6 bg-primary text-white text-sm font-bold shadow-md hover:bg-primary/90 transition-all">
-                                                    <span className="truncate">Resgatar Agora</span>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Bio Section */}
-                            <div className="bg-white dark:bg-[#2a2f36] rounded-xl p-8 border border-[#f0f2f4] dark:border-[#3a3f45]">
-                                <h3 className="text-lg font-bold mb-4 flex items-center gap-2 text-[#111417] dark:text-white">
-                                    <span className="material-symbols-outlined text-primary">person</span>
-                                    Sobre mim
-                                </h3>
-                                <p className="text-[#111417] dark:text-[#e1e4e8] text-base leading-relaxed text-left">
-                                    {profile.bio}
-                                </p>
-                            </div>
-
-                            {/* Links/Buttons */}
-                            <div className="flex flex-col gap-3">
-                                <h3 className="text-lg font-bold mb-1 px-1 text-[#111417] dark:text-white">Links Rápidos</h3>
-                                <a href="#" className="group flex items-center justify-between w-full bg-white dark:bg-[#1a1f24] border border-[#f0f2f4] dark:border-[#3a3f45] p-5 rounded-xl hover:border-primary/50 transition-all shadow-sm hover:shadow-md">
-                                    <div className="flex items-center gap-4">
-                                        <div className="bg-primary/10 text-primary p-2.5 rounded-lg group-hover:bg-primary group-hover:text-white transition-colors">
-                                            <span className="material-symbols-outlined">description</span>
-                                        </div>
-                                        <span className="font-bold text-base text-[#111417] dark:text-white">Solicitar Orçamento Grátis</span>
-                                    </div>
-                                    <span className="material-symbols-outlined text-[#647587] group-hover:translate-x-1 transition-transform">arrow_forward_ios</span>
-                                </a>
-                                <a href="#" className="group flex items-center justify-between w-full bg-white dark:bg-[#1a1f24] border border-[#f0f2f4] dark:border-[#3a3f45] p-5 rounded-xl hover:border-primary/50 transition-all shadow-sm hover:shadow-md">
-                                    <div className="flex items-center gap-4">
-                                        <div className="bg-primary/10 text-primary p-2.5 rounded-lg group-hover:bg-primary group-hover:text-white transition-colors">
-                                            <span className="material-symbols-outlined">event_available</span>
-                                        </div>
-                                        <span className="font-bold text-base text-[#111417] dark:text-white">Agendar Consultoria</span>
-                                    </div>
-                                    <span className="material-symbols-outlined text-[#647587] group-hover:translate-x-1 transition-transform">arrow_forward_ios</span>
-                                </a>
-                                <a href="#" className="group flex items-center justify-between w-full bg-white dark:bg-[#1a1f24] border border-[#f0f2f4] dark:border-[#3a3f45] p-5 rounded-xl hover:border-primary/50 transition-all shadow-sm hover:shadow-md">
-                                    <div className="flex items-center gap-4">
-                                        <div className="bg-primary/10 text-primary p-2.5 rounded-lg group-hover:bg-primary group-hover:text-white transition-colors">
-                                            <span className="material-symbols-outlined">imagesmode</span>
-                                        </div>
-                                        <span className="font-bold text-base text-[#111417] dark:text-white">Ver Portfólio de Projetos</span>
-                                    </div>
-                                    <span className="material-symbols-outlined text-[#647587] group-hover:translate-x-1 transition-transform">arrow_forward_ios</span>
-                                </a>
-                            </div>
-
-                            {/* Testimonials Slider */}
-                            <div className="flex flex-col gap-4">
-                                <h3 className="text-lg font-bold px-1 text-[#111417] dark:text-white">O que dizem os clientes</h3>
-                                <div className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar snap-x">
-                                    {profile.reviews.map(review => (
-                                        <div key={review.id} className="min-w-[300px] flex-shrink-0 snap-center bg-white dark:bg-[#1a1f24] border border-[#f0f2f4] dark:border-[#3a3f45] p-6 rounded-xl shadow-sm">
-                                            <div className="flex items-center gap-3 mb-4">
-                                                {review.avatar && <div className="size-12 rounded-full bg-center bg-cover" style={{ backgroundImage: `url('${review.avatar}')` }}></div>}
-                                                <div>
-                                                    <p className="font-bold text-sm text-[#111417] dark:text-white">{review.author}</p>
-                                                    <div className="flex text-yellow-400 text-xs">
-                                                        {[...Array(5)].map((_, i) => (
-                                                            <span key={i} className={`material-symbols-outlined text-[14px] ${i < review.rating ? 'fill-current' : 'text-gray-300'}`} style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <p className="text-sm text-[#647587] dark:text-[#a0aab6] italic">"{review.text}"</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Instagram Grid */}
-                            <div className="flex flex-col gap-4">
-                                <div className="flex items-center justify-between px-1">
-                                    <h3 className="text-lg font-bold text-[#111417] dark:text-white">Galeria Instagram</h3>
-                                    <a className="text-sm font-semibold text-primary" href="#">@joaosilva_servicos</a>
-                                </div>
-                                <div className="grid grid-cols-3 gap-2">
-                                    {profile.instagramImages?.map((img, i) => (
-                                        <div key={i} className="aspect-square rounded-lg bg-center bg-cover shadow-sm hover:opacity-90 cursor-pointer" style={{ backgroundImage: `url('${img}')` }}></div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <footer className="mt-8 text-center border-t border-[#f0f2f4] dark:border-[#3a3f45] pt-10 pb-8">
-                                <div className="flex flex-col items-center gap-2">
-                                    <p className="text-sm text-[#647587] dark:text-[#a0aab6] mb-2">Parte da rede oficial Conecta Dourados</p>
-                                    <div className="flex justify-center gap-6 mb-4">
-                                        <span className="material-symbols-outlined text-[#647587] text-2xl">public</span>
-                                        <span className="material-symbols-outlined text-[#647587] text-2xl">photo_camera</span>
-                                        <span className="material-symbols-outlined text-[#647587] text-2xl">mail</span>
-                                    </div>
-                                    <p className="text-xs uppercase font-bold tracking-widest text-[#647587]">2024 Conecta Dourados</p>
-                                </div>
-                            </footer>
+        <div className="w-full flex flex-col items-center bg-[#f6f7f8] dark:bg-background-dark min-h-screen">
+            <main className="w-full max-w-4xl px-4 py-8 lg:py-12">
+                <div className="bg-white dark:bg-gray-900 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+                    {profile.status === 'pending' && profile.usuario_id === userId && (
+                        <div className="bg-yellow-50 border-b border-yellow-100 p-4 text-center">
+                            <p className="text-yellow-800 text-sm font-bold">
+                                Seu anúncio está em análise pela nossa equipe e em breve estará visível para todos.
+                            </p>
                         </div>
                     )}
-                </div>
-            </main>
+                    {profile.status === 'rejected' && profile.usuario_id === userId && (
+                        <div className="bg-red-50 border-b border-red-100 p-4 text-center">
+                            <p className="text-red-800 text-sm font-bold">
+                                Seu anúncio foi recusado. Entre em contato com o suporte ou edite as informações.
+                            </p>
+                        </div>
+                    )}
 
-            {/* Floating WhatsApp Action Button */}
-            <a href="https://wa.me/5567000000000" target="_blank" className="fixed bottom-8 right-8 z-[100] group">
-                <div className="relative flex items-center justify-center w-16 h-16 bg-[#25D366] text-white rounded-full shadow-[0_4px_20px_rgba(37,211,102,0.4)] hover:scale-110 transition-transform active:scale-95">
-                    <svg className="w-9 h-9" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.72.937 3.659 1.432 5.628 1.433h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"></path>
-                    </svg>
+                    {/* Header Banner - Primary theme color based on category or default */}
+                    <div className="relative h-48 md:h-64 bg-gradient-to-r from-primary to-blue-600">
+                        <div className="absolute top-6 right-6 z-10">
+                            <button
+                                onClick={handleShare}
+                                className="p-3 rounded-full bg-white/20 backdrop-blur-md text-white hover:bg-white/30 transition-all border border-white/30"
+                            >
+                                <Share2 size={24} />
+                            </button>
+                        </div>
+                        {profile.imagem_url && (
+                            <img
+                                src={profile.imagem_url}
+                                alt="Banner"
+                                className="w-full h-full object-cover opacity-60"
+                            />
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                    </div>
+
+                    {/* Profile Info Overlap */}
+                    <div className="px-6 md:px-12 pb-12 relative">
+                        <div className="flex flex-col items-center md:items-start -mt-20 md:-mt-24 mb-6">
+                            <div className="relative">
+                                {profile.avatar_url ? (
+                                    <div className="size-40 md:size-48 rounded-full border-8 border-white dark:border-gray-900 shadow-2xl overflow-hidden bg-white">
+                                        <img
+                                            src={profile.avatar_url}
+                                            alt={profile.nome_prestador}
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </div>
+                                ) : (
+                                    <div className={`size-40 md:size-48 rounded-full border-8 border-white dark:border-gray-900 shadow-2xl flex items-center justify-center text-white text-5xl font-bold ${getAvatarColor(profile.nome_prestador)}`}>
+                                        {getInitials(profile.nome_prestador)}
+                                    </div>
+                                )}
+                                <div className="absolute bottom-2 right-2 bg-green-500 border-4 border-white dark:border-gray-900 size-10 rounded-full flex items-center justify-center shadow-lg">
+                                    <CheckCircle className="text-white fill-current" size={20} />
+                                </div>
+                            </div>
+
+                            <div className="mt-6 text-center md:text-left w-full flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+                                <div>
+                                    <div className="flex flex-col sm:flex-row items-center gap-2 mb-2">
+                                        <h1 className="text-4xl font-black text-gray-900 dark:text-white tracking-tight leading-none">
+                                            {profile.nome_prestador}
+                                        </h1>
+                                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                                            Profissional Verificado
+                                        </span>
+                                    </div>
+                                    <p className="text-primary text-2xl font-bold mb-2">{profile.titulo}</p>
+                                    <div className="flex flex-wrap justify-center md:justify-start gap-4 text-gray-500 dark:text-gray-400 font-medium">
+                                        <div className="flex items-center gap-1.5">
+                                            <Award size={18} className="text-primary" />
+                                            <span>{profile.categoria}</span>
+                                        </div>
+                                        <div className="flex items-center gap-1.5">
+                                            <MapPin size={18} className="text-primary" />
+                                            <span>{profile.areas_atendimento || 'Dourados, MS'}</span>
+                                        </div>
+                                        {profile.anos_experiencia > 0 && (
+                                            <div className="flex items-center gap-1.5">
+                                                <Clock size={18} className="text-primary" />
+                                                <span>{profile.anos_experiencia} anos de experiência</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col items-center md:items-end gap-2">
+                                    <div className="text-gray-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-1">Preço Sugerido</div>
+                                    <div>
+                                        {profile.preco_a_combinar || profile.preco <= 0 ? (
+                                            <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 text-primary border-2 border-primary/20">
+                                                <span className="text-base md:text-lg font-black uppercase tracking-tight whitespace-nowrap">A Combinar</span>
+                                            </div>
+                                        ) : (
+                                            <div className="text-4xl font-black text-primary tracking-tighter">
+                                                R$ {Number(profile.preco).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Main Content Grid */}
+                        <div className="grid lg:grid-cols-3 gap-8 mt-12 pt-12 border-t border-gray-100 dark:border-gray-800">
+
+                            {/* Left Column: Description */}
+                            <div className="lg:col-span-2 space-y-10">
+                                <section>
+                                    <h3 className="text-xl font-black text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                        <div className="size-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                                            <User size={18} />
+                                        </div>
+                                        Sobre o Serviço
+                                    </h3>
+                                    <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-2xl border border-gray-100 dark:border-gray-700">
+                                        <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed whitespace-pre-wrap">
+                                            {profile.descricao || "Nenhuma descrição detalhada disponível."}
+                                        </p>
+                                    </div>
+                                </section>
+
+                                {/* Quick Links Section from Image */}
+                                <section className="space-y-6">
+                                    <h3 className="text-xl font-black text-gray-900 dark:text-white flex items-center gap-2">
+                                        Links Rápidos
+                                    </h3>
+                                    <div className="flex flex-col gap-4">
+                                        {/* Solicitar Orçamento */}
+                                        <a
+                                            href={`https://wa.me/${formatWhatsApp(profile.telefone)}?text=Olá ${profile.nome_prestador}! Vi seu anúncio "${profile.titulo}" no Conecta Dourados e gostaria de solicitar um orçamento grátis.`}
+                                            target="_blank"
+                                            className="group flex items-center justify-between w-full bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-5 rounded-2xl hover:border-primary transition-all shadow-sm hover:shadow-md"
+                                        >
+                                            <div className="flex items-center gap-5">
+                                                <div className="size-14 rounded-xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600">
+                                                    <FileText size={28} />
+                                                </div>
+                                                <span className="font-bold text-lg text-gray-900 dark:text-white">Solicitar Orçamento Grátis</span>
+                                            </div>
+                                            <span className="material-symbols-outlined text-gray-300 group-hover:text-primary group-hover:translate-x-1 transition-all">arrow_forward_ios</span>
+                                        </a>
+
+                                        {/* Agendar Consultoria */}
+                                        <a
+                                            href={`https://wa.me/${formatWhatsApp(profile.telefone)}?text=Olá ${profile.nome_prestador}! Gostaria de agendar uma consultoria sobre o serviço "${profile.titulo}".`}
+                                            target="_blank"
+                                            className="group flex items-center justify-between w-full bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-5 rounded-2xl hover:border-primary transition-all shadow-sm hover:shadow-md"
+                                        >
+                                            <div className="flex items-center gap-5">
+                                                <div className="size-14 rounded-xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600">
+                                                    <Calendar size={28} />
+                                                </div>
+                                                <span className="font-bold text-lg text-gray-900 dark:text-white">Agendar Consultoria</span>
+                                            </div>
+                                            <span className="material-symbols-outlined text-gray-300 group-hover:text-primary group-hover:translate-x-1 transition-all">arrow_forward_ios</span>
+                                        </a>
+
+                                        {/* Ver Portfólio */}
+                                        {profile.instagram || profile.website ? (
+                                            <a
+                                                href={profile.website || (profile.instagram?.startsWith('http') ? profile.instagram : `https://instagram.com/${profile.instagram?.replace('@', '')}`)}
+                                                target="_blank"
+                                                className="group flex items-center justify-between w-full bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-5 rounded-2xl hover:border-primary transition-all shadow-sm hover:shadow-md"
+                                            >
+                                                <div className="flex items-center gap-5">
+                                                    <div className="size-14 rounded-xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600">
+                                                        <Image size={28} />
+                                                    </div>
+                                                    <span className="font-bold text-lg text-gray-900 dark:text-white">Ver Portfólio de Projetos</span>
+                                                </div>
+                                                <span className="material-symbols-outlined text-gray-300 group-hover:text-primary group-hover:translate-x-1 transition-all">arrow_forward_ios</span>
+                                            </a>
+                                        ) : null}
+                                    </div>
+                                </section>
+
+                                {/* Badges / Features */}
+                                <section className="grid sm:grid-cols-2 gap-4">
+                                    <div className="flex items-center gap-4 p-4 rounded-xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm">
+                                        <div className="size-12 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600">
+                                            <Calendar size={24} />
+                                        </div>
+                                        <div>
+                                            <div className="font-bold text-gray-900 dark:text-white">Facilidade</div>
+                                            <div className="text-sm text-gray-500">Agendamento flexível</div>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-4 p-4 rounded-xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm">
+                                        <div className="size-12 rounded-full bg-orange-50 dark:bg-orange-900/20 flex items-center justify-center text-orange-600">
+                                            <Award size={24} />
+                                        </div>
+                                        <div>
+                                            <div className="font-bold text-gray-900 dark:text-white">Qualidade</div>
+                                            <div className="text-sm text-gray-500">Referência local</div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+
+                            {/* Right Column: Sidebar Actions */}
+                            <div className="space-y-6">
+                                <div className="p-8 rounded-[2rem] bg-gray-900 text-white shadow-xl shadow-gray-200 dark:shadow-none space-y-6 sticky top-8">
+                                    <div className="text-center">
+                                        <h3 className="text-xl font-bold mb-1">Contatar Profissional</h3>
+                                        <p className="text-gray-400 text-sm">Resposta média em 30 min</p>
+                                    </div>
+
+                                    <div className="space-y-3">
+                                        <a
+                                            href={`https://wa.me/${formatWhatsApp(profile.telefone)}?text=Olá ${profile.nome_prestador}! Vi seu anúncio "${profile.titulo}" no Conecta Dourados e gostaria de fazer um orçamento.`}
+                                            target="_blank"
+                                            className="flex items-center justify-center gap-3 w-full bg-[#25D366] hover:bg-[#128C7E] text-white h-16 rounded-2xl font-black text-lg transition-all shadow-lg shadow-green-900/20 active:scale-95"
+                                        >
+                                            <MessageCircle size={24} />
+                                            WhatsApp
+                                        </a>
+
+                                        <button className="flex items-center justify-center gap-3 w-full bg-white/10 hover:bg-white/20 text-white h-16 rounded-2xl font-black text-lg transition-all border border-white/10 active:scale-95">
+                                            Enviar E-mail
+                                        </button>
+                                    </div>
+
+                                    <div className="pt-6 border-t border-white/10 space-y-4">
+                                        {profile.instagram && (
+                                            <a href={profile.instagram.startsWith('http') ? profile.instagram : `https://instagram.com/${profile.instagram.replace('@', '')}`} target="_blank" className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors group">
+                                                <div className="size-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-primary transition-all">
+                                                    <Instagram size={20} />
+                                                </div>
+                                                <span className="font-bold underline">Instagram</span>
+                                            </a>
+                                        )}
+                                        {profile.website && (
+                                            <a href={profile.website.startsWith('http') ? profile.website : `https://${profile.website}`} target="_blank" className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors group">
+                                                <div className="size-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-primary transition-all">
+                                                    <Globe size={20} />
+                                                </div>
+                                                <span className="font-bold underline">Website</span>
+                                            </a>
+                                        )}
+                                        <Link to={`/card/${profile.id}`} className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors group">
+                                            <div className="size-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-primary transition-all">
+                                                <ExternalLink size={20} />
+                                            </div>
+                                            <span className="font-bold underline">Cartão Digital (QR)</span>
+                                        </Link>
+                                    </div>
+
+                                    <div className="text-center pt-2">
+                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-[0.2em]">Selo Conecta Dourados 2024</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
-                <span className="absolute right-full mr-4 top-1/2 -translate-y-1/2 bg-black/80 text-white text-xs font-bold py-2 px-3 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">Falar com {profile.name.split(' ')[0]} no WhatsApp</span>
-            </a>
-        </div>
+
+                {/* Footer Section */}
+                <div className="mt-12 text-center opacity-40">
+                    <p className="text-xs font-bold uppercase tracking-[0.3em] text-gray-500">
+                        Publicado em {new Date(profile.criado_em).toLocaleDateString('pt-BR')}
+                    </p>
+                </div>
+            </main >
+        </div >
     );
 }

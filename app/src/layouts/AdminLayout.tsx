@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, UserCircle, CreditCard, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, Users, UserCircle, CreditCard, Settings, LogOut, Megaphone } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -54,6 +54,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                     <Link to="/admin/subscriptions" className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold transition-colors ${isActive('/admin/subscriptions')}`}>
                         <CreditCard size={20} />
                         <span>Assinaturas</span>
+                    </Link>
+                    <Link to="/admin/approvals" className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold transition-colors ${isActive('/admin/approvals')}`}>
+                        <Megaphone size={20} />
+                        <span>Aprovações</span>
                     </Link>
 
                     <div className="mt-auto pt-4 border-t border-[#f0f2f4]">

@@ -1,4 +1,4 @@
-import { Store, Handshake, TrendingUp, CheckCircle, MapPin, Loader2 } from 'lucide-react';
+import { Store, Handshake, TrendingUp, CheckCircle, MapPin, Loader2, ShieldCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
@@ -69,7 +69,7 @@ export default function About() {
             <section className="relative w-full">
                 <div className="max-w-[1280px] mx-auto px-4 lg:px-10 py-8 lg:py-12">
                     {/* Note: In a real app, you might want to host this image or put it in public folder */}
-                    <div className="relative min-h-[520px] rounded-2xl overflow-hidden flex items-center justify-center text-center p-8 bg-cover bg-center" style={{ backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url("https://lh3.googleusercontent.com/aida-public/AB6AXuBvSebyMzev4AW24jXILSvVCIXdlQ3G507YMNiXpJpnjO7Q5kNZHLg15E2eTaXFf4jjXs0UYI38wEUWFJAuEVqxGvoPXeiHylNsrmbKvUUXDunOrGT8B1I7PdVBZJiUQip3IZjBRul0_v7cjk64e-owoXv6LQ-k_Uug6oKg_J0ScCSxAZ-s3NCFpSsJS6O7Qkdbi0E6s4YT3O9lWxqVmBMAAISGxuBy8ixvRi7l2BSaEwRXUjpVdPG6DEL7DQSE2T0qjZqPdTsfiB7T")' }}>
+                    <div className="relative min-h-[520px] rounded-2xl overflow-hidden flex items-center justify-center text-center p-8 bg-cover bg-center" style={{ backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url("/banner-sobre-light.png")' }}>
                         <div className="max-w-3xl space-y-6">
                             <h1 className="text-white text-4xl lg:text-6xl font-extrabold leading-tight tracking-tight">
                                 Conectando Dourados ao que a cidade tem de melhor
@@ -115,6 +115,19 @@ export default function About() {
                                 <div>
                                     <h3 className="font-bold text-lg text-[#121517] dark:text-white">Confiança Local</h3>
                                     <p className="text-[#657886] dark:text-gray-400">Fomentamos conexões reais entre vizinhos e profissionais, criando uma rede de segurança e qualidade.</p>
+                                </div>
+                            </div>
+                            <div className="flex gap-4 p-5 rounded-xl border border-[#dce1e5] dark:border-gray-800 bg-white dark:bg-background-dark">
+                                <div className="flex-shrink-0 size-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                                    <ShieldCheck size={28} />
+                                </div>
+                                <div>
+                                    <h3 className="font-bold text-lg text-[#121517] dark:text-white">Termos e Condições</h3>
+                                    <p className="text-[#657886] dark:text-gray-400 text-sm leading-relaxed">
+                                        O site Conecta Dourados consiste em um serviço de classificados online e intermediação de contatos. A administração do site não verifica a idoneidade, capacidade técnica ou legalidade dos prestadores de serviço anunciados.
+                                        Ao utilizar a plataforma, o usuário contratante reconhece que qualquer relação contratual ou comercial é estabelecida diretamente com o prestador de serviço, sem qualquer participação, ingerência ou responsabilidade do site.
+                                        O Conecta Dourados isenta-se de quaisquer danos, prejuízos ou vícios decorrentes da prestação de serviços, devendo o consumidor tomar as precauções necessárias antes da contratação.
+                                    </p>
                                 </div>
                             </div>
                         </div>

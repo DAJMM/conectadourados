@@ -1,41 +1,134 @@
-import { useParams } from 'react-router-dom';
-import { Download, Share2, MapPin, CheckCircle, Briefcase, User, QrCode, Printer } from 'lucide-react';
-import { professionalsData } from '../data/professionals';
+import { useParams, Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { supabase } from '../lib/supabase';
+import {
+    Download,
+    Share2,
+    MapPin,
+    CheckCircle,
+    Briefcase,
+    User,
+    QrCode,
+    Printer,
+    Loader2
+} from 'lucide-react';
+
+interface AnuncioCard {
+    id: string;
+    titulo: string;
+    nome_prestador: string;
+    telefone: string;
+    categoria: string;
+    avatar_url?: string;
+}
 
 export default function DigitalCard() {
-    const { id } = useParams();
+    const { id } = useParams<{ id: string }>();
+    const [profile, setProfile] = useState<AnuncioCard | null>(null);
+    const [loading, setLoading] = useState(true);
 
-    // Find professional by ID string (e.g. 'carlos', 'joao')
-    // Fallback to first one if not found (for demo purposes if user types random specific ID)
-    const professional = professionalsData.find(p => p.id === id) || professionalsData[0];
+    useEffect(() => {
+        if (!id) return;
+        fetchProfile();
+    }, [id]);
+
+    const fetchProfile = async () => {
+        try {
+            setLoading(true);
+            const { data, error } = await supabase
+                .from('anuncios')
+                .select(`
+                    id,
+                    titulo,
+                    nome_prestador,
+                    telefone,
+                    categoria,
+                    profiles:usuario_id (
+                        avatar_url,
+                        full_name
+                    )
+                `)
+                .eq('id', id)
+                .single();
+
+            if (error) throw error;
+            if (data) {
+                const profileData = (data as any).profiles;
+                setProfile({
+                    ...data,
+                    avatar_url: profileData?.avatar_url,
+                    nome_prestador: data.nome_prestador || profileData?.full_name || 'Profissional'
+                });
+            }
+        } catch (err) {
+            console.error('Erro ao buscar cartão:', err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleShare = () => {
         if (navigator.share) {
             navigator.share({
-                title: `Cartão de ${professional.name}`,
-                text: `Confira os serviços de ${professional.name} no Conecta Dourados.`,
+                title: `Cartão de ${profile?.nome_prestador}`,
+                text: `Confira os serviços de ${profile?.nome_prestador} no Conecta Dourados.`,
                 url: window.location.href,
             });
         } else {
+            navigator.clipboard.writeText(window.location.href);
             alert('Link copiado para a área de transferência!');
         }
     };
 
-    if (!professional) return <div className="text-center p-10">Profissional não encontrado</div>;
+    const formatWhatsApp = (phone: string) => {
+        const clean = phone?.replace(/\D/g, '') || '';
+        return clean.startsWith('55') ? clean : `55${clean}`;
+    };
+
+    const getInitials = (name: string) => {
+        if (!name) return '?';
+        return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+    };
+
+    const getAvatarColor = (name: string) => {
+        const colors = [
+            'bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-orange-500',
+            'bg-pink-500', 'bg-teal-500', 'bg-indigo-500', 'bg-red-500',
+        ];
+        const index = name?.length ? name.charCodeAt(0) % colors.length : 0;
+        return colors[index];
+    };
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-[#f0f2f4] dark:bg-[#111921] flex flex-col items-center justify-center">
+                <Loader2 className="animate-spin text-primary size-10" />
+            </div>
+        );
+    }
+
+    if (!profile) return (
+        <div className="min-h-screen bg-[#f0f2f4] dark:bg-[#111921] flex flex-col items-center justify-center p-4">
+            <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl text-center">
+                <h2 className="text-xl font-bold mb-4">Cartão não encontrado</h2>
+                <Link to="/" className="text-primary font-bold underline">Voltar para o início</Link>
+            </div>
+        </div>
+    );
 
     return (
         <div className="min-h-screen bg-[#f0f2f4] dark:bg-[#111921] flex flex-col items-center justify-center p-4 font-display">
 
             {/* Top Bar */}
             <div className="w-full max-w-4xl flex justify-between items-center mb-8 px-4">
-                <div className="flex items-center gap-2 text-[#111417] dark:text-white">
+                <Link to="/" className="flex items-center gap-2 text-[#111417] dark:text-white">
                     <div className="size-6 text-primary">
                         <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path fillRule="evenodd" clipRule="evenodd" d="M24 4H6V17.3333V30.6667H24V44H42V30.6667V17.3333H24V4Z" fill="currentColor"></path>
                         </svg>
                     </div>
                     <span className="font-bold text-sm tracking-tight">Conecta Dourados</span>
-                </div>
+                </Link>
                 <div className="flex gap-2">
                     <button className="p-2 rounded-lg bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors shadow-sm">
                         <Download size={20} />
@@ -55,22 +148,29 @@ export default function DigitalCard() {
                 {/* Profile Section */}
                 <div className="flex flex-col items-center text-center mt-4 mb-8">
                     <div className="relative mb-4">
-                        <div className="size-28 rounded-full border-4 border-white dark:border-gray-800 shadow-lg overflow-hidden">
-                            <img
-                                src={professional.avatar || professional.heroImage}
-                                alt={professional.name}
-                                className="w-full h-full object-cover"
-                            />
-                        </div>
+                        {profile.avatar_url ? (
+                            <div className="size-28 rounded-full border-4 border-white dark:border-gray-800 shadow-lg overflow-hidden">
+                                <img
+                                    src={profile.avatar_url}
+                                    alt={profile.nome_prestador}
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
+                        ) : (
+                            <div className={`size-28 rounded-full border-4 border-white dark:border-gray-800 shadow-lg flex items-center justify-center text-white text-3xl font-bold ${getAvatarColor(profile.nome_prestador)}`}>
+                                {getInitials(profile.nome_prestador)}
+                            </div>
+                        )}
                         <div className="absolute bottom-1 right-1 bg-white dark:bg-gray-800 rounded-full p-1 shadow-md">
                             <CheckCircle className="text-primary fill-current" size={24} />
                         </div>
                     </div>
 
-                    <h1 className="text-2xl font-bold text-[#111417] dark:text-white mb-1">{professional.name}</h1>
-                    <p className="text-[#647587] dark:text-gray-400 font-medium">{professional.role}</p>
+                    <h1 className="text-2xl font-bold text-[#111417] dark:text-white mb-1">{profile.nome_prestador}</h1>
+                    <p className="text-primary font-bold text-sm mb-1">{profile.titulo}</p>
+                    <p className="text-[#647587] dark:text-gray-400 font-medium text-xs">{profile.categoria}</p>
 
-                    <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-[10px] font-bold uppercase tracking-wider">
+                    <div className="mt-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-[10px] font-bold uppercase tracking-wider">
                         <span className="size-1.5 rounded-full bg-green-500 animate-pulse"></span>
                         Profissional Verificado
                     </div>
@@ -89,7 +189,7 @@ export default function DigitalCard() {
                 {/* Action Buttons */}
                 <div className="space-y-3">
                     <a
-                        href={`https://wa.me/55${professional.phone?.replace(/\D/g, '') || '67999999999'}`}
+                        href={`https://wa.me/${formatWhatsApp(profile.telefone)}?text=Olá ${profile.nome_prestador}! Vi seu Cartão Digital no Conecta Dourados e gostaria de informações.`}
                         target="_blank"
                         className="w-full flex items-center justify-between px-6 py-4 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-xl font-bold shadow-lg shadow-green-200 dark:shadow-none transition-all active:scale-[0.98]"
                     >
@@ -102,18 +202,18 @@ export default function DigitalCard() {
                         </div>
                     </a>
 
-                    <a
-                        href={`/profile/${professional.id}`}
+                    <Link
+                        to={`/profile/${profile.id}`}
                         className="w-full flex items-center justify-between px-6 py-4 bg-[#111921] dark:bg-white text-white dark:text-[#111921] rounded-xl font-bold shadow-lg hover:opacity-90 transition-all active:scale-[0.98]"
                     >
                         <div className="flex items-center gap-3">
                             <Briefcase size={20} />
-                            <span>Ver Portfólio</span>
+                            <span>Ver Perfil Completo</span>
                         </div>
                         <div className="bg-white/20 dark:bg-black/10 rounded-lg p-1">
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M9 5l7 7-7 7"></path></svg>
                         </div>
-                    </a>
+                    </Link>
 
                     <div className="w-full flex items-center justify-between px-6 py-4 bg-white dark:bg-gray-800 border-2 border-[#f0f2f4] dark:border-gray-700 rounded-xl font-bold text-[#647587] dark:text-gray-300">
                         <div className="flex items-center gap-3">
@@ -139,11 +239,11 @@ export default function DigitalCard() {
             <div className="mt-8 flex gap-6 text-xs font-bold text-gray-500 dark:text-gray-400">
                 <button className="flex items-center gap-2 hover:text-primary transition-colors">
                     <User size={16} />
-                    Salvar Contato (VCF)
+                    Salvar Contato
                 </button>
                 <button className="flex items-center gap-2 hover:text-primary transition-colors" onClick={() => window.print()}>
                     <Printer size={16} />
-                    Imprimir QR
+                    Imprimir Cartão
                 </button>
             </div>
 

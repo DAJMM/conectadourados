@@ -17,6 +17,10 @@ interface Anuncio {
     preco: number;
     criado_em: string;
     imagem_url?: string;
+    avatar_url?: string;
+    profiles?: {
+        avatar_url: string | null;
+    };
 }
 
 export default function Home() {
@@ -33,7 +37,8 @@ export default function Home() {
             setLoading(true);
             let query = supabase
                 .from('anuncios')
-                .select('*')
+                .select('*, profiles(avatar_url)')
+                .eq('status', 'approved')
                 .order('criado_em', { ascending: false });
 
             // Apply category filter if selected
@@ -88,38 +93,36 @@ export default function Home() {
             <div className="w-full flex justify-center py-6 px-4 lg:px-40">
                 <div className="w-full max-w-[1200px]">
                     <div className="@container">
-                        <div className="relative flex min-h-[420px] flex-col gap-6 overflow-hidden rounded-2xl items-center justify-center p-8 bg-[#f8fafc] dark:bg-[#252d35]">
-                            {/* Decorative background elements */}
-                            <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-                                <div className="absolute top-10 left-10 w-32 h-32 rounded-full bg-primary blur-3xl"></div>
-                                <div className="absolute bottom-10 right-10 w-48 h-48 rounded-full bg-primary blur-3xl"></div>
+                        <div className="relative flex min-h-[420px] flex-col gap-6 overflow-hidden rounded-2xl items-center justify-center p-8">
+                            {/* Background Image with Overlay */}
+                            <div
+                                className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 hover:scale-105"
+                                style={{ backgroundImage: 'url("/hero-bg.jpg")' }}
+                            >
+                                <div className="absolute inset-0 bg-black/50 backdrop-blur-[1px]"></div>
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                                {/* Optional: Add a network pattern overlay via CSS or another div */}
+                                <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
                             </div>
-                            <div className="flex flex-col gap-4 text-center z-10">
-                                <h1 className="text-[#111518] dark:text-white text-4xl font-extrabold leading-tight tracking-tight max-w-2xl">
-                                    Quem você precisa contratar hoje?
+
+                            <div className="flex flex-col gap-6 text-center z-10 px-4">
+                                <h1 className="text-white text-4xl md:text-6xl font-black leading-tight tracking-tight max-w-4xl drop-shadow-2xl">
+                                    Dourados Conectada: Sua Vitrine para o Sucesso Local.
                                 </h1>
-                                <p className="text-[#617989] dark:text-gray-400 text-base font-medium text-xl">
-                                    Encontre e agende os melhores profissionais locais em Dourados.
+                                <p className="text-white/90 text-xl md:text-2xl font-medium max-w-3xl mx-auto drop-shadow-lg leading-relaxed">
+                                    Junte-se à plataforma que une empresas e clientes na nossa região.
+                                    <br className="hidden md:block" />
+                                    Dê destaque ao seu negócio e alcance quem realmente importa.
                                 </p>
                             </div>
-                            <label className="relative flex flex-col min-w-40 h-16 w-full max-w-[640px] z-10">
-                                <div className="flex w-full flex-1 items-stretch rounded-xl overflow-hidden shadow-xl border border-gray-100 dark:border-gray-700 bg-white dark:bg-[#1f262e]">
-                                    <div className="text-[#617989] flex items-center justify-center pl-5">
-                                        <span className="material-symbols-outlined">search</span>
-                                    </div>
-                                    <input className="flex w-full border-none focus:ring-0 bg-transparent text-[#111518] dark:text-white px-4 text-base placeholder:text-[#617989] outline-none" placeholder="Ex: Eletricista, Professor de Inglês, Diarista..." />
-                                    <div className="flex items-center pr-2">
-                                        <button className="flex h-12 px-8 cursor-pointer items-center justify-center rounded-lg bg-primary text-white text-base font-bold transition-all hover:bg-primary-light">
-                                            Pesquisar
-                                        </button>
-                                    </div>
-                                </div>
-                            </label>
-                            <div className="flex gap-4 mt-2 text-sm text-[#617989] dark:text-gray-400 font-medium">
-                                <span>Popular:</span>
-                                <button onClick={() => setSelectedCategory('Diarista / Faxineira')} className="underline hover:text-primary">Diaristas</button>
-                                <button onClick={() => setSelectedCategory('Pintor')} className="underline hover:text-primary">Pintores</button>
-                                <button onClick={() => setSelectedCategory('Manicure / Pedicure')} className="underline hover:text-primary">Manicure</button>
+
+                            <div className="z-10 mt-4">
+                                <Link
+                                    to="/meus-anuncios"
+                                    className="inline-flex items-center justify-center px-10 py-5 bg-primary hover:bg-primary-light text-white text-lg md:text-xl font-black rounded-2xl shadow-[0_10px_30px_rgba(25,102,179,0.3)] hover:shadow-[0_15px_40px_rgba(25,102,179,0.5)] hover:-translate-y-1 transition-all uppercase tracking-wider border border-white/20"
+                                >
+                                    ANUNCIE AGORA E CRESÇA CONOSCO!
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -130,7 +133,7 @@ export default function Home() {
             <CategoryBar />
 
             {/* SectionHeader: Profissionais */}
-            <div className="px-4 lg:px-40 flex justify-center py-2">
+            <div className="px-4 lg:px-40 flex justify-center mt-8 mb-4">
                 <div className="max-w-[1200px] w-full flex items-center justify-between px-4">
                     <div className="flex items-center gap-3">
                         <h2 className="text-[#111518] dark:text-white text-[22px] font-extrabold leading-tight tracking-tight">
@@ -175,10 +178,10 @@ export default function Home() {
                             >
                                 {/* Avatar or Image */}
                                 <div className="relative shrink-0">
-                                    {anuncio.imagem_url ? (
-                                        <div className="size-24 md:size-32 rounded-lg overflow-hidden border border-gray-100 dark:border-gray-700">
+                                    {(anuncio.avatar_url || anuncio.profiles?.avatar_url) ? (
+                                        <div className="size-24 md:size-32 rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-sm bg-gray-100 dark:bg-gray-800">
                                             <img
-                                                src={anuncio.imagem_url}
+                                                src={anuncio.avatar_url || anuncio.profiles?.avatar_url || ''}
                                                 alt={anuncio.nome_prestador}
                                                 className="w-full h-full object-cover"
                                             />
@@ -190,9 +193,7 @@ export default function Home() {
                                             {getInitials(anuncio.nome_prestador)}
                                         </div>
                                     )}
-                                    {!anuncio.imagem_url && (
-                                        <div className="absolute bottom-1 right-1 bg-green-500 size-4 rounded-full border-2 border-white dark:border-gray-800 shadow-sm"></div>
-                                    )}
+                                    <div className="absolute bottom-1 right-1 bg-green-500 size-4 md:size-5 rounded-full border-2 border-white dark:border-gray-800 shadow-sm"></div>
                                 </div>
 
                                 {/* Info */}
